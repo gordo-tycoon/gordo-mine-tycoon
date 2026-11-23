@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.0.1</title>
+<title>고르도 광산 타이쿤 v1.0.2</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -191,6 +191,7 @@ body.shake #view{animation:shake .45s}
 .shcol.over{box-shadow:inset 0 0 0 2px var(--gold)!important;background:#2a2614!important}
 .wcar{display:flex;gap:10px;align-items:center;margin-top:8px;font-size:14px}.wcar .cimg{width:96px;height:58px}
 #bossB{flex:none;width:38px;height:38px;padding:0;border:0;border-radius:50%;background:#1a1f24;box-shadow:0 0 0 2px var(--gold);overflow:hidden;cursor:pointer}#bossB img{width:100%;height:100%;object-fit:cover;display:block}
+.almvol{display:flex;align-items:center;gap:8px;margin-top:12px}.almvol input{flex:1;accent-color:var(--acc)}.almvol b{min-width:38px;text-align:right}
 .bossmine{display:flex;gap:10px;align-items:center;margin:8px 0;padding:8px;border-radius:8px;background:rgba(242,193,78,.08);box-shadow:inset 0 0 0 1px rgba(242,193,78,.35)}.bossmine img{width:40px;height:40px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--gold);flex:none}
 .bosscard{display:flex;gap:12px;align-items:center;cursor:pointer}.bosscard img{width:64px;height:64px;border-radius:8px;object-fit:cover;box-shadow:0 0 0 2px var(--gold);flex:none}
 .crew .wk{border-radius:7px;box-shadow:0 0 0 2px var(--gc,#555)}.crew .wk.gS{box-shadow:0 0 0 2px var(--gc),0 0 10px var(--gc)}.crew .wk.gA{box-shadow:0 0 0 2px var(--gc),0 0 6px var(--gc)}
@@ -245,7 +246,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.0.1';
+const APPVER='v1.0.2';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -935,7 +936,10 @@ setInterval(()=>{const now=Date.now(),dt=Math.max(0,Math.min(TICK_MAX,(now-tPrev
 const ALMFULL={hg:50,th:40},ALMNAME={hg:'배고픔',th:'목마름'},ALMIC={hg:'🍔',th:'💧'},ALMC={hg:'#f2a14e',th:'#5cb6ff'};let ALM={};
 try{ALM=JSON.parse(localStorage.getItem('gordo-alarm')||'{}')||{};}catch(e){ALM={};}
 function almSave(){try{localStorage.setItem('gordo-alarm',JSON.stringify(ALM));}catch(e){}almTick();}
-let AC=null;function beep(n){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();for(let i=0;i<n;i++){const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+i*.35;o.frequency.value=i%2?660:880;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.3,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.3);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.32);}}catch(e){}}
+/* 알람 음량 0~100 (1.0.2). 50이 예전 소리 크기, 100은 두 배 */
+let ALMVOL=50;try{const v=localStorage.getItem('gordo-alarm-vol');if(v!=null&&!isNaN(+v))ALMVOL=Math.max(0,Math.min(100,+v));}catch(e){}
+function almVol(v){ALMVOL=Math.max(0,Math.min(100,Math.round(+v||0)));try{localStorage.setItem('gordo-alarm-vol',ALMVOL);}catch(e){}const t=document.getElementById('almVolT');if(t)t.textContent=ALMVOL?ALMVOL+'%':'끔';}
+let AC=null;function beep(n){if(ALMVOL<=0)return;const pk=.6*ALMVOL/100;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();for(let i=0;i<n;i++){const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+i*.35;o.frequency.value=i%2?660:880;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(pk,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.3);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.32);}}catch(e){}}
 function almAlert(k,zero){const msg=zero?`${ALMNAME[k]}이 0이 됐어요!${k==='hg'?' 지금 먹지 않으면 죽습니다.':''}`:`${ALMNAME[k]} 0까지 약 ${Math.max(1,Math.ceil((ALM[k].end-Date.now())/60000))}분 남았어요. ${k==='hg'?'뭘 좀 먹어야 해요.':'마실 걸 챙기세요.'}`;
  beep(zero?6:4);$('almT').querySelector('span').textContent=msg;$('almT').style.display='flex';
  if('Notification' in window&&Notification.permission==='granted'){try{new Notification('고르도 알리미',{body:msg});}catch(e){}}}
@@ -951,7 +955,7 @@ function almTick(){const now=Date.now();let w=false;
  document.title=(w?'⚠ ':'')+document.title.replace(/^⚠ /,'');}
 function almSaveQ(){try{localStorage.setItem('gordo-alarm',JSON.stringify(ALM));}catch(e){}}
 function almSet(k){const a=ALM[k],cur=a?Math.max(0,Math.round((a.end-Date.now())/(ALMFULL[k]*600))):100;
- modal(`<h3>${ALMIC[k]} ${ALMNAME[k]} 타이머</h3><div class="sub">100에서 0까지 ${ALMFULL[k]}분</div><div class="almf"><label>지금 수치 <input type="number" id="almV" min="0" max="100" value="${cur}"></label><label>0 되기 <input type="number" id="almW" min="0" max="${ALMFULL[k]}" value="${a?a.warn:(k==='hg'?5:3)}">분 전에 알림</label></div>`,
+ modal(`<h3>${ALMIC[k]} ${ALMNAME[k]} 타이머</h3><div class="sub">100에서 0까지 ${ALMFULL[k]}분</div><div class="almf"><label>지금 수치 <input type="number" id="almV" min="0" max="100" value="${cur}"></label><label>0 되기 <input type="number" id="almW" min="0" max="${ALMFULL[k]}" value="${a?a.warn:(k==='hg'?5:3)}">분 전에 알림</label></div><div class="almvol"><span>🔊 알람 음량</span><input type="range" id="almVol" min="0" max="100" step="5" value="${ALMVOL}" oninput="almVol(this.value)" onchange="almVol(this.value);beep(1)"><b id="almVolT">${ALMVOL?ALMVOL+'%':'끔'}</b><button type="button" class="btn mini" onclick="beep(2)">들어보기</button></div>`,
  [...(a?[['끄기',()=>{delete ALM[k];almSave();}]]:[]),[k==='hg'?'먹었음 (100)':'마셨음 (100)',()=>almGo(k,100)],[a?'수정':'시작',()=>almGo(k,+$('almV').value),'pri']]);}
 function almGo(k,v){const w=Math.max(0,+$('almW').value||0);ALM[k]={end:Date.now()+Math.max(0,Math.min(100,v||0))/100*ALMFULL[k]*60000,warn:w,fired:0};
  if('Notification' in window&&Notification.permission==='default'){try{Notification.requestPermission();}catch(e){}}almSave();}
