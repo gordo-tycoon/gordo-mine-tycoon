@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.1.11</title>
+<title>고르도 광산 타이쿤 v1.1.12</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -264,7 +264,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.1.11';
+const APPVER='v1.1.12';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -373,7 +373,7 @@ const COST={
  crafter:3000000,crLv:l=>3000000*Math.pow(2.2,l)};
 
 /* ===== 상태 ===== */
-function fresh(){return {v:2,total:0,inv:{},w:0,fw:0,fa:{},ws:[],wname:[],bname:'',wimg:[],wfat:[],wrest:[],wforce:[],wburn:[],wshift:[],wcarOwn:[],wloy:[],gift:{},wcarDur:[],wcarDead:[],cdur:{},shift3:1,shiftCur:0,shiftT:0,ms:[],sw:0,co:1,mgr:{on:0,dir:'all',log:[],t:0,keep:0,fix:1,gift:1,ct:0},got:{},hist:[],gear:0,pick:0,cap:0,payT:0,strike:0,wages:0,autoU:0,auto:{},lock:{},fever:0,fevers:0,ev:{k:'',t:0},evN:{cop:0,mob:0},
+function fresh(){return {v:2,total:0,inv:{},w:0,fw:0,fa:{},ws:[],wname:[],bname:'',bface:-1,wimg:[],wfat:[],wrest:[],wforce:[],wburn:[],wshift:[],wcarOwn:[],wloy:[],gift:{},wcarDur:[],wcarDead:[],cdur:{},shift3:1,shiftCur:0,shiftT:0,ms:[],sw:0,co:1,mgr:{on:0,dir:'all',log:[],t:0,keep:0,fix:1,gift:1,ct:0},got:{},hist:[],gear:0,pick:0,cap:0,payT:0,strike:0,wages:0,autoU:0,auto:{},lock:{},fever:0,fevers:0,ev:{k:'',t:0},evN:{cop:0,mob:0},
  fur:{lv:0,on:{iron:1,sulfur:1,copper:1,gold:1,dia:1,sapph:1,aqua:1},b:0},rares:0,cr:{u:0,lv:0,on:{},p:{},made:{},slots:[]},
  bm:1,ach:{},cars:[],car:-1,wcar:{want:0,t:0},carBad:0,tab:'work',last:Date.now(),seen:0,money:START_MONEY};}
 let S=fresh();
@@ -653,7 +653,12 @@ function fireAsk(kind,idx){idx=+idx||0;const n=kind==='w'?nW():kind==='s'?S.sw:k
 function feverFx(){if(!FXON)return;const e=$('fv');let h='';for(let i=0;i<16;i++){const a=Math.PI*2*i/16,d=170+Math.random()*200;h+=`<span class="sp" style="--dx:${Math.round(Math.cos(a)*d)}px;--dy:${Math.round(Math.sin(a)*d)}px">${i%2?'🔥':'💰'}</span>`;}
  e.innerHTML=h+'<b>FEVER TIME!</b><small>유저 손님이 몰려옵니다 · 지금 비싸게 파세요</small>';e.classList.remove('on');void e.offsetWidth;e.classList.add('on');document.body.classList.add('shake');setTimeout(()=>document.body.classList.remove('shake'),460);setTimeout(()=>{e.classList.remove('on');e.innerHTML='';},2050);}
 {let h='';for(let i=0;i<8;i++)h+=`<span style="left:${(i*12.5+Math.random()*4).toFixed(1)}%;--sx:${Math.round(Math.random()*80-40)}px;animation-duration:${(2.6+Math.random()*2.6).toFixed(2)}s;animation-delay:${(-Math.random()*4).toFixed(2)}s">${i%4?'🔥':'💰'}</span>`;$('embers').innerHTML=h;}
-const bossSrc=()=>bu(CIMG.boss)||BOSS0.hire||BOSS0.fire||'';
+const bossSrc=()=>(S.bface>=0&&NW&&WIMGS[S.bface])||bu(CIMG.boss)||BOSS0.hire||BOSS0.fire||'';
+function bossPick(){const cur=S.bface>=0?S.bface:-1,cell=(i,src,lb)=>`<span class="imgslot fg" style="cursor:pointer;${i===cur?'box-shadow:0 0 0 3px var(--gold),0 0 12px var(--gold)':''}" onclick="bossSet(${i})"><img src="${src}" alt=""><span class="il">${i===cur?'✔ ':''}${lb}</span></span>`;
+ let h='<h2>🖼️ 사장님 프로필 바꾸기</h2><p class="sub">마음에 드는 얼굴을 누르면 바로 바뀌어요. (무료)</p><div class="imged">'+cell(-1,BOSS0.hire||BOSS0.fire,'기본');
+ for(let i=0;i<WSLOTS&&i<NW;i++)h+=cell(i,WIMGS[i],(i+1)+'번');
+ modal(h+'</div>',[['닫기',null,'pri']]);}
+window.bossSet=function(i){S.bface=i;save();R();toast('👑 사장님 프로필을 바꿨어요');bossPick();};
 function R(){if(drg&&drg.gh)return;{const b=$('bossImg'),u=bossSrc();if(b&&b.getAttribute('src')!==u)b.setAttribute('src',u);}document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.x===S.tab));
  const v=$('view'),st=v.scrollTop;v.innerHTML=(VIEW[S.tab]||VIEW.work)();v.scrollTop=st;chart();grab();U();}
 function val(k){const [a,b]=k.split(':');switch(a){
@@ -825,7 +830,7 @@ const ACT={
  bName(){nameAsk('b');},
  bmTog(){S.bm=S.bm?0:1;toast(S.bm?'사장님이 직접 곡괭이를 들었습니다! ⛏️':'사장님이 채굴에서 빠졌습니다');},
  hire(){if(nW()>=wMax()){toast('회사 '+S.co+'레벨에서는 채굴 알바를 '+wMax()+'명까지 고용할 수 있습니다'+(S.co<CO_MAX?'. 회사 탭에서 승급하세요':''));return;}if(pay(COST.worker(nW()))){if(!staff()){S.payT=0;S.strike=0;}const g=rollGrade();wPush(g);save();R();hireFx('w',g,S.wimg[S.wimg.length-1]);return 'skip';}},
- fireW(x){workerMenu(x);return 'skip';},shAuto(){distributeShifts();toast('알바를 1·2·3조에 고르게 나눴습니다');},shClear(){S.wshift=S.ws.map(()=>-1);toast('모두 미편성으로 뺐습니다. 직원을 끌어서 조에 넣으세요');},boss(){const c=car();modal(`<h2>👑 사장님</h2><div class="hiw"><img src="${bossSrc()}" alt="" style="box-shadow:0 0 0 3px var(--gold)"></div><table class="it"><tr><td>가진 돈</td><td>${W(S.money)}</td></tr><tr><td>회사</td><td>${S.co}레벨</td></tr><tr><td>타는 차</td><td>${c?c[0]:'없음'}</td></tr><tr><td>모은 차</td><td>${S.cars.length} / ${CARS.length}대</td></tr><tr><td>직원</td><td>채굴 알바 ${nW()}명 · 관리인 ${nM()}명 · 로봇 ${S.sw+(S.fw||0)}대</td></tr></table>`,[['📒 직원 도감',imgEditor],['닫기',null,'pri']]);return 'skip';},shPick(x){x=+x;if(shSel===x){shSel=-1;R();workerMenu(x);return 'skip';}shSel=x;},shMove(x){if(shSel<0){toast('먼저 옮길 직원을 누르세요');return 'skip';}S.wshift[shSel]=+x;toast(S.ws[shSel]+'등급 알바 → '+shLabel(+x));shSel=-1;},shAuto(){distributeShifts();shSel=-1;toast('알바를 1·2·3조에 고르게 나눴습니다');},shClear(){S.wshift=S.ws.map(()=>-1);shSel=-1;toast('모두 미편성으로 뺐습니다. 직원을 눌러 조에 넣으세요');},
+ fireW(x){workerMenu(x);return 'skip';},shAuto(){distributeShifts();toast('알바를 1·2·3조에 고르게 나눴습니다');},shClear(){S.wshift=S.ws.map(()=>-1);toast('모두 미편성으로 뺐습니다. 직원을 끌어서 조에 넣으세요');},boss(){const c=car();modal(`<h2>👑 사장님</h2><div class="hiw"><img src="${bossSrc()}" alt="" style="box-shadow:0 0 0 3px var(--gold)"></div><table class="it"><tr><td>가진 돈</td><td>${W(S.money)}</td></tr><tr><td>회사</td><td>${S.co}레벨</td></tr><tr><td>타는 차</td><td>${c?c[0]:'없음'}</td></tr><tr><td>모은 차</td><td>${S.cars.length} / ${CARS.length}대</td></tr><tr><td>직원</td><td>채굴 알바 ${nW()}명 · 관리인 ${nM()}명 · 로봇 ${S.sw+(S.fw||0)}대</td></tr></table>`,[['🖼️ 프로필 바꾸기',bossPick],['📒 직원 도감',imgEditor],['닫기',null,'pri']]);return 'skip';},shPick(x){x=+x;if(shSel===x){shSel=-1;R();workerMenu(x);return 'skip';}shSel=x;},shMove(x){if(shSel<0){toast('먼저 옮길 직원을 누르세요');return 'skip';}S.wshift[shSel]=+x;toast(S.ws[shSel]+'등급 알바 → '+shLabel(+x));shSel=-1;},shAuto(){distributeShifts();shSel=-1;toast('알바를 1·2·3조에 고르게 나눴습니다');},shClear(){S.wshift=S.ws.map(()=>-1);shSel=-1;toast('모두 미편성으로 뺐습니다. 직원을 눌러 조에 넣으세요');},
  train(x){trainAsk(x);return 'skip';},
  hireF(){if((S.fw||0)>=fMax()){toast('회사 '+S.co+'레벨에서는 화로 알바를 '+fMax()+'명까지 고용할 수 있습니다'+(S.co<CO_MAX?'. 회사 탭에서 승급하세요':''));return;}if(pay(COST.fworker(S.fw||0))){if(!staff()){S.payT=0;S.strike=0;}S.fw=(S.fw||0)+1;save();R();hireFx('f');return 'skip';}},
  carInfo(x){x=+x;const c=CARS[x],own=S.cars.includes(x),ic=cIc(c),ph='';
@@ -950,6 +955,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
+ {v:'v1.1.12',t:'👑 사장 프로필 변경',l:['👑 사장님 프로필 사진을 바꿀 수 있어요. 왼쪽 위 사장님 얼굴을 누르고 <b>🖼️ 프로필 바꾸기</b>. 기본 독수리나 알바 얼굴 29가지 중에서 고르면 돼요(무료).']},
  {v:'v1.1.11',t:'🧑 새 얼굴 3명 · 🔔 업데이트 알림',l:['🧑 알바 얼굴 3명 추가! 이제 29가지예요. 직원 도감에서 모아 보세요.','🔔 게임을 켜 둔 동안 새 버전이 나오면 화면 위에 알림이 떠요. <b>새로고침</b>을 누르면 저장하고 바로 새 버전으로 바뀌어요.']},
  {v:'v1.1.10',t:'🧑 새 얼굴 4명',l:['🧑 알바 얼굴 4명 추가! 이제 26가지예요. 직원 도감에서 모아 보세요.']},
  {v:'v1.1.9',t:'📒 직원 도감',l:['📒 ≡ 메뉴의 이미지 편집이 <b>직원 도감</b>으로 바뀌었어요. 알바 얼굴 22가지를 모아 보세요.','👷 고용 중인 얼굴은 등급 색 테두리로, 아직 못 만난 얼굴은 흐릿한 ?로 보여요. 얼굴을 누르면 크게 볼 수 있어요.','🖼️ 직접 사진을 올리는 기능은 없어졌어요. 올려 둔 사진 대신 기본 얼굴로 보여요.']},
