@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.1.2</title>
+<title>고르도 광산 타이쿤 v1.1.3</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -212,7 +212,7 @@ body.shake #view{animation:shake .45s}
 .mopt{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
 .bossmine{display:flex;gap:10px;align-items:center;margin:8px 0;padding:8px;border-radius:8px;background:rgba(242,193,78,.08);box-shadow:inset 0 0 0 1px rgba(242,193,78,.35)}.bossmine img{width:40px;height:40px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--gold);flex:none}
 .bosscard{display:flex;gap:12px;align-items:center;cursor:pointer}.bosscard img{width:64px;height:64px;border-radius:8px;object-fit:cover;box-shadow:0 0 0 2px var(--gold);flex:none}
-.crew .wk{border-radius:7px;box-shadow:0 0 0 2px var(--gc,#555)}.crew .wk.gS{box-shadow:0 0 0 2px var(--gc),0 0 10px var(--gc)}.crew .wk.gA{box-shadow:0 0 0 2px var(--gc),0 0 6px var(--gc)}
+.crew .wk{border-radius:7px;box-shadow:0 0 0 2px var(--gc,#555)}.crew .wk.gSp{box-shadow:0 0 0 2px var(--gc),0 0 14px var(--gc),0 0 4px #fff}.crew .wk.gS{box-shadow:0 0 0 2px var(--gc),0 0 10px var(--gc)}.crew .wk.gA{box-shadow:0 0 0 2px var(--gc),0 0 6px var(--gc)}
 .wcl{max-height:52vh;overflow:auto;margin-top:8px}.wcrow{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px solid #262c2a}.wcrow .grow{flex:1;min-width:0}
 .rchip{display:inline-flex;align-items:center;gap:0;padding:3px 8px 3px 3px;cursor:pointer}.rchip .ic{width:34px;height:34px;margin-right:5px;font-size:20px}.rchip b{font-size:13px}
 .shopit{display:flex;gap:10px;align-items:center}.shopit .ic{width:48px;height:48px;font-size:30px;margin:0}.shopit .grow{flex:1;min-width:0}.sbtn{display:flex;flex-direction:column;gap:4px}.sbtn .btn{padding:4px 8px;min-width:84px}
@@ -264,7 +264,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.1.2';
+const APPVER='v1.1.3';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -332,11 +332,12 @@ const SELL_R=16, SW_BASE=50000;
 /* 1.0.3: 사장 혼자 시작(알바·로봇 없음). 사장 채굴력 = 회사 레벨+1 (1레벨 ×2 ~ 10레벨 ×11). 사장은 1초에 BOSS_SELL개 직접 팖 */
 const bossX=()=>1+(S.co||1), BOSS_SELL=4;
 /* 채굴 알바 등급: p 뽑힐 확률, x 채굴량 배수, w 월급 */
-const GRADE={S:{p:.01,x:4,w:30000,c:'#ff5d73'},A:{p:.04,x:2.5,w:16000,c:'#f2c14e'},B:{p:.15,x:1.7,w:10000,c:'#4fd17a'},C:{p:.30,x:1.3,w:7000,c:'#5cb6ff'},D:{p:.50,x:1,w:5000,c:'#9aa3a0'}};
-const GORD='SABCD', SEV=3;
+/* 1.1.3: 등급 10단계 (각 등급에 + 추가). 옛 저장의 S/A/B/C/D는 그대로 */
+const GRADE={'S+':{p:.002,x:5,w:40000,c:'#ff3df0'},S:{p:.008,x:4,w:30000,c:'#ff5d73'},'A+':{p:.01,x:3.2,w:22000,c:'#ff9a3d'},A:{p:.03,x:2.5,w:16000,c:'#f2c14e'},'B+':{p:.05,x:2.1,w:13000,c:'#a6e35a'},B:{p:.10,x:1.7,w:10000,c:'#4fd17a'},'C+':{p:.08,x:1.5,w:8500,c:'#4fe0d6'},C:{p:.22,x:1.3,w:7000,c:'#5cb6ff'},'D+':{p:.10,x:1.15,w:6000,c:'#c4cbc8'},D:{p:.40,x:1,w:5000,c:'#9aa3a0'}};
+const GORD=['S+','S','A+','A','B+','B','C+','C','D+','D'], SEV=3;
 /* 교육: 지금 등급 → 다음 등급, c 교육비, p 성공 확률. 실패하면 교육비만 나감 */
-const TRAIN={D:{to:'C',c:100000,p:.5},C:{to:'B',c:300000,p:.4},B:{to:'A',c:1000000,p:.2},A:{to:'S',c:3000000,p:.1}};
-const lowIdx=()=>{for(const g of 'DCBA'){const i=S.ws.indexOf(g);if(i>=0)return i;}return -1;};
+const TRAIN={D:{to:'D+',c:50000,p:.7},'D+':{to:'C',c:70000,p:.7},C:{to:'C+',c:150000,p:.65},'C+':{to:'B',c:200000,p:.62},B:{to:'B+',c:500000,p:.45},'B+':{to:'A',c:700000,p:.45},A:{to:'A+',c:1500000,p:.32},'A+':{to:'S',c:2000000,p:.31},S:{to:'S+',c:5000000,p:.1}};
+const lowIdx=()=>{for(const g of GORD.slice().reverse()){if(!TRAIN[g])continue;const i=S.ws.indexOf(g);if(i>=0)return i;}return -1;};
 function trainDo(i){const g=S.ws[i],t=TRAIN[g],ok=Math.random()<t.p;if(ok)S.ws[i]=t.to;else S.trainF=(S.trainF||0)+1;S.trainN=(S.trainN||0)+1;return [ok,g,t.to];}
 function rollGrade(){let r=Math.random();for(const g of GORD){if(r<GRADE[g].p)return g;r-=GRADE[g].p;}return 'D';}
 const CR_MAX=8;
@@ -345,7 +346,7 @@ const CO_MAX=10, MGR_WAGE0=5000, MGR_COST=500000, FAIL0=.2;
 const EVENTS={cop:{n:'경찰 범죄 집중 단속',e:'🚨',x:.5,t:64,img:'_경찰_캐릭터',d:'경찰이 불법 물건을 단속합니다. 제작품 가격이 절반으로 떨어집니다.',say:'삐뽀삐뽀! 지금부터 집중 단속입니다. 쇠지렛대, 총알 들고 다니시면 곤란합니다!'},
  mob:{n:'범죄 흥행',e:'🕴️',x:2,t:64,img:'_마피아_캐릭터',d:'뒷골목이 들썩입니다. 제작품 가격이 두 배로 오릅니다.',say:'요즘 장사 잘되지? 드릴이랑 총알 있는 대로 다 가져와. 값은 두 배로 쳐 주지.'}};
 const EV_P=.003; /* 1.0.4: 단속·범죄 흥행 확률 2배(사용자) */
-const WORK_T=4, FATIG_UP=100/512, FATIG_DN=100/64, CARDSR_COST=1500000, CARDSR_T=256, CAR_BAD_P=.0005, CARREQ_P=.001, WAGE=5000, PAY_T=64, FEVER_P=.00125, FEVER_T=32, FEVER_X=2.5;
+const WORK_T=4, FATIG_UP=100/512, FATIG_DN=100/64, CARDSR_COST=1500000, CARDSR_T=256, CAR_BAD_P=.00025, CARREQ_P=.001, WAGE=5000, PAY_T=64, FEVER_P=.00125, FEVER_T=32, FEVER_X=2.5;
 const SHIFT_LEN=256, BURN_MAX=4, BURN_DECAY=1/128;
 /* 충성도: 0~100. 아주 천천히 줄어(100→0 약 4시간 30분) 0이 돼도 퇴사는 안 함(채굴만 줄어듦). 파업 중엔 4배 빨리 줄어듦. 자리를 오래 비워도 시간만으로 퇴사하는 일은 없음 */
 const LOY_DN=100/16384, LOY_START=64, LOY_CAR=64, LOY_LOW=16, LOY_HIGH=80, LOY_LOWX=.5, LOY_HIGHX=1.25;
@@ -427,7 +428,7 @@ const DIRS={all:{n:'알아서',d:'본전 빨리 뽑는 것부터',u:Object.keys(
  본전 시간(값 ÷ 늘어나는 순수익)이 가장 짧은 것부터 삼. 본전이 MGR_PAYBACK초 넘게 걸리면 안 삼(단, 남는 돈의 1/4보다 싸고 본전 4시간 안이면 삼).
  '남길 돈'(S.mgr.keep, 최소 월급 4번치)은 절대 안 씀. 관리인 수만큼 1초에 최대 그만큼 삼 */
 const MGR_PAYBACK=3600;
-const EXP_X=GORD.split('').reduce((a,g)=>a+GRADE[g].p*GRADE[g].x,0), EXP_W=GORD.split('').reduce((a,g)=>a+GRADE[g].p*GRADE[g].w,0);
+const EXP_X=GORD.reduce((a,g)=>a+GRADE[g].p*GRADE[g].x,0), EXP_W=GORD.reduce((a,g)=>a+GRADE[g].p*GRADE[g].w,0);
 const oreV=()=>{let a=0,b=0;for(const [it,p] of DROPS){if(it==='coal')continue;a+=p*ITEM[PROD[it]].npc;b+=p;}return a/b;};
 const wPow=()=>S.ws.reduce((a,g,i)=>a+GRADE[g].x*loyX(i),0);
 function ecoRate(o){o=o||{};const co=o.co??S.co,gear=o.gear??S.gear,fail=Math.max(.1,FAIL0-.01*(co-1)),sh=S.shift3?1/3:1;
@@ -544,7 +545,7 @@ const VIEW={
   <div class="sub" style="margin:6px 0 12px">📦 창고 · 품목마다 <b data-v="cap"></b>개까지</div>
   <div class="card" id="wCard"><h3>👷 채굴 알바 <span class="tag g">${nW()} / ${wMax()}명</span> <span class="tag">알바 곡괭이 ${gearEff()+1}단계</span></h3><div class="sub" data-v="pay" style="font-weight:700;color:#c9d1cd;margin:2px 0"></div>
    <div class="sub">${WORK_T}초마다 ${1+gearEff()}개 × 등급 배수 · 실패 ${Math.round(failP()*100)}%</div>
-   <div class="bar"><i data-w="pay"></i></div><div class="bossmine"><img src="${bossSrc()}" alt=""><div class="grow">${S.bm?`<b>👑 사장님 직접 채굴 중</b><div class="sub">채굴 ×${bossX()} (회사 레벨로 올라감) · 월급 0원 · 피로·교대 없이 늘 캠</div>`:`<b>👑 사장님은 쉬는 중</b><div class="sub">다시 들어가면 채굴 ×${bossX()}, 월급 0원</div>`}</div><button class="btn mini ${S.bm?'':'pri'}" data-a="bmTog">${S.bm?'빠지기':'들어가기'}</button></div>${nW()?shiftUI():''}${crewW()}<div class="gtab">${[...GORD].map(g=>`<div><b style="color:${GRADE[g].c}">${g}등급</b> ${S.ws.filter(x=>x===g).length}명<br>확률 ${Math.round(GRADE[g].p*100)}%<br>채굴 ×${GRADE[g].x}<br>월급 ${F(GRADE[g].w)}</div>`).join('')}</div>
+   <div class="bar"><i data-w="pay"></i></div><div class="bossmine"><img src="${bossSrc()}" alt=""><div class="grow">${S.bm?`<b>👑 사장님 직접 채굴 중</b><div class="sub">채굴 ×${bossX()} (회사 레벨로 올라감) · 월급 0원 · 피로·교대 없이 늘 캠</div>`:`<b>👑 사장님은 쉬는 중</b><div class="sub">다시 들어가면 채굴 ×${bossX()}, 월급 0원</div>`}</div><button class="btn mini ${S.bm?'':'pri'}" data-a="bmTog">${S.bm?'빠지기':'들어가기'}</button></div>${nW()?shiftUI():''}${crewW()}<div class="gtab">${[...GORD].map(g=>`<div><b style="color:${GRADE[g].c}">${g}등급</b> ${S.ws.filter(x=>x===g).length}명<br>확률 ${+(GRADE[g].p*100).toFixed(1)}%<br>채굴 ×${GRADE[g].x}<br>월급 ${F(GRADE[g].w)}</div>`).join('')}</div>
    <div class="row">${nW()>=wMax()?`<button class="btn no" data-a="hire">채굴 알바 ${nW()}명 (최대)<small>${S.co<CO_MAX?'회사 레벨을 올리면 더 고용':'더 고용할 수 없음'}</small></button>`:costB('채굴 알바 고용',COST.worker(nW()),'hire','','pri')}${lowIdx()>=0?costB(S.ws[lowIdx()]+'등급 알바 교육 ('+TRAIN[S.ws[lowIdx()]].p*100+'%)',TRAIN[S.ws[lowIdx()]].c,'train',lowIdx()):''}${costB('알바 곡괭이 '+(S.gear+2)+'단계로',COST.gear(S.gear),'gear','')}</div></div>`;},
  sell(){
   return `<div class="card"><div class="row" style="margin-top:0"><div class="grow sub" data-v="sellNote"></div><button class="btn pri sellb" data-a="sellAll">모두 판매 <span data-v="sellAll"></span></button></div>
@@ -616,7 +617,7 @@ const shLabel=v=>v<0?'미편성':(v+1)+'조', shName=i=>shLabel(S.wshift[i]==nul
 function shiftUI(){return `<div class="row" style="margin:8px 0 0"><span class="tag g" style="align-self:center">🔄 3교대 근무</span><button class="btn" data-a="shAuto">자동 편성</button><button class="btn" data-a="shClear">모두 빼기</button></div><div class="sub" style="margin-top:4px">지금 <b>${S.shiftCur+1}조</b> 근무 · ${SHIFT_LEN}초마다 교대</div>`;}
 function crewW(){if(!nW())return '';if(shSel>=nW())shSel=-1;
  const L=S.ws.map((g,i)=>[g,i]).sort((a,b)=>GORD.indexOf(a[0])-GORD.indexOf(b[0]));
- const one=(g,i,act)=>{const src=wsrc(i),frc=S.wforce&&S.wforce[i],rst=S.wrest&&S.wrest[i],off=S.shift3&&S.wshift[i]!==S.shiftCur,bn=S.wburn&&S.wburn[i]>=3,tired=frc||rst||off;return `<span class="wk g${g} ${tired?'tired':''} ${act==='shPick'&&shSel===i?'sel':''}" style="--gc:${GRADE[g].c}" data-a="${act}" data-x="${i}" title="${g}등급${frc?' · 쉬게 함':rst?' · 자동 휴식':off?' · '+(S.wshift[i]<0?'미편성 대기':'비번('+shName(i)+')'):''}">${src?`<img src="${src}" alt="">`:(IMG['_알바_아이콘']?'<i class="pw"></i>':'👷')}<b class="gr" style="color:${GRADE[g].c}">${g}</b><span class="fb"><i data-wf="${i}"></i></span>${frc||rst?'<span class="zzz">😴</span>':off?'<span class="zzz">💤</span>':''}${bn?'<span class="zzz" style="left:auto;right:-4px">🥵</span>':''}${(S.wloy[i]??LOY_START)<LOY_LOW?'<span class="lh">💔</span>':(S.wloy[i]??0)>=LOY_HIGH?'<span class="lh">💖</span>':''}</span>`;};
+ const one=(g,i,act)=>{const src=wsrc(i),frc=S.wforce&&S.wforce[i],rst=S.wrest&&S.wrest[i],off=S.shift3&&S.wshift[i]!==S.shiftCur,bn=S.wburn&&S.wburn[i]>=3,tired=frc||rst||off;return `<span class="wk g${g.replace('+','p')} ${tired?'tired':''} ${act==='shPick'&&shSel===i?'sel':''}" style="--gc:${GRADE[g].c}" data-a="${act}" data-x="${i}" title="${g}등급${frc?' · 쉬게 함':rst?' · 자동 휴식':off?' · '+(S.wshift[i]<0?'미편성 대기':'비번('+shName(i)+')'):''}">${src?`<img src="${src}" alt="">`:(IMG['_알바_아이콘']?'<i class="pw"></i>':'👷')}<b class="gr" style="color:${GRADE[g].c}">${g}</b><span class="fb"><i data-wf="${i}"></i></span>${frc||rst?'<span class="zzz">😴</span>':off?'<span class="zzz">💤</span>':''}${bn?'<span class="zzz" style="left:auto;right:-4px">🥵</span>':''}${(S.wloy[i]??LOY_START)<LOY_LOW?'<span class="lh">💔</span>':(S.wloy[i]??0)>=LOY_HIGH?'<span class="lh">💖</span>':''}</span>`;};
  const foot=`<div class="sub" style="margin-top:4px">채굴력 합계 ×${trim(power().toFixed(1))}</div>`;
  if(!S.shift3)return `<div class="crew ${S.strike?'rest':''}">${L.map(([g,i])=>one(g,i,'fireW')).join('')}<em class="zz">💤 월급을 못 받아 쉬는 중</em></div>`+foot;
  const box=v=>{const m=L.filter(([g,i])=>S.wshift[i]===v);return `<div class="shcol ${v===S.shiftCur?'cur':''} ${v<0?'un':''}" data-x="${v}"><h4>${v<0?'📋 미편성 (대기)':shLabel(v)+(v===S.shiftCur?' · 근무 중 ⛏️':' · 쉬는 조')} <small>${m.length}명</small></h4><div class="crew ${S.strike?'rest':''}">${m.map(([g,i])=>one(g,i,'fireW')).join('')||'<em class="emp">비어 있음</em>'}</div></div>`;};
@@ -632,9 +633,9 @@ const HIRE_L={w:['사장님 감사합니다!! 곡괭이 하나는 자신 있어�
  f:['삐빅. 제련 로봇 가동. 광석을 제품으로 변환합니다.','화로 온도 정상. 주괴 생산 라인을 시작합니다, 사장님.'],
  m:['관리인으로 왔습니다. 회사 살림은 저한테 맡기시고 사장님은 편히 계세요!','방향만 정해 주세요, 사장님. 나머지는 제가 알아서 하겠습니다!']};
 function hireFx(kind,g,imIdx){const robot=(kind==='s'||kind==='f'),job={w:'채굴 알바',s:'판매 로봇',m:'관리인',f:'가공 로봇'}[kind],L=HIRE_L[kind],im=(kind==='w'&&imIdx!=null)?wface(imIdx):(IMG['_채용_캐릭터']||IMG['_해고_캐릭터']);
- modal(`<h2>🎉 ${job} ${robot?'가동':'채용'}!${g?` <span style="color:${GRADE[g].c}">${g}등급</span>`:''}</h2>${robot?'<div class="hiw"><i class="rbico big"></i></div>':kind==='m'?'<div class="hiw"><i class="mgico big"></i></div>':`<div class="hiw">${im?`<img src="${im}" alt="">`:'<div style="font-size:90px;text-align:center">🥳</div>'}</div>`}<div class="say">“${L[Math.floor(Math.random()*L.length)]}”</div><p class="sub" style="margin:10px 0 0">${g?(g==='S'?'🌟 1% 확률의 S급입니다! ':g==='A'?'✨ 4% 확률의 에이스입니다! ':'')+'채굴량 ×'+GRADE[g].x+' · ':''}${robot?'유지비':'월급'}는 ${PAY_T}초마다 ${W(kind==='m'?mgrWage():kind==='f'?FW_WAGE:g?GRADE[g].w:WAGE)}입니다.</p>`,[[robot?'가동 시작':'잘 부탁해!',null,'pri']]);}
+ modal(`<h2>🎉 ${job} ${robot?'가동':'채용'}!${g?` <span style="color:${GRADE[g].c}">${g}등급</span>`:''}</h2>${robot?'<div class="hiw"><i class="rbico big"></i></div>':kind==='m'?'<div class="hiw"><i class="mgico big"></i></div>':`<div class="hiw">${im?`<img src="${im}" alt="">`:'<div style="font-size:90px;text-align:center">🥳</div>'}</div>`}<div class="say">“${L[Math.floor(Math.random()*L.length)]}”</div><p class="sub" style="margin:10px 0 0">${g?(g[0]==='S'?'🌟 '+(+(GRADE[g].p*100).toFixed(1))+'% 확률의 '+g+'급입니다! ':g[0]==='A'?'✨ '+(+(GRADE[g].p*100).toFixed(1))+'% 확률의 에이스입니다! ':'')+'채굴량 ×'+GRADE[g].x+' · ':''}${robot?'유지비':'월급'}는 ${PAY_T}초마다 ${W(kind==='m'?mgrWage():kind==='f'?FW_WAGE:g?GRADE[g].w:WAGE)}입니다.</p>`,[[robot?'가동 시작':'잘 부탁해!',null,'pri']]);}
 function workerMenu(i){i=+i;const g=S.ws[i];if(!g)return;const t=TRAIN[g],im=wsrc(i);
- modal(`<h2><span style="color:${GRADE[g].c}">${g}등급</span> 채굴 알바</h2><div style="display:flex;gap:14px;align-items:center">${im?`<img src="${im}" alt="" style="width:96px;height:96px;border-radius:6px;box-shadow:0 0 0 3px ${GRADE[g].c}">`:'<span style="font-size:60px">👷</span>'}<p style="margin:0">채굴량 ×${GRADE[g].x}<br>월급 ${W(GRADE[g].w)} (${PAY_T}초마다)<br>${t?`교육: ${t.to}등급으로 · ${W(t.c)} · 성공 ${t.p*100}%`:'최고 등급입니다'}</p></div><p class="sub" style="margin:8px 0 0">피로도 ${Math.round(S.wfat[i]||0)}% · ${S.wforce[i]?'쉬는 중 😴':S.wrest[i]?'자동 휴식 😴':(S.shift3&&(S.wshift[i]||0)!==S.shiftCur)?'비번 💤':'일하는 중 ⛏️'}${S.shift3?' · '+shName(i):''} · 번아웃 ${Math.round(S.wburn[i]||0)}/${BURN_MAX}</p><p class="sub" style="margin:4px 0 0">충성도 <b>${Math.floor(S.wloy[i]??LOY_START)}</b>/100 · ${loyTxt(S.wloy[i]??LOY_START)}</p><div class="bar" style="margin-top:4px"><i style="width:${S.wloy[i]??LOY_START}%;background:#ff6fa8"></i></div>${(S.wcarOwn&&S.wcarOwn[i]>=0&&CARS[S.wcarOwn[i]])?`<div class="wcar">${carImg(CARS[S.wcarOwn[i]])}<div>🚗 <b>${CARS[S.wcarOwn[i]][0]}</b> 보유 중<br><span class="sub">${CARS[S.wcarOwn[i]][2]} · ${W(CARS[S.wcarOwn[i]][1])}</span><br><span class="sub">🔧 ${durTxt(S.wcarDur[i]??100,S.wcarDur[i]>0?null:S.wcarDead[i]||0)}</span></div></div>`:'<p class="sub" style="margin:4px 0 0">🚗 아직 차가 없습니다</p>'}`,
+ modal(`<h2><span style="color:${GRADE[g].c}">${g}등급</span> 채굴 알바</h2><div style="display:flex;gap:14px;align-items:center">${im?`<img src="${im}" alt="" style="width:96px;height:96px;border-radius:6px;box-shadow:0 0 0 3px ${GRADE[g].c}">`:'<span style="font-size:60px">👷</span>'}<p style="margin:0">채굴량 ×${GRADE[g].x}<br>월급 ${W(GRADE[g].w)} (${PAY_T}초마다)<br>${t?`교육: ${t.to}등급으로 · ${W(t.c)} · 성공 ${Math.round(t.p*100)}%`:'최고 등급입니다'}</p></div><p class="sub" style="margin:8px 0 0">피로도 ${Math.round(S.wfat[i]||0)}% · ${S.wforce[i]?'쉬는 중 😴':S.wrest[i]?'자동 휴식 😴':(S.shift3&&(S.wshift[i]||0)!==S.shiftCur)?'비번 💤':'일하는 중 ⛏️'}${S.shift3?' · '+shName(i):''} · 번아웃 ${Math.round(S.wburn[i]||0)}/${BURN_MAX}</p><p class="sub" style="margin:4px 0 0">충성도 <b>${Math.floor(S.wloy[i]??LOY_START)}</b>/100 · ${loyTxt(S.wloy[i]??LOY_START)}</p><div class="bar" style="margin-top:4px"><i style="width:${S.wloy[i]??LOY_START}%;background:#ff6fa8"></i></div>${(S.wcarOwn&&S.wcarOwn[i]>=0&&CARS[S.wcarOwn[i]])?`<div class="wcar">${carImg(CARS[S.wcarOwn[i]])}<div>🚗 <b>${CARS[S.wcarOwn[i]][0]}</b> 보유 중<br><span class="sub">${CARS[S.wcarOwn[i]][2]} · ${W(CARS[S.wcarOwn[i]][1])}</span><br><span class="sub">🔧 ${durTxt(S.wcarDur[i]??100,S.wcarDur[i]>0?null:S.wcarDead[i]||0)}</span></div></div>`:'<p class="sub" style="margin:4px 0 0">🚗 아직 차가 없습니다</p>'}`,
  [['🎁 선물 주기',()=>giftPick(i)],['💉 성형하기 '+W(FACE_COST),()=>faceGacha(i),S.money>=FACE_COST?'':'no'],...(S.wcarOwn[i]>=0&&(S.wcarDur[i]??100)<100?[['🔧 수리비 내주기 '+W(wFixCost(i)),()=>{wFix(i);workerMenu(i);}]]:[]),['🚗 차 사 주기',()=>wcarPick(i)],[S.wforce[i]?'▶️ 다시 일 시키기':'😴 쉬게 하기',()=>{S.wforce[i]=S.wforce[i]?0:1;save();R();}],...(S.shift3?[['조 바꾸기 ('+shName(i)+'→'+shLabel(nextSh(S.wshift[i]))+')',()=>{S.wshift[i]=nextSh(S.wshift[i]);save();R();}]]:[]),['내보내기',()=>fireAsk('w',i)],...(t?[['교육하기 '+W(t.c),()=>trainAsk(i),'pri']]:[]),['닫기']]);}
 function trainAsk(i){i=+i;const g=S.ws[i],t=TRAIN[g];if(!t)return;if(!pay(t.c))return;const [ok,,to]=trainDo(i);save();R();const im=ok?(IMG['_채용_캐릭터']||IMG['_해고_캐릭터']):IMG['_해고_캐릭터'],t2=TRAIN[S.ws[i]];
  modal(`<h2>${ok?`🎓 교육 성공! <span style="color:${GRADE[to].c}">${to}등급</span>이 됐습니다`:'📚 교육 실패...'}</h2><div class="hiw">${im?`<img src="${im}" alt="">`:''}</div><div class="say">“${ok?'사장님! 저 이제 '+to+'등급이에요! 월급도 올려 주시는 거죠? 헤헤':'죄송해요 사장님... 졸았어요... 한 번만 더 가르쳐 주세요...'}”</div><p class="sub" style="margin:10px 0 0">${ok?'채굴량 ×'+GRADE[to].x+' · 월급 '+W(GRADE[to].w):'교육비 '+W(t.c)+'만 나갔습니다. 등급은 '+g+'등급 그대로입니다.'}</p>`,
@@ -811,7 +812,7 @@ function giveWCars(list){const top=Math.max(0,...S.cars.map(x=>CARS[x][1])),pool
 /* 1.1.2: 차 없는 알바 중 1~3명만 요청 (S.wcar.who) */
 function carDesireTrig(){const nc=noCar();if(!nc.length||S.wcar.want)return;const n=Math.min(nc.length,1+Math.floor(Math.random()*3));const who=nc.sort(()=>Math.random()-.5).slice(0,n);S.wcar.want=1;S.wcar.t=CARDSR_T;S.wcar.who=who;}
 const wcarWho=()=>(S.wcar.who||[]).filter(i=>S.ws[i]&&!(S.wcarOwn[i]>=0));
-function carBad(x){if(x==null||!CARS[x])return;const pr=CARS[x][1],tire=Math.random()<.6;let loss=Math.round(pr*(tire?.08:.15));loss=Math.min(loss,Math.floor(S.money));if(loss<1)return;S.money-=loss;S.carBad=(S.carBad||0)+loss;S.carBadN=(S.carBadN||0)+1;const im=IMG[tire?'_마피아_캐릭터':'_경찰_캐릭터'];
+function carBad(x){if(x==null||!CARS[x])return;const pr=CARS[x][1],tire=Math.random()<.6;let loss=Math.round(pr*(tire?.04:.075));loss=Math.min(loss,Math.floor(S.money));if(loss<1)return;S.money-=loss;S.carBad=(S.carBad||0)+loss;S.carBadN=(S.carBadN||0)+1;const im=IMG[tire?'_마피아_캐릭터':'_경찰_캐릭터'];
  modal(`<h2>${tire?'🛞 타이어 탈취!':'🚓 차량 압류!'}</h2><div class="hiw">${im?`<img src="${im}" alt="">`:''}</div><div class="say">“${tire?'크큭, 이 타이어 좋은 거네. 좀 챙겨 가지.':'불법 주정차 차량입니다. 견인합니다. 벌금 내고 찾아가세요.'}”</div><p class="sub" style="margin:10px 0 0">${CARS[x][0]}의 ${tire?'타이어를 도둑맞아 교체비':'견인 벌금'} <b style="color:#ff6b6b">${W(loss)}</b>을 썼습니다.</p>`,[['어쩔 수 없지…',null,'pri']],5);}
 function doBuyCar(x){x=+x;if(S.cars.includes(x)){toast('이미 가지고 있는 차입니다');return;}if(!carUnlocked(x)){toast('🔒 앞 단계 차('+CARS[x-1][0]+')를 먼저 사야 합니다');return;}if(!pay(CARS[x][1]))return;S.cars.push(x);S.car=x;carDesireTrig();toast(CARS[x][0]+' 구매! 모든 수입 +'+carPct(x)+'%');save();R();}
 
@@ -900,7 +901,7 @@ function chatPick(a){const o=a==='b'?null:+a,g=o==null?'':S.ws[o];if(!S.ws[o]&&o
  if(o==null){const st=almState();if(st.zero)return rp(['배가… 너무 고프다…','물… 물 한 잔만…','눈앞이 핑 도네…']);if(st.hg&&Math.random()<.5)return '슬슬 뭐 좀 먹어야겠다';if(st.th&&Math.random()<.5)return '목이 칼칼하네. 물 마셔야지';if(almBufN()&&Math.random()<.4)return '든든하게 먹으니 곡괭이가 가볍구먼!';return rp(TALK.boss);}
  const pool=[...TALK.base];const add=(k,n)=>{for(let j=0;j<n;j++)pool.push(...TALK[k]);};
  if((S.wfat[o]||0)>60)add('tired',3);const l=S.wloy[o]??LOY_START;if(l<LOY_LOW)add('lowloy',3);else if(l>=LOY_HIGH)add('highloy',2);
- if(S.wcarOwn[o]>=0)add('car',2);else if(S.cars.length)add('nocar',1);if(S.fever>0)add('fever',6);if(S.ev.t>0)add(S.ev.k,6);if(S.shiftCur===2)add('night',1);{const st=almState();if(st.zero)add('faint',4);else{if(st.hg)add('hungry',5);if(st.th)add('thirsty',5);}if(almBufN())add('fed',1);}if(g==='S'||g==='A')add('S',1);if(g==='D')add('D',1);
+ if(S.wcarOwn[o]>=0)add('car',2);else if(S.cars.length)add('nocar',1);if(S.fever>0)add('fever',6);if(S.ev.t>0)add(S.ev.k,6);if(S.shiftCur===2)add('night',1);{const st=almState();if(st.zero)add('faint',4);else{if(st.hg)add('hungry',5);if(st.th)add('thirsty',5);}if(almBufN())add('fed',1);}if(g[0]==='S'||g[0]==='A')add('S',1);if(g[0]==='D')add('D',1);
  let t;for(let k=0;k<4;k++){t=rp(pool);if(t!==chatLast)break;}chatLast=t;return t;}
 const rp=a=>a[Math.floor(Math.random()*a.length)];
 function bubble(el,t,delay){const m=$('mine');if(!m||!el||!t)return;setTimeout(()=>{if(!el.isConnected)return;const b=document.createElement('div');b.className='bub';b.textContent=t;m.appendChild(b);{const W0=m.clientWidth,w=b.offsetWidth,x=parseFloat(el.style.left)/100*W0;b.style.left=Math.max(w/2+4,Math.min(W0-w/2-4,x))+'px';}setTimeout(()=>b.remove(),5600);},delay||0);}
@@ -915,7 +916,7 @@ function commuteFx(){const m=$('mine');if(!m||S.tab!=='work'||document.hidden)re
 const ACH=[
  {id:'m1',e:'💵',n:'첫 100만',d:'번 돈 100만원',c:()=>S.total>=1e6},{id:'m2',e:'💰',n:'천만 광부',d:'번 돈 1천만원',c:()=>S.total>=1e7},{id:'m3',e:'🏦',n:'억대 광산',d:'번 돈 1억원',c:()=>S.total>=1e8},{id:'m4',e:'👑',n:'광산 재벌',d:'번 돈 10억원',c:()=>S.total>=1e9},{id:'m5',e:'🌌',n:'전설의 고르도',d:'번 돈 100억원',c:()=>S.total>=1e10},
  {id:'c3',e:'🏢',n:'번듯한 회사',d:'회사 3레벨',c:()=>S.co>=3},{id:'c5',e:'🏬',n:'중견 기업',d:'회사 5레벨',c:()=>S.co>=5},{id:'c10',e:'🏙️',n:'고르도 그룹',d:'회사 10레벨',c:()=>S.co>=10},
- {id:'w1',e:'🤝',n:'첫 식구',d:'채굴 알바 첫 고용',c:()=>S.ws.length>=1},{id:'w16',e:'👷',n:'풀 파티',d:'채굴 알바 16명',c:()=>S.ws.length>=16},{id:'ws',e:'⭐',n:'S급 인재',d:'S등급 알바 탄생',c:()=>S.ws.includes('S')},{id:'wss',e:'🌟',n:'드림팀',d:'알바 16명 모두 S등급',c:()=>S.ws.length>=16&&S.ws.every(g=>g==='S')},
+ {id:'w1',e:'🤝',n:'첫 식구',d:'채굴 알바 첫 고용',c:()=>S.ws.length>=1},{id:'w16',e:'👷',n:'풀 파티',d:'채굴 알바 16명',c:()=>S.ws.length>=16},{id:'ws',e:'⭐',n:'S급 인재',d:'S등급 알바 탄생',c:()=>S.ws.some(g=>g[0]==='S')},{id:'wsp',e:'💫',n:'S+ 전설',d:'S+등급 알바 탄생',c:()=>S.ws.includes('S+')},{id:'wss',e:'🌟',n:'드림팀',d:'알바 16명 모두 S등급',c:()=>S.ws.length>=16&&S.ws.every(g=>g[0]==='S')},
  {id:'mg',e:'👔',n:'살림꾼 영입',d:'관리인 첫 고용',c:()=>S.ms.length>=1},{id:'cr1',e:'🛠️',n:'장인의 첫걸음',d:'제작품 첫 생산',c:()=>Object.values(S.cr.made||{}).some(v=>v>0)},{id:'am',e:'🔫',n:'탄약고',d:'총알 1만 발 생산',c:()=>(S.cr.made||{}).ammo>=1e4},
  {id:'k1',e:'🚗',n:'첫 차',d:'차 첫 구매',c:()=>S.cars.length>=1},{id:'k10',e:'🚙',n:'주차장 확장',d:'차 10대',c:()=>S.cars.length>=10},{id:'k46',e:'🏁',n:'올 컬렉션',d:'차 46대 모두',c:()=>S.cars.length>=CARS.length},
  {id:'aq',e:'💠',n:'푸른 전설',d:'아쿠아마린 첫 채굴',c:()=>(S.got.aqua||0)>=1},{id:'r1',e:'✨',n:'최상급!',d:'최상급 제품 첫 획득',c:()=>(S.rares||0)>=1},{id:'r10',e:'🌠',n:'행운아',d:'최상급 제품 10개',c:()=>(S.rares||0)>=10},
@@ -935,6 +936,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
+ {v:'v1.1.3',t:'⭐ 등급 + 추가',l:['⭐ 알바 등급이 10단계로 늘었어요: D → D+ → C → C+ → B → B+ → A → A+ → S → <b>S+</b>. 등급마다 채굴량·월급이 사이값으로 있어요.','🎓 교육은 한 칸씩 올라가요(D→D+, D+→C …). 칸마다 교육비는 싸고 성공 확률은 높아요. 마지막 S→S+는 500만원·10%.','🛞 차 사고는 확률 절반(1초 0.025%, 평균 67분에 한 번), 손실도 절반(타이어 차값 4%, 견인 7.5%).','🏅 업적 \'S+ 전설\' 추가.']},
  {v:'v1.1.2',t:'🚗 차 이벤트 손질',l:['🐛 사장님이 차를 사면 차 없는 알바 <b>전원</b>이 차를 사 달라고 하던 문제를 고쳤어요. 이제 <b>1~3명</b>만 사 달라고 해요.','🚗 사장님이 차를 갖고 있는 동안 <b>가끔(1초에 0.1%, 평균 17분에 한 번)</b> 알바가 차를 사 달라고 해요. 4분 안에 안 사 주면 그 알바만 충성도 −32.','🛞 타이어 탈취·🚓 견인은 차를 살 때만이 아니라 차를 갖고 있는 동안 <b>1초에 0.05% (평균 33분에 한 번)</b> 일어나요.']},
  {v:'v1.1.1',t:'🍔 알리미 × 광산',l:['❤️ <b>사장님 체력</b>이 생겼어요. 배고픔·목마름 알리미 중 하나라도 0이 되면 체력이 10분에 걸쳐 0까지 줄어요. 0이 되면 <b>사장님이 쓰러져 광산 전체가 멈춰요</b>(월급·충성도도 같이 멈춤, 잃는 건 없음). 🍔·💧 동그라미에서 먹었음/마셨음을 누르면 바로 일어나요.','🍔 <b>0이 되기 전에</b> 먹었음/마셨음을 누르면 10분 동안 <b>든든 버프</b>: 채굴 +10% (둘 다면 +20%).','⚠️ 알리미를 <b>하나도 안 켜 두면</b> 수입 −20%. 동그라미를 눌러 켜 두세요.','💬 알림이 울릴 때쯤이면 알바들이 “사장님 밥 드세요!” 하고 챙겨 줘요.','🏅 끼니 업적과 🎖️ 굶은 훈장·쓰러짐 훈장이 생겼어요. 광산 화면 왼쪽 아래에 체력·버프가 보여요.']},
  {v:'v1.1.0',t:'🎉 대규모 패치',l:['⛏️ <b>살아 있는 광산.</b> 일하는 알바들이 수다를 떨고(말풍선), 쉬는 조는 휴게실에서 꾸벅꾸벅 졸아요. 교대 시간엔 출퇴근 차가 지나가요.','💬 <b>알바 수다 200줄 넘게.</b> 피곤할 때, 충성도, 차, 피버, 단속, 밤 근무, 등급마다 하는 말이 달라요. 둘이 주고받는 대화도 있어요.','🏅 <b>업적·훈장.</b> 수집함 탭에서 확인해요. 잘한 것만이 아니라 교육 실패, 단속, 견인, 번아웃 같은 <b>실패 훈장</b>도 있어요.','📖 수집함에 업적 진행 상황(몇 개 달성)이 보여요.']}];
