@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.1.8</title>
+<title>고르도 광산 타이쿤 v1.1.9</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -264,7 +264,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.1.8';
+const APPVER='v1.1.9';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -950,6 +950,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
+ {v:'v1.1.9',t:'📒 직원 도감',l:['📒 ≡ 메뉴의 이미지 편집이 <b>직원 도감</b>으로 바뀌었어요. 알바 얼굴 22가지를 모아 보세요.','👷 고용 중인 얼굴은 등급 색 테두리로, 아직 못 만난 얼굴은 흐릿한 ?로 보여요. 얼굴을 누르면 크게 볼 수 있어요.','🖼️ 직접 사진을 올리는 기능은 없어졌어요. 올려 둔 사진 대신 기본 얼굴로 보여요.']},
  {v:'v1.1.8',t:'🧑 새 얼굴 2명 더',l:['🧑 알바 얼굴 2명 추가! 이제 22가지예요.']},
  {v:'v1.1.7',t:'📖 웹툰 & 새 이벤트 그림',l:['🚨 경찰 집중 단속, 🕴️ 범죄 흥행 이벤트 그림이 새로 바뀌었어요.','📖 상점에서 웹툰 <b>「망해가는 카페, 내가 살린다!」</b>를 <b>5억원</b>에 살 수 있어요. 사면 상점과 수집함에서 언제든 다시 볼 수 있어요.']},
  {v:'v1.1.6',t:'🧑 새 얼굴 2명',l:['🧑 알바 얼굴 2명 추가! 이제 20가지예요. 새로 뽑는 알바에게서 만날 수 있어요.']},
