@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.0.6</title>
+<title>고르도 광산 타이쿤 v1.0.7</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -248,7 +248,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.0.6';
+const APPVER='v1.0.7';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -384,11 +384,12 @@ const gearEff=()=>S.gear;
 const nW=()=>S.ws.length, nM=()=>S.ms.length;
 const power=()=>S.ws.reduce((a,g)=>a+GRADE[g].x,0)+(S.bm?bossX():0);
 const TEAM_MAX=16;const wCapL=l=>l<4?8:16, sCapL=l=>l<3?2:4, fCapL=l=>l<3?2:l<7?4:8, mCapL=l=>l<3?1:l<6?2:4;
-const mMax=()=>Math.min(mCapL(S.co),TEAM_MAX-nW());
+/* 1.0.7: 관리인은 채굴 알바 인원(16명)과 따로 셈. 예전엔 알바 16명이면 관리인 자리가 0이 됐음 */
+const mMax=()=>mCapL(S.co);
 const FW_WAGE=6000, fMax=()=>fCapL(S.co);
 const staff=()=>nW()+S.sw+nM()+(S.fw||0);
 const wageAll=()=>S.ws.reduce((a,g)=>a+GRADE[g].w,0)+S.sw*WAGE+nM()*mgrWage()+(S.fw||0)*FW_WAGE;
-const wMax=()=>Math.min(wCapL(S.co),TEAM_MAX-nM()), sMax=()=>sCapL(S.co);
+const wMax=()=>wCapL(S.co), sMax=()=>sCapL(S.co);
 const failP=()=>Math.max(.1,FAIL0-.01*(S.co-1));
 /* 강화 목록: 버튼과 관리인이 같이 씀 */
 const UPG={
@@ -847,6 +848,7 @@ window.clrImg=function(ev,kind,idx){ev.preventDefault();ev.stopPropagation();if(
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
+ {v:'v1.0.7',l:['🐛 채굴 알바가 16명이면 관리인을 못 뽑던 문제를 고쳤어요. 이제 관리인은 알바 인원과 따로 세요 (회사 1~2레벨 1명, 3~5레벨 2명, 6레벨부터 4명).','👔 관리인은 회사 탭의 <b>관리인 고용</b> 버튼으로 직접 뽑아요.']},
  {v:'v1.0.6',l:['🎓 알바 교육 성공 확률 상승: C→B <b>30% → 40%</b>, B→A <b>15% → 20%</b>.']},
  {v:'v1.0.5',l:['👔 <b>관리인이 똑똑해졌어요.</b> 들인 돈을 가장 빨리 되찾는 것부터 사고, 본전 뽑기 힘든 건 돈이 넉넉할 때만 사요.','💰 관리인이 <b>남길 돈</b>을 정할 수 있어요 (회사 탭 관리인 칸).','🔧 차 수리, 🍔 충성도 챙기기를 관리인에게 맡길 수 있어요.','👀 관리인이 <b>다음에 살 것</b>과 본전 시간을 보여 줘요.','📝 새 버전이 나오면 이렇게 패치노트가 떠요. ≡ 메뉴에서 다시 볼 수 있어요.']},
  {v:'v1.0.4',l:['😆 채굴 알바 얼굴 7종 추가 (모두 18종). 새로 뽑거나 💉 성형하기로 만날 수 있어요.','🚨 경찰 단속과 🕴️ 범죄 흥행이 2배 자주 나와요.']},
