@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.1.1</title>
+<title>고르도 광산 타이쿤 v1.1.2</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -264,7 +264,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.1.1';
+const APPVER='v1.1.2';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -321,7 +321,7 @@ const WIMGS=[];for(let i=1;i<=24;i++){if(IMG['_알바_'+i])WIMGS.push(IMG['_알�
 /* 1.0.4: 알바 얼굴 18장(12~18번 유리창 캐릭터 추가), 얼굴 칸도 18칸 */
 const NW=WIMGS.length,WSLOTS=18;const wface=idx=>(CIMG.w&&bu(CIMG.w[idx]))||(NW?WIMGS[idx%NW]:'')||IMG['_알바_아이콘']||'';const wRnd=()=>Math.floor(Math.random()*WSLOTS),wsrc=i=>wface(S.wimg[i]||0);
 function wPush(g){S.wcarDur.push(100);S.wcarDead.push(0);S.wloy.push(LOY_START);S.ws.push(g);S.wimg.push(wRnd());S.wfat.push(0);S.wrest.push(0);S.wforce.push(0);S.wburn.push(0);S.wshift.push(autoShift());S.wcarOwn.push(-1);}
-function wSplice(i){S.wcarDur.splice(i,1);S.wcarDead.splice(i,1);S.wloy.splice(i,1);S.ws.splice(i,1);S.wimg.splice(i,1);S.wfat.splice(i,1);S.wrest.splice(i,1);S.wforce.splice(i,1);S.wburn.splice(i,1);S.wshift.splice(i,1);S.wcarOwn.splice(i,1);}
+function wSplice(i){S.wcarDur.splice(i,1);S.wcarDead.splice(i,1);S.wloy.splice(i,1);S.ws.splice(i,1);S.wimg.splice(i,1);S.wfat.splice(i,1);S.wrest.splice(i,1);S.wforce.splice(i,1);S.wburn.splice(i,1);S.wshift.splice(i,1);S.wcarOwn.splice(i,1);if(S.wcar&&S.wcar.who)S.wcar.who=S.wcar.who.filter(j=>j!==i).map(j=>j>i?j-1:j);}
 function autoShift(){const c=[0,0,0];for(const s of (S.wshift||[]))if(s>=0)c[s%3]++;let m=0;for(let k=1;k<3;k++)if(c[k]<c[m])m=k;return m;}
 function distributeShifts(){for(let i=0;i<S.ws.length;i++)S.wshift[i]=i%3;}
 function wSync(){if(!S.wimg)S.wimg=[];if(!S.wfat)S.wfat=[];if(!S.wrest)S.wrest=[];if(!S.wforce)S.wforce=[];if(!S.wburn)S.wburn=[];if(!S.wshift)S.wshift=[];while(S.wimg.length<S.ws.length)S.wimg.push(wRnd());S.wimg.length=S.ws.length;while(S.wfat.length<S.ws.length)S.wfat.push(0);S.wfat.length=S.ws.length;while(S.wrest.length<S.ws.length)S.wrest.push(0);S.wrest.length=S.ws.length;while(S.wforce.length<S.ws.length)S.wforce.push(0);S.wforce.length=S.ws.length;while(S.wburn.length<S.ws.length)S.wburn.push(0);S.wburn.length=S.ws.length;while(S.wshift.length<S.ws.length)S.wshift.push(autoShift());S.wshift.length=S.ws.length;if(!S.wcarOwn)S.wcarOwn=[];while(S.wcarOwn.length<S.ws.length)S.wcarOwn.push(-1);S.wcarOwn.length=S.ws.length;if(!S.wcarDur)S.wcarDur=[];while(S.wcarDur.length<S.ws.length)S.wcarDur.push(100);S.wcarDur.length=S.ws.length;if(!S.wcarDead)S.wcarDead=[];while(S.wcarDead.length<S.ws.length)S.wcarDead.push(0);S.wcarDead.length=S.ws.length;if(!S.cdur)S.cdur={};if(!S.wloy)S.wloy=[];while(S.wloy.length<S.ws.length)S.wloy.push(LOY_START);S.wloy.length=S.ws.length;if(!S.gift)S.gift={};if(!S.shift3){S.shift3=1;distributeShifts();}if(S.shiftCur==null)S.shiftCur=0;if(S.shiftT==null)S.shiftT=0;}
@@ -345,7 +345,7 @@ const CO_MAX=10, MGR_WAGE0=5000, MGR_COST=500000, FAIL0=.2;
 const EVENTS={cop:{n:'경찰 범죄 집중 단속',e:'🚨',x:.5,t:64,img:'_경찰_캐릭터',d:'경찰이 불법 물건을 단속합니다. 제작품 가격이 절반으로 떨어집니다.',say:'삐뽀삐뽀! 지금부터 집중 단속입니다. 쇠지렛대, 총알 들고 다니시면 곤란합니다!'},
  mob:{n:'범죄 흥행',e:'🕴️',x:2,t:64,img:'_마피아_캐릭터',d:'뒷골목이 들썩입니다. 제작품 가격이 두 배로 오릅니다.',say:'요즘 장사 잘되지? 드릴이랑 총알 있는 대로 다 가져와. 값은 두 배로 쳐 주지.'}};
 const EV_P=.003; /* 1.0.4: 단속·범죄 흥행 확률 2배(사용자) */
-const WORK_T=4, FATIG_UP=100/512, FATIG_DN=100/64, CARDSR_COST=1500000, CARDSR_T=256, CAR_BAD_P=.18, WAGE=5000, PAY_T=64, FEVER_P=.00125, FEVER_T=32, FEVER_X=2.5;
+const WORK_T=4, FATIG_UP=100/512, FATIG_DN=100/64, CARDSR_COST=1500000, CARDSR_T=256, CAR_BAD_P=.0005, CARREQ_P=.001, WAGE=5000, PAY_T=64, FEVER_P=.00125, FEVER_T=32, FEVER_X=2.5;
 const SHIFT_LEN=256, BURN_MAX=4, BURN_DECAY=1/128;
 /* 충성도: 0~100. 아주 천천히 줄어(100→0 약 4시간 30분) 0이 돼도 퇴사는 안 함(채굴만 줄어듦). 파업 중엔 4배 빨리 줄어듦. 자리를 오래 비워도 시간만으로 퇴사하는 일은 없음 */
 const LOY_DN=100/16384, LOY_START=64, LOY_CAR=64, LOY_LOW=16, LOY_HIGH=80, LOY_LOWX=.5, LOY_HIGHX=1.25;
@@ -511,7 +511,7 @@ function step(dt){
  for(let i=0;i<S.ws.length;i++){if(!(S.wcarOwn[i]>=0))continue;const d=(S.wcarDur[i]??100)-DUR_DN*dt;if(d>0){S.wcarDur[i]=d;continue;}S.wcarDur[i]=0;S.wcarDead[i]=(S.wcarDead[i]||0)+dt;if(S.wcarDead[i]>=SCRAP_T){scrapN.push(CARS[S.wcarOwn[i]]?CARS[S.wcarOwn[i]][0]:'차');S.wcarOwn[i]=-1;S.wcarDead[i]=0;S.wcarDur[i]=100;}}
  if(S.fever>0)S.fever=Math.max(0,S.fever-dt);
  if(S.ev.t>0){S.ev.t=Math.max(0,S.ev.t-dt);if(!S.ev.t)S.ev.k='';}
- if(S.wcar&&S.wcar.want){S.wcar.t-=dt;if(S.wcar.t<=0){S.wcar.want=0;S.wcar.t=0;{const cd=noCar();for(const i of cd)S.wloy[i]=Math.max(0,(S.wloy[i]??LOY_START)-32);if(cd.length)wcarQuit=1;}}}
+ if(S.wcar&&S.wcar.want){S.wcar.t-=dt;if(S.wcar.t<=0){S.wcar.want=0;S.wcar.t=0;{const cd=wcarWho();S.wcar.who=[];for(const i of cd)S.wloy[i]=Math.max(0,(S.wloy[i]??LOY_START)-32);if(cd.length)wcarQuit=1;}}}
 }
 function sellBud(bud){const rv=crReserve();for(const k of sellOrder()){if(bud<=0)break;const n=Math.min(bud,have(k)-(rv[k]||0));if(n>0){S.inv[k]-=n;gain(n*price(k));bud-=n;}}}
 const CRAFT_RESERVE=32;const crReserve=()=>{const r={};if(S.cr.u)for(const sl of S.cr.slots){const rc=RECIPE[sl.k];if(rc)for(const it in rc.m)r[it]=(r[it]||0)+rc.m[it]*CRAFT_RESERVE;}return r;};
@@ -540,7 +540,7 @@ const VIEW={
  work(){
   return `<div class="mbox">${mineScene()}<div class="mchips">${ORES.map(it=>`<span class="chip rchip" data-chip="${it}" data-a="info" data-x="${it}" title="${ITEM[it].n}">${ic(it)}<b data-v="inv:${it}"></b></span>`).join('')}</div></div>
   ${brokeW().length||(car()&&bDur()<25)?`<div class="card"><h3>🔧 수리가 필요한 차</h3><div class="sub">${brokeW().length?`직원 차 ${brokeW().length}대가 많이 닳았어요(내구도 50 미만). 0이 된 뒤 ${Math.round(SCRAP_T/60)}분이 지나면 폐차돼요.`:''}${car()&&bDur()<25?` 사장님 차 ${car()[0]} 내구도 ${Math.ceil(bDur())}${bDur()>0?'':' · 고장이라 창고·피버 효과 꺼짐'}.`:''}</div><div class="row">${brokeW().length?costB('직원 차 모두 수리',brokeW().reduce((a,i)=>a+wFixCost(i),0),'wFixAll',''):''}${car()&&bDur()<100?costB('사장 차 수리',fixCost(S.car,bDur()),'bFix',S.car):''}</div></div>`:''}
-  ${S.wcar&&S.wcar.want?`<div class="card bad"><h3>🚗 직원들이 술렁입니다</h3><div class="sub">사장님이 차를 뽑으니 차 없는 알바들이 차를 갖고 싶어 합니다. <b data-v="wcarT"></b> 안에 사 주지 않으면 차 없는 알바들 충성도가 32씩 떨어집니다.</div><div class="row">${costB('차 없는 직원 차 사 주기 ('+noCar().length+'명)',carDesireCost(),'wcarBuy','','pri')}</div></div>`:''}
+  ${S.wcar&&S.wcar.want?`<div class="card bad"><h3>🚗 직원들이 술렁입니다</h3><div class="sub">사장님 차를 보고 ${wcarWho().map(i=>`<b style="color:${GRADE[S.ws[i]].c}">${S.ws[i]}등급</b>`).join(', ')} 알바 ${wcarWho().length}명이 차를 사 달라고 합니다. <b data-v="wcarT"></b> 안에 사 주지 않으면 이 알바들 충성도가 32씩 떨어집니다.</div><div class="row">${costB('차 사 주기 ('+wcarWho().length+'명)',carDesireCost(),'wcarBuy','','pri')}</div></div>`:''}
   <div class="sub" style="margin:6px 0 12px">📦 창고 · 품목마다 <b data-v="cap"></b>개까지</div>
   <div class="card" id="wCard"><h3>👷 채굴 알바 <span class="tag g">${nW()} / ${wMax()}명</span> <span class="tag">알바 곡괭이 ${gearEff()+1}단계</span></h3><div class="sub" data-v="pay" style="font-weight:700;color:#c9d1cd;margin:2px 0"></div>
    <div class="sub">${WORK_T}초마다 ${1+gearEff()}개 × 등급 배수 · 실패 ${Math.round(failP()*100)}%</div>
@@ -794,7 +794,7 @@ function startEvent(k){const E=EVENTS[k];S.ev={k,t:E.t};S.evN[k]=(S.evN[k]||0)+1
  setTimeout(()=>{fx.classList.remove('on');fx.innerHTML='';if($('mBg').style.display!=='flex')modal(`<h2>${E.e} ${E.n}</h2><div class="hiw">${im?`<img src="${im}" alt="">`:''}</div><div class="say">“${E.say}”</div><p class="sub" style="margin:10px 0 0">${E.d} ${E.t}초 동안 이어집니다.${k==='cop'?' 제작품은 🔒로 잠가 두고 단속이 끝난 뒤 파세요.':' 지금이 제작품을 팔 때입니다!'}</p>`,[['알겠어',null,'pri']],5);},2600);R();}
 function startFever(){S.fever=feverLen();S.fevers++;feverFx();toast('🔥 피버타임! '+Math.round(S.fever)+'초 동안 비싸게 팔 수 있습니다');R();}
 function carUnlocked(x){x=+x;if(x===0)return true;const pv=carPrev(x);return pv<0?true:S.cars.includes(pv);}
-const noCar=()=>S.ws.map((g,i)=>i).filter(i=>!(S.wcarOwn[i]>=0)),carDesireCost=()=>noCar().length*CARDSR_COST;
+const noCar=()=>S.ws.map((g,i)=>i).filter(i=>!(S.wcarOwn[i]>=0)),carDesireCost=()=>wcarWho().length*CARDSR_COST;
 function wFix(i){const c=wFixCost(i);if(c<=0)return false;if(!pay(c))return false;S.wcarDur[i]=100;S.wcarDead[i]=0;addLoy(i,LOY_FIX);save();R();toast('🔧 '+S.ws[i]+'등급 알바 차 수리 완료 (충성도 +'+LOY_FIX+')');return true;}
 const brokeW=()=>S.ws.map((g,i)=>i).filter(i=>S.wcarOwn[i]>=0&&(S.wcarDur[i]??100)<50);
 function faceGacha(i){i=+i;if(!S.ws[i])return;if(!pay(FACE_COST))return;const cur=wsrc(i);let k=S.wimg[i],n=0;
@@ -806,12 +806,14 @@ function wcarPick(i){i=+i;const g=S.ws[i];if(!g)return;const top=Math.max(0,...S
  const cur=S.wcarOwn[i],list=CARS.map((c,k)=>k).filter(k=>CARS[k][1]<=top).sort((a,b)=>CARS[b][1]-CARS[a][1]);
  modal(`<h2>🚗 <span style="color:${GRADE[g].c}">${g}등급</span> 알바에게 차 사 주기</h2><p class="sub">사장님 차 중 가장 비싼 차(${W(top)})까지 고를 수 있어요. 차값은 그대로 나갑니다. 차가 있는 직원은 차 욕심으로 충성도가 떨어지지 않아요. 차를 사 주면 충성도 +${LOY_CAR}.${cur>=0&&CARS[cur]?' 지금 차: <b>'+CARS[cur][0]+'</b>':''}</p><div class="wcl">${list.map(k=>{const c=CARS[k],own=k===cur;return `<div class="wcrow">${carImg(c)}<div class="grow"><b>${c[0]}</b><br><span class="sub">${c[2]}</span></div>${own?'<button class="btn on">지금 차</button>':`<button class="btn ${S.money<c[1]?'no':'pri'}" data-a="wcarGive" data-x="${i}:${k}">사 주기<small>${W(c[1])}</small></button>`}</div>`;}).join('')}</div>`,[['닫기']]);}
 let scrapN=[];let wcarQuit=0,burnQuit=0,shiftRot=0,loyQuit=0;
-function giveWCars(){const top=Math.max(0,...S.cars.map(x=>CARS[x][1])),pool=CARS.map((c,i)=>i).filter(i=>CARS[i][1]<=top);if(!pool.length)return;
- for(const i of noCar()){S.wcarOwn[i]=pool[Math.floor(Math.random()*pool.length)];S.wcarDur[i]=100;S.wcarDead[i]=0;addLoy(i,LOY_CAR);}}
-function carDesireTrig(){if(noCar().length){S.wcar.want=1;S.wcar.t=CARDSR_T;}}
-function carBad(x){if(Math.random()>=CAR_BAD_P)return;const pr=CARS[x][1],tire=Math.random()<.6;let loss=Math.round(pr*(tire?.08:.15));loss=Math.min(loss,Math.floor(S.money));if(loss<1)return;S.money-=loss;S.carBad=(S.carBad||0)+loss;S.carBadN=(S.carBadN||0)+1;const im=IMG[tire?'_마피아_캐릭터':'_경찰_캐릭터'];
+function giveWCars(list){const top=Math.max(0,...S.cars.map(x=>CARS[x][1])),pool=CARS.map((c,i)=>i).filter(i=>CARS[i][1]<=top);if(!pool.length)return;
+ for(const i of (list||noCar())){S.wcarOwn[i]=pool[Math.floor(Math.random()*pool.length)];S.wcarDur[i]=100;S.wcarDead[i]=0;addLoy(i,LOY_CAR);}}
+/* 1.1.2: 차 없는 알바 중 1~3명만 요청 (S.wcar.who) */
+function carDesireTrig(){const nc=noCar();if(!nc.length||S.wcar.want)return;const n=Math.min(nc.length,1+Math.floor(Math.random()*3));const who=nc.sort(()=>Math.random()-.5).slice(0,n);S.wcar.want=1;S.wcar.t=CARDSR_T;S.wcar.who=who;}
+const wcarWho=()=>(S.wcar.who||[]).filter(i=>S.ws[i]&&!(S.wcarOwn[i]>=0));
+function carBad(x){if(x==null||!CARS[x])return;const pr=CARS[x][1],tire=Math.random()<.6;let loss=Math.round(pr*(tire?.08:.15));loss=Math.min(loss,Math.floor(S.money));if(loss<1)return;S.money-=loss;S.carBad=(S.carBad||0)+loss;S.carBadN=(S.carBadN||0)+1;const im=IMG[tire?'_마피아_캐릭터':'_경찰_캐릭터'];
  modal(`<h2>${tire?'🛞 타이어 탈취!':'🚓 차량 압류!'}</h2><div class="hiw">${im?`<img src="${im}" alt="">`:''}</div><div class="say">“${tire?'크큭, 이 타이어 좋은 거네. 좀 챙겨 가지.':'불법 주정차 차량입니다. 견인합니다. 벌금 내고 찾아가세요.'}”</div><p class="sub" style="margin:10px 0 0">${CARS[x][0]}의 ${tire?'타이어를 도둑맞아 교체비':'견인 벌금'} <b style="color:#ff6b6b">${W(loss)}</b>을 썼습니다.</p>`,[['어쩔 수 없지…',null,'pri']],5);}
-function doBuyCar(x){x=+x;if(S.cars.includes(x)){toast('이미 가지고 있는 차입니다');return;}if(!carUnlocked(x)){toast('🔒 앞 단계 차('+CARS[x-1][0]+')를 먼저 사야 합니다');return;}if(!pay(CARS[x][1]))return;S.cars.push(x);S.car=x;carDesireTrig();toast(CARS[x][0]+' 구매! 모든 수입 +'+carPct(x)+'%');save();R();carBad(x);}
+function doBuyCar(x){x=+x;if(S.cars.includes(x)){toast('이미 가지고 있는 차입니다');return;}if(!carUnlocked(x)){toast('🔒 앞 단계 차('+CARS[x-1][0]+')를 먼저 사야 합니다');return;}if(!pay(CARS[x][1]))return;S.cars.push(x);S.car=x;carDesireTrig();toast(CARS[x][0]+' 구매! 모든 수입 +'+carPct(x)+'%');save();R();}
 
 /* ===== 누르기 ===== */
 const ACT={
@@ -854,8 +856,8 @@ const ACT={
  giftGive(x){const [a,k]=String(x).split(':'),i=+a,it=SHOP[k];if(!it||!S.ws[i]||!(S.gift[k]>0))return 'skip';S.gift[k]--;const b=Math.floor(S.wloy[i]??LOY_START);addLoy(i,it.l);save();R();toast(it.e+' '+S.ws[i]+'등급 알바에게 '+it.n+'! 충성도 '+b+' → '+Math.floor(S.wloy[i]));giftPick(i);return 'skip';},
  shopBuy(x){const [k,n0]=String(x).split(':'),it=SHOP[k],n=+n0||1;if(!it)return 'skip';if(!pay(it.c*n))return 'skip';S.gift[k]=(S.gift[k]||0)+n;toast(it.e+' '+it.n+' '+n+'개 샀습니다');},
  shopAll(k){const it=SHOP[k];if(!it)return 'skip';const ord=S.ws.map((g,i)=>i).sort((a,b)=>(S.wloy[a]??0)-(S.wloy[b]??0));let n=0;for(const i of ord){if(!(S.gift[k]>0))break;if((S.wloy[i]??0)>=100)continue;S.gift[k]--;addLoy(i,it.l);n++;}toast(n?it.e+' '+n+'명에게 '+it.n+'을(를) 나눠 줬습니다 (충성도 낮은 순)':'줄 사람이 없거나 선물이 없어요');},
- wcarGive(x){const [i,k]=String(x).split(':').map(Number),c=CARS[k];if(!c||!S.ws[i])return 'skip';if(!pay(c[1]))return 'skip';S.wcarOwn[i]=k;S.wcarDur[i]=100;S.wcarDead[i]=0;addLoy(i,LOY_CAR);if(S.wcar.want&&!noCar().length){S.wcar.want=0;S.wcar.t=0;}$('mBg').style.display='none';toast('🚗 '+S.ws[i]+'등급 알바에게 '+c[0]+'을(를) 사 줬습니다! 충성도 +'+LOY_CAR);},
- wcarBuy(){const c=carDesireCost();if(c<=0){S.wcar.want=0;return;}if(pay(c)){S.wcar.want=0;S.wcar.t=0;giveWCars();toast('🚗 알바들에게 차를 사 줬습니다! 알바를 누르면 무슨 차인지 보여요');}},
+ wcarGive(x){const [i,k]=String(x).split(':').map(Number),c=CARS[k];if(!c||!S.ws[i])return 'skip';if(!pay(c[1]))return 'skip';S.wcarOwn[i]=k;S.wcarDur[i]=100;S.wcarDead[i]=0;addLoy(i,LOY_CAR);if(S.wcar.want&&!wcarWho().length){S.wcar.want=0;S.wcar.t=0;S.wcar.who=[];}$('mBg').style.display='none';toast('🚗 '+S.ws[i]+'등급 알바에게 '+c[0]+'을(를) 사 줬습니다! 충성도 +'+LOY_CAR);},
+ wcarBuy(){const c=carDesireCost();if(c<=0){S.wcar.want=0;return;}if(pay(c)){const L=wcarWho();S.wcar.want=0;S.wcar.t=0;S.wcar.who=[];giveWCars(L);toast('🚗 '+L.length+'명에게 차를 사 줬습니다! 알바를 누르면 무슨 차인지 보여요');}},
  menu(){modal(`<h2>메뉴</h2><p class="sub">고르도 광산 타이쿤 ${APPVER} · 진행 상황은 자동으로 저장됩니다.</p><div class="warn" style="margin:8px 0;font-size:12.5px;line-height:1.6">⚠️ <b>무단 복제·도용 금지</b><br>이 게임과 그림, 프로그램을 허락 없이 복제·수정·재배포하거나 자기 것처럼 쓰는 것을 금지합니다. 정해진 서버 이용자를 위한 게임이며, <b>서버 밖에서의 공유·판매·사용을 금지</b>합니다.</div><div class="donate">💝 <b>후원받아요!</b> 계좌에 <b>'아아멘'</b>으로 입금해 주시면 돼요.<br><span class="sub">문의: 712-7514 또는 DM</span></div>`,[['📘 튜토리얼',()=>tutStart()],['📝 패치노트',()=>patchShow(null)],[(FXON?'✨ 이펙트 끄기':'✨ 이펙트 켜기'),()=>{setFx(!FXON);toast(FXON?'✨ 이펙트를 켰습니다':'이펙트를 껐습니다 (광산 애니메이션만 남음)');}],['저장 내보내기',exportSave],['저장 불러오기',importSave],['🖼️ 이미지 편집',imgEditor],['처음부터',()=>modal('<h2>처음부터 다시 할까요?</h2><p>지금까지 모은 돈과 차가 모두 사라집니다.</p>',[['취소'],['모두 지우고 다시 시작',()=>{S=fresh();S.seen=1;save();R();},'pri']])],['닫기',null,'pri']]);return 'skip';}
 };
 document.addEventListener('change',ev=>{const c=ev.target.closest('select[data-crs]');if(c){const sl=S.cr.slots[+c.dataset.crs];sl.k=c.value;sl.p=0;save();R();return;}const e=ev.target.closest('select[data-mgr]');if(!e)return;S.ms[+e.dataset.mgr]=e.value;save();toast('관리인 '+(+e.dataset.mgr+1)+' 방향: '+DIRS[e.value].n);});
@@ -933,6 +935,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
+ {v:'v1.1.2',t:'🚗 차 이벤트 손질',l:['🐛 사장님이 차를 사면 차 없는 알바 <b>전원</b>이 차를 사 달라고 하던 문제를 고쳤어요. 이제 <b>1~3명</b>만 사 달라고 해요.','🚗 사장님이 차를 갖고 있는 동안 <b>가끔(1초에 0.1%, 평균 17분에 한 번)</b> 알바가 차를 사 달라고 해요. 4분 안에 안 사 주면 그 알바만 충성도 −32.','🛞 타이어 탈취·🚓 견인은 차를 살 때만이 아니라 차를 갖고 있는 동안 <b>1초에 0.05% (평균 33분에 한 번)</b> 일어나요.']},
  {v:'v1.1.1',t:'🍔 알리미 × 광산',l:['❤️ <b>사장님 체력</b>이 생겼어요. 배고픔·목마름 알리미 중 하나라도 0이 되면 체력이 10분에 걸쳐 0까지 줄어요. 0이 되면 <b>사장님이 쓰러져 광산 전체가 멈춰요</b>(월급·충성도도 같이 멈춤, 잃는 건 없음). 🍔·💧 동그라미에서 먹었음/마셨음을 누르면 바로 일어나요.','🍔 <b>0이 되기 전에</b> 먹었음/마셨음을 누르면 10분 동안 <b>든든 버프</b>: 채굴 +10% (둘 다면 +20%).','⚠️ 알리미를 <b>하나도 안 켜 두면</b> 수입 −20%. 동그라미를 눌러 켜 두세요.','💬 알림이 울릴 때쯤이면 알바들이 “사장님 밥 드세요!” 하고 챙겨 줘요.','🏅 끼니 업적과 🎖️ 굶은 훈장·쓰러짐 훈장이 생겼어요. 광산 화면 왼쪽 아래에 체력·버프가 보여요.']},
  {v:'v1.1.0',t:'🎉 대규모 패치',l:['⛏️ <b>살아 있는 광산.</b> 일하는 알바들이 수다를 떨고(말풍선), 쉬는 조는 휴게실에서 꾸벅꾸벅 졸아요. 교대 시간엔 출퇴근 차가 지나가요.','💬 <b>알바 수다 200줄 넘게.</b> 피곤할 때, 충성도, 차, 피버, 단속, 밤 근무, 등급마다 하는 말이 달라요. 둘이 주고받는 대화도 있어요.','🏅 <b>업적·훈장.</b> 수집함 탭에서 확인해요. 잘한 것만이 아니라 교육 실패, 단속, 견인, 번아웃 같은 <b>실패 훈장</b>도 있어요.','📖 수집함에 업적 진행 상황(몇 개 달성)이 보여요.']}];
 function patchShow(from){let L=PATCH;if(from){const i=PATCH.findIndex(p=>p.v===from);if(i>=0)L=PATCH.slice(0,i);}if(!L.length)L=PATCH.slice(0,1);
@@ -1056,7 +1059,7 @@ loadImgs();
 genSprites();
 load();
 /* 켜 둔 동안에만 진행: 꺼 둔 시간은 계산하지 않음 */
-S.fever=0;S.ev={k:'',t:0};if(!S.seen)S.seen=1;
+S.fever=0;S.ev={k:'',t:0};if(!S.seen)S.seen=1;if(S.wcar&&S.wcar.want&&!(S.wcar.who||[]).length){S.wcar.want=0;S.wcar.t=0;}
 {let a=false;try{a=!localStorage.getItem(TUT_KEY);}catch(e){}if(a){$('mBg').style.display='none';tutStart();}patchChk(a);}
 setFx(FXON);
 aqSeen=Math.floor(S.got.aqua||0);
@@ -1076,7 +1079,7 @@ setInterval(()=>{const now=Date.now(),dt=Math.max(0,Math.min(TICK_MAX,(now-tPrev
  if(bossUp){bossUp=0;R();toast('💪 사장님이 일어났어요! 광산 다시 가동 (체력 30)');}
  if(now-tChat>=8000){tChat=now;if(!document.hidden)chatTick();}
  if(now-tAch>=3000){tAch=now;achChk();}
- if(now-tRoll>=1000){if(now-tRoll<3000&&!document.hidden){if(S.fever<=0&&Math.random()<FEVER_P)startFever();if(S.ev.t<=0&&S.cr.u&&Math.random()<EV_P)startEvent(Math.random()<.5?'cop':'mob');}tRoll=now;}
+ if(now-tRoll>=1000){if(now-tRoll<3000&&!document.hidden){if(S.fever<=0&&Math.random()<FEVER_P)startFever();if(S.ev.t<=0&&S.cr.u&&Math.random()<EV_P)startEvent(Math.random()<.5?'cop':'mob');if(S.cars.length&&$('mBg').style.display!=='flex'){if(Math.random()<CAR_BAD_P)carBad(S.car>=0&&S.cars.includes(S.car)?S.car:S.cars[Math.floor(Math.random()*S.cars.length)]);if(!S.wcar.want&&Math.random()<CARREQ_P){carDesireTrig();if(S.wcar.want){toast('🚗 알바 '+S.wcar.who.length+'명이 차를 사 달라고 합니다! (광산 탭)');R();}}}}tRoll=now;}
  if(now-tRate>=1000){const s=(now-tRate)/1000;rate=rate*.8+acc/s*60*.2;acc=0;tRate=now;}
  if(now-tSave>=10000){S.hist.push(Math.round(S.money));if(S.hist.length>180)S.hist.shift();chart();save();tSave=now;}
  if(!document.hidden&&now-tU>=250){tU=now;U();}},100);
