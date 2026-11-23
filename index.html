@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.0.8</title>
+<title>고르도 광산 타이쿤 v1.1.0</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -193,6 +193,19 @@ body.shake #view{animation:shake .45s}
 #bossB{flex:none;width:38px;height:38px;padding:0;border:0;border-radius:50%;background:#1a1f24;box-shadow:0 0 0 2px var(--gold);overflow:hidden;cursor:pointer}#bossB img{width:100%;height:100%;object-fit:cover;display:block}
 .almvol{display:flex;align-items:center;gap:8px;margin-top:12px}.almvol input{flex:1;accent-color:var(--acc)}.almvol b{min-width:38px;text-align:right}
 .donate{margin:8px 0;padding:8px 10px;border-radius:8px;background:rgba(255,111,168,.1);box-shadow:inset 0 0 0 1px rgba(255,111,168,.35);font-size:13px;line-height:1.6}
+#mine .bub{position:absolute;bottom:112px;transform:translateX(-50%);max-width:180px;width:max-content;background:#fff;color:#151a18;font-size:11.5px;line-height:1.35;padding:4px 8px;border-radius:9px;z-index:4;animation:bub 5.5s ease forwards;pointer-events:none;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+#mine .bub::after{content:'';position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-top-color:#fff;border-bottom:0}
+@keyframes bub{0%{opacity:0;margin-bottom:-6px}7%{opacity:1;margin-bottom:0}86%{opacity:1}100%{opacity:0}}
+#mine .rest{position:absolute;right:6px;bottom:108px;display:flex;gap:3px;align-items:flex-end;padding:3px 5px 13px;border-radius:8px;background:rgba(10,14,13,.6);z-index:2}
+#mine .rest span{position:relative;width:24px;height:24px}#mine .rest img{width:24px;height:24px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1.5px var(--gc);filter:brightness(.8)}
+#mine .rest i{position:absolute;right:-5px;top:-9px;font-size:10px;font-style:normal;animation:zz 2.2s ease-in-out infinite}
+@keyframes zz{0%{opacity:0;transform:translate(0,4px) scale(.7)}40%{opacity:1}100%{opacity:0;transform:translate(5px,-8px) scale(1.1)}}
+#mine .rest b{position:absolute;left:0;right:0;bottom:1px;text-align:center;font-size:9px;color:#9fb0c2;font-weight:600}#mine .rest em{font-size:10px;color:#9fb0c2;font-style:normal}
+#mine .cmt{position:absolute;bottom:4px;left:-30%;z-index:3;animation:cmt 5s linear forwards;pointer-events:none;display:flex;flex-direction:column;align-items:center}
+#mine .cmt i{display:block;width:64px;height:32px;background:center/contain no-repeat;image-rendering:pixelated}#mine .cmt b{font-size:10.5px;background:rgba(0,0,0,.65);color:#fff;padding:1px 6px;border-radius:6px;white-space:nowrap;margin-bottom:2px}
+@keyframes cmt{to{left:110%}}
+.achg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px}.ach{display:flex;gap:6px;align-items:center;padding:6px;background:#101312;box-shadow:inset 0 0 0 1px var(--tileB);border-radius:8px;font-size:12px;line-height:1.3;text-align:left}
+.ach .me{font-size:24px;flex:none}.ach.no{opacity:.38;filter:grayscale(1)}.ach small{color:#9aa3a0}.ach.f{box-shadow:inset 0 0 0 1px rgba(255,111,168,.45)}
 .pnote{margin:4px 0 10px;padding-left:20px;line-height:1.6;font-size:13.5px}.pnote li{margin:3px 0}
 .mopt{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
 .bossmine{display:flex;gap:10px;align-items:center;margin:8px 0;padding:8px;border-radius:8px;background:rgba(242,193,78,.08);box-shadow:inset 0 0 0 1px rgba(242,193,78,.35)}.bossmine img{width:40px;height:40px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--gold);flex:none}
@@ -249,7 +262,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.0.8';
+const APPVER='v1.1.0';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -322,7 +335,7 @@ const GORD='SABCD', SEV=3;
 /* 교육: 지금 등급 → 다음 등급, c 교육비, p 성공 확률. 실패하면 교육비만 나감 */
 const TRAIN={D:{to:'C',c:100000,p:.5},C:{to:'B',c:300000,p:.4},B:{to:'A',c:1000000,p:.2},A:{to:'S',c:3000000,p:.1}};
 const lowIdx=()=>{for(const g of 'DCBA'){const i=S.ws.indexOf(g);if(i>=0)return i;}return -1;};
-function trainDo(i){const g=S.ws[i],t=TRAIN[g],ok=Math.random()<t.p;if(ok)S.ws[i]=t.to;S.trainN=(S.trainN||0)+1;return [ok,g,t.to];}
+function trainDo(i){const g=S.ws[i],t=TRAIN[g],ok=Math.random()<t.p;if(ok)S.ws[i]=t.to;else S.trainF=(S.trainF||0)+1;S.trainN=(S.trainN||0)+1;return [ok,g,t.to];}
 function rollGrade(){let r=Math.random();for(const g of GORD){if(r<GRADE[g].p)return g;r-=GRADE[g].p;}return 'D';}
 const CR_MAX=8;
 const CO_MAX=10, MGR_WAGE0=5000, MGR_COST=500000, FAIL0=.2;
@@ -355,7 +368,7 @@ const COST={
 /* ===== 상태 ===== */
 function fresh(){return {v:2,total:0,inv:{},w:0,fw:0,fa:{},ws:[],wimg:[],wfat:[],wrest:[],wforce:[],wburn:[],wshift:[],wcarOwn:[],wloy:[],gift:{},wcarDur:[],wcarDead:[],cdur:{},shift3:1,shiftCur:0,shiftT:0,ms:[],sw:0,co:1,mgr:{on:0,dir:'all',log:[],t:0,keep:0,fix:1,gift:1,ct:0},got:{},hist:[],gear:0,pick:0,cap:0,payT:0,strike:0,wages:0,autoU:0,auto:{},lock:{},fever:0,fevers:0,ev:{k:'',t:0},evN:{cop:0,mob:0},
  fur:{lv:0,on:{iron:1,sulfur:1,copper:1,gold:1,dia:1,sapph:1,aqua:1},b:0},rares:0,cr:{u:0,lv:0,on:{},p:{},made:{},slots:[]},
- bm:1,cars:[],car:-1,wcar:{want:0,t:0},carBad:0,tab:'work',last:Date.now(),seen:0,money:START_MONEY};}
+ bm:1,ach:{},cars:[],car:-1,wcar:{want:0,t:0},carBad:0,tab:'work',last:Date.now(),seen:0,money:START_MONEY};}
 let S=fresh();
 function load(){try{const t=localStorage.getItem(SAVEKEY);if(t)merge(JSON.parse(t));}catch(e){}}
 function merge(o){const f=fresh();(function mg(a,b){for(const k in b){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object')mg(a[k],b[k]);else a[k]=b[k];}})(f,o);S=f;if(o&&o.cr&&o.cr.made)S.cr.made=o.cr.made;if(S.cr.u&&!S.cr.slots.length){const on=Object.keys(RECIPE).filter(k=>S.cr.on&&S.cr.on[k]);S.cr.slots=(on.length?on:['ecu']).map(k=>({k,p:0}));}if(S.w>0&&!S.ws.length)S.ws=Array(S.w).fill('D');S.w=0;wSync();if(!S.shift3){S.shift3=1;distributeShifts();}if(S.mgr.on&&!S.ms.length)S.ms=[S.mgr.dir||'all'];S.mgr.on=0;}
@@ -467,7 +480,7 @@ let newRare=[];
 function addItem(it,n){got(it,n);S.inv[it]=Math.min(cap(),have(it)+n);}
 const AID_WAIT=15,AID_CD=600,AID_X=4;let aidN=0;
 /* 지원금: 월급을 못 내 15초 넘게 멈추면 월급 4번치 지급, 10분에 한 번 */
-function aidChk(dt){if(S.aidCd>0)S.aidCd=Math.max(0,S.aidCd-dt);if(!S.strike){S.aidW=0;return;}S.aidW=(S.aidW||0)+dt;if(S.aidW<AID_WAIT||S.aidCd>0)return;const c=wageAll();if(S.money>=c)return;const v=Math.ceil(c*AID_X/10000)*10000;S.money+=v;S.aidW=0;S.aidCd=AID_CD;aidN+=v;payWage();}
+function aidChk(dt){if(S.aidCd>0)S.aidCd=Math.max(0,S.aidCd-dt);if(!S.strike){S.aidW=0;return;}S.aidW=(S.aidW||0)+dt;if(S.aidW<AID_WAIT||S.aidCd>0)return;const c=wageAll();if(S.money>=c)return;const v=Math.ceil(c*AID_X/10000)*10000;S.money+=v;S.aidW=0;S.aidCd=AID_CD;aidN+=v;S.aidC=(S.aidC||0)+1;payWage();}
 /* 관리인 월급: 회사 레벨 × 5,000원 (1레벨 5,000 ~ 10레벨 50,000) */
 function mgrWage(){return MGR_WAGE0*(S.co||1);}
 function payWage(){const c=wageAll();if(S.money>=c){S.money-=c;S.wages+=c;S.strike=0;S.payT=0;return true;}S.strike=1;return false;}
@@ -476,11 +489,12 @@ function step(dt){
   if(S.strike)payWage();
   aidChk(dt);
   if(nM()&&!S.strike){S.mgr.t=(S.mgr.t||0)+dt;if(S.mgr.t>=1){S.mgr.t=0;for(let n=0;n<nM()&&mgrBuy();n++);S.mgr.ct=(S.mgr.ct||0)+1;if(S.mgr.ct>=10){S.mgr.ct=0;mgrChores();}}}
-  if(!S.strike){if(S.shift3){S.shiftT=(S.shiftT||0)+dt;if(S.shiftT>=SHIFT_LEN){S.shiftT-=SHIFT_LEN;S.shiftCur=((S.shiftCur||0)+1)%3;shiftRot=1;}}let ap=0;for(let i=0;i<S.ws.length;i++){const off=S.wforce[i]||(S.shift3&&(S.wshift[i]||0)!==S.shiftCur);if(!off&&!S.wrest[i]){S.wfat[i]=(S.wfat[i]||0)+FATIG_UP*dt;if(S.wfat[i]>=100){S.wfat[i]=100;S.wrest[i]=1;S.wburn[i]=(S.wburn[i]||0)+1;}else ap+=GRADE[S.ws[i]].x*loyX(i);}else{S.wfat[i]=(S.wfat[i]||0)-FATIG_DN*dt;if(S.wfat[i]<=0){S.wfat[i]=0;S.wrest[i]=0;}if((S.wfat[i]||0)<30)S.wburn[i]=Math.max(0,(S.wburn[i]||0)-BURN_DECAY*dt);}}for(let i=S.ws.length-1;i>=0;i--)if((S.wburn[i]||0)>=BURN_MAX){S.wburn[i]=0;S.wfat[i]=100;S.wrest[i]=1;S.wloy[i]=Math.max(0,(S.wloy[i]??LOY_START)-32);burnQuit=1;}
+  if(!S.strike){if(S.shift3){S.shiftT=(S.shiftT||0)+dt;if(S.shiftT>=SHIFT_LEN){S.shiftT-=SHIFT_LEN;S.shiftCur=((S.shiftCur||0)+1)%3;shiftRot=1;}}let ap=0;for(let i=0;i<S.ws.length;i++){const off=S.wforce[i]||(S.shift3&&(S.wshift[i]||0)!==S.shiftCur);if(!off&&!S.wrest[i]){S.wfat[i]=(S.wfat[i]||0)+FATIG_UP*dt;if(S.wfat[i]>=100){S.wfat[i]=100;S.wrest[i]=1;S.wburn[i]=(S.wburn[i]||0)+1;S.burnN=(S.burnN||0)+1;}else ap+=GRADE[S.ws[i]].x*loyX(i);}else{S.wfat[i]=(S.wfat[i]||0)-FATIG_DN*dt;if(S.wfat[i]<=0){S.wfat[i]=0;S.wrest[i]=0;}if((S.wfat[i]||0)<30)S.wburn[i]=Math.max(0,(S.wburn[i]||0)-BURN_DECAY*dt);}}for(let i=S.ws.length-1;i>=0;i--)if((S.wburn[i]||0)>=BURN_MAX){S.wburn[i]=0;S.wfat[i]=100;S.wrest[i]=1;S.wloy[i]=Math.max(0,(S.wloy[i]??LOY_START)-32);burnQuit=1;}
    const r=ap*(1+gearEff())/WORK_T*dt*(1-failP());for(const [it,p] of DROPS)addItem(it,r*p*(it==='coal'?COAL_AVG:1));
    if(S.sw)sellBud(S.sw*SELL_R*dt);
    S.payT+=dt;if(S.payT>=PAY_T)payWage();}
  }
+ S.playT=(S.playT||0)+dt;if(S.bm)S.bossT=(S.bossT||0)+dt;
  if(S.bm){const r=bossX()*(1+gearEff())/WORK_T*dt*(1-failP());for(const [it,p] of DROPS)addItem(it,r*p*(it==='coal'?COAL_AVG:1));}
  sellBud(BOSS_SELL*dt);
  {S.fur.b=(S.fur.b||0)+furRate()*dt;let idle=true;
@@ -505,12 +519,14 @@ function run(sec){if(sec<=0)return;const n=Math.min(1000,Math.max(1,Math.ceil(se
 /* ===== 화면 ===== */
 const mineW=()=>{const W=[];if(S.strike)return W;for(let i=0;i<nW();i++){if(S.wforce[i]||S.wrest[i]||(S.shift3&&(S.wshift[i]??0)!==S.shiftCur))continue;W.push(i);}
  return W.sort((a,b)=>((S.wcarOwn[b]>=0)-(S.wcarOwn[a]>=0))||GORD.indexOf(S.ws[a])-GORD.indexOf(S.ws[b]));};
-const mineSig=()=>{const W=mineW();return 'b'+(S.bm?(carOn()?S.car:'y'):'n')+':'+W.slice(0,4).map(i=>S.ws[i]+(S.wcarOwn[i]??-1)+((S.wcarDur[i]??100)>0?'':'x')).join(',')+'|'+W.length;};
+const restW=()=>S.ws.map((g,i)=>i).filter(i=>S.strike||S.wforce[i]||S.wrest[i]||(S.shift3&&(S.wshift[i]??0)!==S.shiftCur));
+const mineSig=()=>{const W=mineW();return restW().slice(0,5).join('.')+'/b'+(S.bm?(carOn()?S.car:'y'):'n')+':'+W.slice(0,4).map(i=>S.ws[i]+(S.wcarOwn[i]??-1)+((S.wcarDur[i]??100)>0?'':'x')).join(',')+'|'+W.length;};
 function mineScene(){const W=mineW(),B=S.bm?1:0,sh=W.slice(0,4-B),n=sh.length+B,sc=n<=2?3:2;let h='';
- if(B){const c=carOn(),ic=c?rIc(c):'',x=Math.round(.5*100/n);h+=`<div class="rider s${sc}${ic?' oncar':''}" style="left:${x}%;--gc:#f2c14e"><i class="mn"></i>${ic?`<i class="mcar" style="background-image:url(${ic})"></i>`:''}<b class="rg">👑 사장${c?' · '+c[0]:''}</b></div>`;}
+ if(B){const c=carOn(),ic=c?rIc(c):'',x=Math.round(.5*100/n);h+=`<div class="rider s${sc}${ic?' oncar':''}" data-i="b" style="left:${x}%;--gc:#f2c14e"><i class="mn"></i>${ic?`<i class="mcar" style="background-image:url(${ic})"></i>`:''}<b class="rg">👑 사장${c?' · '+c[0]:''}</b></div>`;}
  sh.forEach((i,k)=>{k+=B;const x=Math.round((k+.5)*100/n),ck=S.wcarOwn[i],c=ck>=0?CARS[ck]:null,ic=c?rIc(c):'';
-  h+=`<div class="rider s${sc}${ic?' oncar':''}" style="left:${x}%;--gc:${GRADE[S.ws[i]].c};animation-delay:-${(k*.17).toFixed(2)}s"><i class="mn" style="animation-delay:-${(k*.16).toFixed(2)}s"></i>${ic?`<i class="mcar${(S.wcarDur[i]??100)>0?'':' dead'}" style="background-image:url(${ic})"></i>`:''}<b class="rg">${S.ws[i]}${c?' · '+c[0]:''}</b></div>`;});
+  h+=`<div class="rider s${sc}${ic?' oncar':''}" data-i="${i}" style="left:${x}%;--gc:${GRADE[S.ws[i]].c};animation-delay:-${(k*.17).toFixed(2)}s"><i class="mn" style="animation-delay:-${(k*.16).toFixed(2)}s"></i>${ic?`<i class="mcar${(S.wcarDur[i]??100)>0?'':' dead'}" style="background-image:url(${ic})"></i>`:''}<b class="rg">${S.ws[i]}${c?' · '+c[0]:''}</b></div>`;});
  const cars=W.filter(i=>S.wcarOwn[i]>=0).length;
+ {const R0=restW();if(R0.length)h+=`<div class="rest" title="휴게실">${R0.slice(0,4).map((i,k)=>`<span style="--gc:${GRADE[S.ws[i]].c}"><img src="${wsrc(i)}" alt=""><i style="animation-delay:-${(k*.7).toFixed(1)}s">💤</i></span>`).join('')}${R0.length>4?`<em>+${R0.length-4}</em>`:''}<b>☕ 휴게실</b></div>`;}
  return `<div id="mine" aria-hidden="true" data-sig="${mineSig()}"><div class="cave"></div>${h}<div class="cap">${n?`광부 ${W.length+B}명이 캐는 중${cars?` · 🚗 ${cars}명은 자기 차 타고!`:'…'}${W.length+B>4?' (앞 4명만 보여요)':''}`:S.strike?'월급을 못 받아 파업 중… ✊':'지금은 다들 쉬는 중… 😴'}</div>${n?'<span class="spk">✨</span><span class="spk b">⛏️</span>':''}</div>`;}
 const costB=(label,cost,a,x,cls)=>`<button class="btn ${cls||''}" data-a="${a}" data-x="${x??''}" data-c="${cost}">${label}<small>${W(cost)}</small></button>`;
 const VIEW={
@@ -563,7 +579,10 @@ const VIEW={
   <div class="sub" style="margin-top:8px">가진 돈 그래프 <span data-v="histSpan"></span></div><div id="chart"></div></div>`;},
  bag(){const cell=k=>{const g=S.got[k]>0,r=ITEM[k].rare;return `<button class="slot ${g?'':'none'} ${r?'rare':''}" data-a="info" data-x="${k}">${ic(k)}<span class="nm">${g||!r?ITEM[k].n:'???'}</span><span class="ct" data-v="have0:${k}"></span></button>`;};
   const all=ORES.concat(Object.values(PROD),CRAFTS,RARES),n=all.filter(k=>S.got[k]>0).length;
-  return `<div class="card"><h3>🎒 수집함 <span class="tag g">품목 ${n} / ${all.length}</span> <span class="tag g">차 ${S.cars.length} / ${CARS.length}</span></h3></div>
+  const an=ACH.filter(a=>S.ach&&S.ach[a.id]).length;
+  return `<div class="card"><h3>🎒 수집함 <span class="tag g">품목 ${n} / ${all.length}</span> <span class="tag g">차 ${S.cars.length} / ${CARS.length}</span> <span class="tag g">업적 ${an} / ${ACH.length}</span></h3></div>
+  <div class="sec">🏅 업적</div><div class="achg">${ACH.filter(a=>!a.f).map(achCell).join('')}</div>
+  <div class="sec">🎖️ 실패 훈장 <span class="sub">망해도 남는 게 있다</span></div><div class="achg">${ACH.filter(a=>a.f).map(achCell).join('')}</div>
   <div class="sec">광석</div><div class="grid">${ORES.map(cell).join('')}</div>
   <div class="sec">가공 제품</div><div class="grid">${Object.values(PROD).map(cell).join('')}</div>
   <div class="sec">제작품</div><div class="grid">${CRAFTS.map(cell).join('')}</div>
@@ -775,7 +794,7 @@ const noCar=()=>S.ws.map((g,i)=>i).filter(i=>!(S.wcarOwn[i]>=0)),carDesireCost=(
 function wFix(i){const c=wFixCost(i);if(c<=0)return false;if(!pay(c))return false;S.wcarDur[i]=100;S.wcarDead[i]=0;addLoy(i,LOY_FIX);save();R();toast('🔧 '+S.ws[i]+'등급 알바 차 수리 완료 (충성도 +'+LOY_FIX+')');return true;}
 const brokeW=()=>S.ws.map((g,i)=>i).filter(i=>S.wcarOwn[i]>=0&&(S.wcarDur[i]??100)<50);
 function faceGacha(i){i=+i;if(!S.ws[i])return;if(!pay(FACE_COST))return;const cur=wsrc(i);let k=S.wimg[i],n=0;
- do{k=wRnd();n++;}while((k===S.wimg[i]||wface(k)===cur)&&n<64);S.wimg[i]=k;save();R();toast('💉 성형 완료! 새 얼굴이 나왔어요');workerMenu(i);}
+ do{k=wRnd();n++;}while((k===S.wimg[i]||wface(k)===cur)&&n<64);S.wimg[i]=k;S.faceN=(S.faceN||0)+1;save();R();toast('💉 성형 완료! 새 얼굴이 나왔어요');workerMenu(i);}
 function giftPick(i){i=+i;const g=S.ws[i];if(!g)return;const have=Object.keys(SHOP).filter(k=>(S.gift[k]||0)>0);
  modal(`<h2>🎁 <span style="color:${GRADE[g].c}">${g}등급</span> 알바에게 선물</h2><p class="sub">지금 충성도 <b>${Math.floor(S.wloy[i]??LOY_START)}</b>/100. 선물은 한 번 주면 사라지는 소모품이에요.</p>${have.length?`<div class="wcl">${have.map(k=>{const it=SHOP[k];return `<div class="wcrow">${sIc(k)}<div class="grow"><b>${it.n}</b> <span class="sub">× ${S.gift[k]}</span><br><span class="sub">충성도 +${it.l}</span></div><button class="btn pri" data-a="giftGive" data-x="${i}:${k}">주기</button></div>`;}).join('')}</div>`:'<p>가진 선물이 없어요. <b>상점</b> 탭에서 먼저 사 오세요.</p>'}`,[...(have.length?[]:[['🛒 상점 가기',()=>{S.tab='shop';R();}]]),['닫기']]);}
 function wcarPick(i){i=+i;const g=S.ws[i];if(!g)return;const top=Math.max(0,...S.cars.map(x=>CARS[x][1]));
@@ -786,7 +805,7 @@ let scrapN=[];let wcarQuit=0,burnQuit=0,shiftRot=0,loyQuit=0;
 function giveWCars(){const top=Math.max(0,...S.cars.map(x=>CARS[x][1])),pool=CARS.map((c,i)=>i).filter(i=>CARS[i][1]<=top);if(!pool.length)return;
  for(const i of noCar()){S.wcarOwn[i]=pool[Math.floor(Math.random()*pool.length)];S.wcarDur[i]=100;S.wcarDead[i]=0;addLoy(i,LOY_CAR);}}
 function carDesireTrig(){if(noCar().length){S.wcar.want=1;S.wcar.t=CARDSR_T;}}
-function carBad(x){if(Math.random()>=CAR_BAD_P)return;const pr=CARS[x][1],tire=Math.random()<.6;let loss=Math.round(pr*(tire?.08:.15));loss=Math.min(loss,Math.floor(S.money));if(loss<1)return;S.money-=loss;S.carBad=(S.carBad||0)+loss;const im=IMG[tire?'_마피아_캐릭터':'_경찰_캐릭터'];
+function carBad(x){if(Math.random()>=CAR_BAD_P)return;const pr=CARS[x][1],tire=Math.random()<.6;let loss=Math.round(pr*(tire?.08:.15));loss=Math.min(loss,Math.floor(S.money));if(loss<1)return;S.money-=loss;S.carBad=(S.carBad||0)+loss;S.carBadN=(S.carBadN||0)+1;const im=IMG[tire?'_마피아_캐릭터':'_경찰_캐릭터'];
  modal(`<h2>${tire?'🛞 타이어 탈취!':'🚓 차량 압류!'}</h2><div class="hiw">${im?`<img src="${im}" alt="">`:''}</div><div class="say">“${tire?'크큭, 이 타이어 좋은 거네. 좀 챙겨 가지.':'불법 주정차 차량입니다. 견인합니다. 벌금 내고 찾아가세요.'}”</div><p class="sub" style="margin:10px 0 0">${CARS[x][0]}의 ${tire?'타이어를 도둑맞아 교체비':'견인 벌금'} <b style="color:#ff6b6b">${W(loss)}</b>을 썼습니다.</p>`,[['어쩔 수 없지…',null,'pri']],5);}
 function doBuyCar(x){x=+x;if(S.cars.includes(x)){toast('이미 가지고 있는 차입니다');return;}if(!carUnlocked(x)){toast('🔒 앞 단계 차('+CARS[x-1][0]+')를 먼저 사야 합니다');return;}if(!pay(CARS[x][1]))return;S.cars.push(x);S.car=x;carDesireTrig();toast(CARS[x][0]+' 구매! 모든 수입 +'+carPct(x)+'%');save();R();carBad(x);}
 
@@ -848,19 +867,66 @@ function imgEditor(){
 window.pickImg=function(inp,kind,idx){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),Z=128;c.width=Z;c.height=Z;const x=c.getContext('2d'),sd=Math.min(im.width,im.height),sx=(im.width-sd)/2,sy=(im.height-sd)/2;x.drawImage(im,sx,sy,sd,sd,0,0,Z,Z);let url;try{url=c.toDataURL('image/webp',0.85);}catch(_){url=c.toDataURL('image/jpeg',0.85);}if(kind==='boss'){CIMG.boss=url;applyBoss();}else{CIMG.w[idx]=url;}saveImgs();R();imgEditor();};im.onerror=()=>toast('이미지를 읽지 못했습니다');im.src=e.target.result;};r.readAsDataURL(f);};
 window.clrImg=function(ev,kind,idx){ev.preventDefault();ev.stopPropagation();if(kind==='boss'){CIMG.boss=null;applyBoss();}else{CIMG.w[idx]=null;}saveImgs();R();imgEditor();};
 /* ===== 튜토리얼: 처음 실행하면 자동, 언제든 건너뛰기, ≡ 메뉴에서 다시 ===== */
+/* ===== 1.1.0 살아 있는 광산: 수다·휴게실·출퇴근 / 업적·실패 훈장 ===== */
+const TALK={
+ base:['오늘 석탄 냄새 유난히 진하네요','곡괭이 손잡이에 테이프 감았더니 덜 아파요','저 어제 꿈에서도 곡괭이질 했어요','이 굴 끝에 아쿠아마린 산다는 소문 들었어요?','사장님 오늘 기분 좋아 보이시던데요','점심 뭐 먹지… 또 햄버거인가','철 나왔다! …아, 또 철이네','석탄은 왜 이렇게 많이 나와요?','헬멧 불빛이 깜빡거려요. 건전지 사야겠다','여기 공기 좋다고 한 사람 누구야','고르도 광산 최고! (사장님 들으라고 하는 말)','손에 굳은살이 훈장이죠','저 이번 달 월급 받으면 신발 살 거예요','유황 냄새 맡으면 계란 생각나요','금이다! …아니 그냥 반짝이는 돌이네','오늘은 한 번도 안 쉬고 캘 거예요. 아마도','곡괭이 소리 리듬 타면 일이 빨라요','이 굴 벽에 누가 낙서했어요? "여기 다녀감"','광산에서 휘파람 불면 안 된대요. 왜인지는 몰라요','저 사실 고소공포증 있어서 땅속이 편해요','어제 판매 로봇이 저한테 인사했어요. 삐빅','화로 근처는 따뜻해서 좋아요','다이아는 영원하대요. 제 월급은 아니고요','어머니가 광산 일 위험하냐고 물어보셨어요','이 돌은 왠지 사연이 있어 보여요','오늘 캔 거 다 합치면 차 한 대 값 될까요?','나중에 제 이름 붙은 갱도 생기면 좋겠다','곡괭이 이름 지었어요. "철수"예요','이 일 끝나면 바다 보러 갈 거예요','저기 그림자… 아 제 그림자구나','사파이어 캐면 반지 만들어서 고백할 거예요','가공 로봇은 쉬지도 않네. 부럽다','어제 동굴에서 박쥐랑 눈 마주쳤어요','구리 색깔 예쁘지 않아요? 노을 같아','오늘은 운이 좋을 것 같은 느낌!','광산 라디오 틀어 주시면 안 돼요?','돌 깨는 소리 들으면 스트레스가 풀려요','도시 사람들은 이 맛을 몰라요','캐도 캐도 끝이 없네. 좋은 건가?','사장님 차 봤어요? 반짝반짝하던데','먼지 때문에 재채기가… 에취!','장갑 구멍 났어요. 새 거 주세요…','이 굴은 몇 년 됐을까요?','저 오늘 철 100개 캐면 칭찬해 주세요','광부 체조 시간입니다! 하나 둘!','일 끝나고 국밥 한 그릇 어때요?','돌 하나하나에 정성을 담아서…','오늘 운세에 "땅을 파면 복이 온다"래요','저 어릴 때 꿈이 광부였어요. 진짜로요','돌멩이 하나 주워서 이름 붙여 키우는 중이에요','이 굴은 메아리가 좋아요. 야호!','석탄 묻은 얼굴로 셀카 찍었어요','어제 판 철 주괴가 어디로 갔을까요','가끔 돌이 말을 거는 것 같아요','헬멧 안에 사탕 숨겨 놨어요','월요일의 곡괭이는 두 배로 무거워요','금요일엔 곡괭이도 신나 보여요','광산 밥은 왜 이렇게 맛있을까','오늘 캔 다이아 이름은 "희망"이에요','지하에서는 시간 가는 줄 몰라요','갱도 지도 그리는 게 취미예요','제 곡괭이질 소리 듣고 동료가 깼대요','어제 퇴근길에 노을이 구리 색이었어요','언젠가 제 차로 사장님 모시고 드라이브할게요','굴 천장에서 물 떨어지면 행운이래요','저 이 일 시작하고 팔씨름 안 져요','어제 꿈에 아쿠아마린이 저를 불렀어요','유황 캐는 날은 향수 뿌리고 퇴근해요','진짜 광부는 석탄도 사랑해야 해요','돌 결을 읽으면 어디를 쳐야 할지 보여요','오늘은 석탄을 3번 연속 캤어요. 기록이에요','이 굴에 고양이 한 마리 살면 좋겠다','곡괭이 끝 갈았더니 반짝반짝해요','판매 로봇한테 커피 줬더니 삐빅 했어요','저 회사 단톡방 공지 다 읽어요','사장님 몰래 휴게실 소파 자리 맡아 놨어요','화로 불빛 보면 마음이 편해져요'],
+ tired:['허리야… 아이고 허리야','어깨에 곰 한 마리 올라탄 것 같아요','저 지금 눈 뜨고 자는 중이에요','파스 남은 거 있어요?','잠깐 벽에 기대도 되죠…?','눈꺼풀이 곡괭이보다 무거워요','5분만… 5분만 서서 졸게요','커피… 커피 주세요…','오늘따라 굴이 길어 보이네요','팔이 제 팔이 아닌 것 같아요','이러다 돌이랑 같이 누울 것 같아요','교대 시간 언제예요…?'],
+ lowloy:['요즘 회사가 저한테 관심이 없는 것 같아요','생일인데 아무도 몰라요','휴게실 커피도 떨어졌대요','저 그냥 돌이랑 대화할래요','선물 같은 건 바라지도 않아요… 진짜로요…','다른 광산은 햄버거 준다던데','이 일 계속해야 하나 고민돼요','사장님은 제 이름이나 아실까?','오늘은 대충 캐야지…'],
+ highloy:['고르도 광산에 뼈를 묻겠습니다!','오늘 선물 받은 거 자랑했어요','이 회사 단체 티셔츠 맞춰요!','사장님 얼굴 그려서 휴게실에 붙였어요','사장님을 위해서라면 아쿠아마린도 캐 옵니다!','이 회사 들어온 게 제 인생 최고의 선택이에요','오늘도 열일! 사장님 화이팅!','선물 감사해요! 힘이 솟아요!'],
+ car:['제 차 타고 출근하니까 기분이 달라요','차 안에서 곡괭이질하는 건 비밀이에요','기름값은 회사에서 내 주는 거죠…?','제 차 세차 좀 하고 싶다','이 차 사 주신 사장님 은혜 잊지 않을게요'],
+ nocar:['저도 차 갖고 싶어요…','출근길 버스가 너무 붐벼요','언젠가 저도 오픈카 타고 캘 거예요','사장님 차 한 번만 타 봐도 돼요?'],
+ fever:['지금이다! 다 팔아!','피버타임! 손이 안 보이게 캐!','값 올랐대요! 서둘러요!','지금 캐는 건 금값이다!'],
+ cop:['쉿, 경찰이에요. 쇠지렛대 숨겨!','저는 그냥 돌만 캤습니다…','총알이요? 무슨 총알이요?','단속 끝나면 알려 주세요'],
+ mob:['뒷골목이 들썩인대요. 제작품 값 두 배!','저 양복 아저씨들 무서워요…','드릴 드라이버 지금 팔면 대박이래요'],
+ night:['밤 근무는 별이 안 보여서 아쉬워요','밤에 듣는 곡괭이 소리는 자장가 같아요','야간 수당 나오는 거 맞죠?','야식 시켜도 돼요?','새벽 3시의 광산은 조용해서 좋아요','부엉이도 자는 시간에 우리는 캔다'],
+ S:['S등급의 손놀림, 잘 보세요','다이아가 저를 알아봐요','저한테 걸리면 돌도 금이 돼요'],
+ D:['저도 언젠가 S등급 될 거예요!','교육 한 번만 보내 주세요…','아직 곡괭이 잡는 법 연습 중이에요'],
+ strike:['월급 주세요!','돈 없으면 곡괭이도 없다!','파업 중입니다 ✊'],
+ boss:['자자, 오늘도 힘내 봅시다!','우리 회사 업적 몇 개 땄더라','다음 차는 뭘 사지…','교육비가 아깝긴 한데 다 투자야','관리인 친구가 알뜰하게 사더라고','오늘 장부 보니까 흐뭇하네','사장이 솔선수범해야지','이 곡괭이로 회사를 키웠지','내가 왕년에 아쿠아마린을 열 개나…','다들 햄버거 하나씩 쏜다!','월급날까지 조금만 버텨!','회사 레벨 올리면 나도 더 잘 캔다고']};
+/* 둘이 주고받는 대화: [A, B] */
+const DIA=[['너 어제 아쿠아마린 봤다며?','아니, 그냥 파란 페트병이었어'],['우리 사장님 진짜 직접 캐시네','그러니까 우리도 쉴 수가 없잖아'],['점심 뭐 먹을래?','석탄… 아니 순대국'],['교육 또 떨어졌어…','괜찮아, 난 세 번 떨어졌어'],['경찰 오면 뭐라고 해?','"저희는 정직한 광산입니다"'],['너 차 생겼다며!','응, 근데 할부야'],['이 굴 끝에 뭐가 있을까?','더 많은 석탄'],['피곤해 죽겠다','휴게실 자리 비었더라. 가 봐'],['판매 로봇 이름 지어 줄까?','삐빅이 어때'],['사파이어 캐면 뭐 할 거야?','반지 만들어서 고백할 거야'],['너 월급 얼마 받아?','그런 건 묻는 거 아니야'],['고르도가 무슨 뜻이야?','아무도 몰라. 그게 매력이지'],['오늘 몇 개 캤어?','세는 거 포기했어'],['나 성형하고 왔어','…누구세요?'],['사장님 차 몇 대야?','세다가 헷갈렸어'],['밤 근무 어때?','조용해서 좋은데 무서워'],['번아웃 왔었다며','응, 푹 자고 나니 살 것 같아'],['드릴 드라이버 그거 어디다 써?','묻지 마. 그냥 팔아'],['총알 12개씩 나오는 거 신기하지 않아?','난 그게 제일 무서워'],['다음 월급날 언제야?','곧. 아마도. 제발'],['너 S등급이라며?','등급은 숫자일 뿐이야'],['곡괭이 강화했대','어쩐지 손이 가볍더라'],['관리인님이 또 뭐 샀어','본전 뽑는 거래. 믿어 보자'],['햄버거 또 나눠 준대!','이 회사 오래 다녀야겠다'],['휴게실에서 누가 코 골았어','…나 아니야'],['오늘 단속 나온대','쇠지렛대는 공구라고 우기자'],['차 내구도 다 됐어','관리인님한테 수리 맡겼지?'],['우리 업적 몇 개야?','실패 훈장이 더 많아'],['교대 시간이다!','5분만 더… 아니 칼퇴!'],['광산 노래 하나 할까?','곡괭이 박자에 맞춰서!'],['나 어제 철 300개 캤어','거짓말. 280개였어']];
+let tChat=0,chatLast='';
+function chatPick(a){const o=a==='b'?null:+a,g=o==null?'':S.ws[o];if(!S.ws[o]&&o!=null)return '';
+ if(o==null)return rp(TALK.boss);
+ const pool=[...TALK.base];const add=(k,n)=>{for(let j=0;j<n;j++)pool.push(...TALK[k]);};
+ if((S.wfat[o]||0)>60)add('tired',3);const l=S.wloy[o]??LOY_START;if(l<LOY_LOW)add('lowloy',3);else if(l>=LOY_HIGH)add('highloy',2);
+ if(S.wcarOwn[o]>=0)add('car',2);else if(S.cars.length)add('nocar',1);if(S.fever>0)add('fever',6);if(S.ev.t>0)add(S.ev.k,6);if(S.shiftCur===2)add('night',1);if(g==='S'||g==='A')add('S',1);if(g==='D')add('D',1);
+ let t;for(let k=0;k<4;k++){t=rp(pool);if(t!==chatLast)break;}chatLast=t;return t;}
+const rp=a=>a[Math.floor(Math.random()*a.length)];
+function bubble(el,t,delay){const m=$('mine');if(!m||!el||!t)return;setTimeout(()=>{if(!el.isConnected)return;const b=document.createElement('div');b.className='bub';b.textContent=t;m.appendChild(b);{const W0=m.clientWidth,w=b.offsetWidth,x=parseFloat(el.style.left)/100*W0;b.style.left=Math.max(w/2+4,Math.min(W0-w/2-4,x))+'px';}setTimeout(()=>b.remove(),5600);},delay||0);}
+function chatTick(){const m=$('mine');if(!m||S.tab!=='work')return;const rs=[...m.querySelectorAll('.rider')];if(!rs.length)return;
+ if(S.strike){bubble(rp(rs),rp(TALK.strike));return;}
+ const ws=rs.filter(r=>r.dataset.i!=='b');
+ if(ws.length>=2&&Math.random()<.3){const a=rp(ws);let b=rp(rs.filter(r=>r!==a));const d=rp(DIA);bubble(a,d[0]);bubble(b,d[1],2600);return;}
+ const r=rp(rs);bubble(r,chatPick(r.dataset.i));}
+function commuteFx(){const m=$('mine');if(!m||S.tab!=='work'||document.hidden)return;const own=S.ws.map((g,i)=>i).filter(i=>S.wcarOwn[i]>=0&&(S.wshift[i]??0)===S.shiftCur);
+ const c=own.length?CARS[S.wcarOwn[rp(own)]]:(car()||CARS[0]),ic=c?rIc(c):'';const d=document.createElement('div');d.className='cmt';d.innerHTML=`<b>🔄 ${S.shiftCur+1}조 출근 · ${((S.shiftCur+2)%3)+1}조 퇴근</b><i style="background-image:url(${ic})"></i>`;m.appendChild(d);setTimeout(()=>d.remove(),5100);}
+/* 업적: c 달성 조건, f 실패 훈장 */
+const ACH=[
+ {id:'m1',e:'💵',n:'첫 100만',d:'번 돈 100만원',c:()=>S.total>=1e6},{id:'m2',e:'💰',n:'천만 광부',d:'번 돈 1천만원',c:()=>S.total>=1e7},{id:'m3',e:'🏦',n:'억대 광산',d:'번 돈 1억원',c:()=>S.total>=1e8},{id:'m4',e:'👑',n:'광산 재벌',d:'번 돈 10억원',c:()=>S.total>=1e9},{id:'m5',e:'🌌',n:'전설의 고르도',d:'번 돈 100억원',c:()=>S.total>=1e10},
+ {id:'c3',e:'🏢',n:'번듯한 회사',d:'회사 3레벨',c:()=>S.co>=3},{id:'c5',e:'🏬',n:'중견 기업',d:'회사 5레벨',c:()=>S.co>=5},{id:'c10',e:'🏙️',n:'고르도 그룹',d:'회사 10레벨',c:()=>S.co>=10},
+ {id:'w1',e:'🤝',n:'첫 식구',d:'채굴 알바 첫 고용',c:()=>S.ws.length>=1},{id:'w16',e:'👷',n:'풀 파티',d:'채굴 알바 16명',c:()=>S.ws.length>=16},{id:'ws',e:'⭐',n:'S급 인재',d:'S등급 알바 탄생',c:()=>S.ws.includes('S')},{id:'wss',e:'🌟',n:'드림팀',d:'알바 16명 모두 S등급',c:()=>S.ws.length>=16&&S.ws.every(g=>g==='S')},
+ {id:'mg',e:'👔',n:'살림꾼 영입',d:'관리인 첫 고용',c:()=>S.ms.length>=1},{id:'cr1',e:'🛠️',n:'장인의 첫걸음',d:'제작품 첫 생산',c:()=>Object.values(S.cr.made||{}).some(v=>v>0)},{id:'am',e:'🔫',n:'탄약고',d:'총알 1만 발 생산',c:()=>(S.cr.made||{}).ammo>=1e4},
+ {id:'k1',e:'🚗',n:'첫 차',d:'차 첫 구매',c:()=>S.cars.length>=1},{id:'k10',e:'🚙',n:'주차장 확장',d:'차 10대',c:()=>S.cars.length>=10},{id:'k46',e:'🏁',n:'올 컬렉션',d:'차 46대 모두',c:()=>S.cars.length>=CARS.length},
+ {id:'aq',e:'💠',n:'푸른 전설',d:'아쿠아마린 첫 채굴',c:()=>(S.got.aqua||0)>=1},{id:'r1',e:'✨',n:'최상급!',d:'최상급 제품 첫 획득',c:()=>(S.rares||0)>=1},{id:'r10',e:'🌠',n:'행운아',d:'최상급 제품 10개',c:()=>(S.rares||0)>=10},
+ {id:'fv10',e:'🔥',n:'불타는 장사꾼',d:'피버타임 10번',c:()=>S.fevers>=10},{id:'fv50',e:'☄️',n:'피버 중독',d:'피버타임 50번',c:()=>S.fevers>=50},{id:'mob',e:'🕴️',n:'뒷골목 단골',d:'범죄 흥행 10번',c:()=>(S.evN.mob||0)>=10},
+ {id:'bt',e:'⛏️',n:'현장형 사장',d:'사장님 직접 채굴 1시간',c:()=>(S.bossT||0)>=3600},{id:'p1',e:'⏰',n:'성실 출근',d:'켜 둔 시간 1시간',c:()=>(S.playT||0)>=3600},{id:'p10',e:'📅',n:'개근상',d:'켜 둔 시간 10시간',c:()=>(S.playT||0)>=36000},{id:'p50',e:'🗿',n:'광산의 일부',d:'켜 둔 시간 50시간',c:()=>(S.playT||0)>=180000},
+ {id:'tf1',f:1,e:'🥉',n:'쓴맛',d:'알바 교육 실패 1번',c:()=>(S.trainF||0)>=1},{id:'tf10',f:1,e:'🥈',n:'교육비 기부천사',d:'교육 실패 10번',c:()=>(S.trainF||0)>=10},{id:'tf50',f:1,e:'🥇',n:'불굴의 교관',d:'교육 실패 50번',c:()=>(S.trainF||0)>=50},{id:'tf200',f:1,e:'🎖️',n:'실패의 신',d:'교육 실패 200번',c:()=>(S.trainF||0)>=200},
+ {id:'cp5',f:1,e:'🚨',n:'단골 손님',d:'경찰 단속 5번',c:()=>(S.evN.cop||0)>=5},{id:'cp30',f:1,e:'🚔',n:'경찰서 VIP',d:'경찰 단속 30번',c:()=>(S.evN.cop||0)>=30},
+ {id:'cb1',f:1,e:'🛞',n:'첫 견인',d:'차 사고 1번',c:()=>(S.carBadN||0)>=1},{id:'cb10',f:1,e:'🧾',n:'과태료 수집가',d:'차 사고 10번',c:()=>(S.carBadN||0)>=10},
+ {id:'bn1',f:1,e:'🥵',n:'과로 주의',d:'번아웃 1번',c:()=>(S.burnN||0)>=1},{id:'bn10',f:1,e:'⚖️',n:'노동청 단골',d:'번아웃 10번',c:()=>(S.burnN||0)>=10},
+ {id:'ad1',f:1,e:'🎁',n:'조합의 손길',d:'지원금 1번',c:()=>(S.aidC||0)>=1},{id:'ad5',f:1,e:'🙏',n:'구조 요청 장인',d:'지원금 5번',c:()=>(S.aidC||0)>=5},
+ {id:'fc1',f:1,e:'💉',n:'새 얼굴',d:'성형 1번',c:()=>(S.faceN||0)>=1},{id:'fc10',f:1,e:'🪞',n:'성형 중독',d:'성형 10번',c:()=>(S.faceN||0)>=10}];
+const achCell=a=>{const ok=S.ach&&S.ach[a.id];return `<div class="ach ${ok?'':'no'} ${a.f?'f':''}"><span class="me">${a.e}</span><div><b>${a.n}</b><br><small>${a.d}</small></div></div>`;};
+function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c());if(!nw.length){S.achInit=1;return;}for(const a of nw)S.ach[a.id]=Date.now();
+ if(!S.achInit){S.achInit=1;toast('🏅 지금까지 한 일로 업적 '+nw.length+'개를 달성했어요! 수집함에서 확인하세요');return;}
+ toast((nw[0].f?'🎖️ 실패 훈장: ':'🏅 업적 달성: ')+nw[0].e+' '+nw[0].n+(nw.length>1?' 외 '+(nw.length-1)+'개':''));if(S.tab==='bag')R();}
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
- {v:'v1.0.8',l:['🚗 차 수입 보너스가 <b>차값에 따라</b> 달라져요: 3천만 미만 +1% · 1억 미만 +2% · 2억 미만 +3% · 5억 미만 +4% · 5억 이상 +5%. (예전엔 모두 +2%)','🌳 차고 테크트리에 차마다 보너스 %와 지금 합계가 보여요.']},
- {v:'v1.0.7',l:['🐛 채굴 알바가 16명이면 관리인을 못 뽑던 문제를 고쳤어요. 이제 관리인은 알바 인원과 따로 세요 (회사 1~2레벨 1명, 3~5레벨 2명, 6레벨부터 4명).','👔 관리인은 회사 탭의 <b>관리인 고용</b> 버튼으로 직접 뽑아요.']},
- {v:'v1.0.6',l:['🎓 알바 교육 성공 확률 상승: C→B <b>30% → 40%</b>, B→A <b>15% → 20%</b>.']},
- {v:'v1.0.5',l:['👔 <b>관리인이 똑똑해졌어요.</b> 들인 돈을 가장 빨리 되찾는 것부터 사고, 본전 뽑기 힘든 건 돈이 넉넉할 때만 사요.','💰 관리인이 <b>남길 돈</b>을 정할 수 있어요 (회사 탭 관리인 칸).','🔧 차 수리, 🍔 충성도 챙기기를 관리인에게 맡길 수 있어요.','👀 관리인이 <b>다음에 살 것</b>과 본전 시간을 보여 줘요.','📝 새 버전이 나오면 이렇게 패치노트가 떠요. ≡ 메뉴에서 다시 볼 수 있어요.']},
- {v:'v1.0.4',l:['😆 채굴 알바 얼굴 7종 추가 (모두 18종). 새로 뽑거나 💉 성형하기로 만날 수 있어요.','🚨 경찰 단속과 🕴️ 범죄 흥행이 2배 자주 나와요.']},
- {v:'v1.0.3',l:['👑 새로 시작하면 <b>사장님 혼자</b> 시작해요 (하던 저장은 그대로).','⛏️ 사장님 채굴력은 <b>회사 레벨+1배</b> (1레벨 ×2 ~ 10레벨 ×11).','💵 사장님이 1초에 4개씩 직접 팔아요.']},
- {v:'v1.0.2',l:['🔊 배고픔·목마름 알람 <b>음량 조절</b> (🍔·💧 동그라미를 눌러서).']},
- {v:'v1.0.1',l:['🏷️ \'NPC가\' → <b>판매가</b>. 판매가 변경: 철 주괴 3,000 · 정제 유황 1,000 · 세공 다이아몬드 6,000 · 세공 사파이어 15,000 · 세공 아쿠아마린 10만 · 전자제어부품 7만 · 전자탐지기 15만 · 쇠지렛대 6만 · 드릴 드라이버 24만 · 총알 600','⛏️ 사장님이 직접 채굴해요 (월급 0원, 피로·교대 없음). 채굴 알바 칸에서 빠지기/들어가기.']}];
+ {v:'v1.1.0',t:'🎉 대규모 패치',l:['⛏️ <b>살아 있는 광산.</b> 일하는 알바들이 수다를 떨고(말풍선), 쉬는 조는 휴게실에서 꾸벅꾸벅 졸아요. 교대 시간엔 출퇴근 차가 지나가요.','💬 <b>알바 수다 200줄 넘게.</b> 피곤할 때, 충성도, 차, 피버, 단속, 밤 근무, 등급마다 하는 말이 달라요. 둘이 주고받는 대화도 있어요.','🏅 <b>업적·훈장.</b> 수집함 탭에서 확인해요. 잘한 것만이 아니라 교육 실패, 단속, 견인, 번아웃 같은 <b>실패 훈장</b>도 있어요.','📖 수집함에 업적 진행 상황(몇 개 달성)이 보여요.']}];
 function patchShow(from){let L=PATCH;if(from){const i=PATCH.findIndex(p=>p.v===from);if(i>=0)L=PATCH.slice(0,i);}if(!L.length)L=PATCH.slice(0,1);
- modal(`<h2>📝 패치노트</h2>${L.map(p=>`<div class="sec">${p.v}${p.v===APPVER?' <span class="tag g">지금 버전</span>':''}</div><ul class="pnote">${p.l.map(x=>`<li>${x}</li>`).join('')}</ul>`).join('')}`,[['확인',null,'pri']]);}
+ modal(`<h2>📝 패치노트</h2>${L.map(p=>`<div class="sec">${p.v}${p.t?' '+p.t:''}${p.v===APPVER?' <span class="tag g">지금 버전</span>':''}</div><ul class="pnote">${p.l.map(x=>`<li>${x}</li>`).join('')}</ul>`).join('')}`,[['확인',null,'pri']]);}
 function patchChk(isNew){let seen=null;try{seen=localStorage.getItem(VER_KEY);localStorage.setItem(VER_KEY,APPVER);}catch(e){return;}if(isNew||seen===APPVER)return;patchShow(seen);}
 const TUT_KEY='gordo-tycoon-tut';
 const TUT=[
@@ -984,7 +1050,7 @@ S.fever=0;S.ev={k:'',t:0};if(!S.seen)S.seen=1;
 {let a=false;try{a=!localStorage.getItem(TUT_KEY);}catch(e){}if(a){$('mBg').style.display='none';tutStart();}patchChk(a);}
 setFx(FXON);
 aqSeen=Math.floor(S.got.aqua||0);
-let tMgrR=0,tU=0;
+let tAch=0;let tMgrR=0,tU=0;
 let tPrev=Date.now(),tRate=Date.now(),tSave=Date.now(),tRoll=Date.now();
 setInterval(()=>{const now=Date.now(),dt=Math.max(0,Math.min(TICK_MAX,(now-tPrev)/1000));run(dt);tPrev=now;
  if(mgrDid&&now-tMgrR>=3000&&$('mBg').style.display!=='flex'){mgrDid=false;tMgrR=now;R();}
@@ -995,7 +1061,9 @@ setInterval(()=>{const now=Date.now(),dt=Math.max(0,Math.min(TICK_MAX,(now-tPrev
  if(scrapN.length){const t=scrapN.length>1?scrapN.length+'대':scrapN[0];scrapN=[];if(!document.hidden){toast('🚮 고친 적 없는 직원 차('+t+')가 폐차됐습니다');R();}}
  if(loyQuit){loyQuit=0;if(!document.hidden){toast('💔 충성도가 바닥난 알바가 회사를 떠났습니다. 상점에서 선물을 사서 주세요');R();}}
  if(burnQuit){burnQuit=0;if(!document.hidden){toast('🔥 번아웃! 과로한 알바가 쓰러져 푹 쉬는 중입니다 (충성도 −32). 3교대나 휴식으로 막으세요');R();}}
- if(shiftRot){shiftRot=0;if(!document.hidden&&S.tab==='work')R();}
+ if(shiftRot){shiftRot=0;if(!document.hidden&&S.tab==='work'){R();commuteFx();}}
+ if(now-tChat>=8000){tChat=now;if(!document.hidden)chatTick();}
+ if(now-tAch>=3000){tAch=now;achChk();}
  if(now-tRoll>=1000){if(now-tRoll<3000&&!document.hidden){if(S.fever<=0&&Math.random()<FEVER_P)startFever();if(S.ev.t<=0&&S.cr.u&&Math.random()<EV_P)startEvent(Math.random()<.5?'cop':'mob');}tRoll=now;}
  if(now-tRate>=1000){const s=(now-tRate)/1000;rate=rate*.8+acc/s*60*.2;acc=0;tRate=now;}
  if(now-tSave>=10000){S.hist.push(Math.round(S.money));if(S.hist.length>180)S.hist.shift();chart();save();tSave=now;}
