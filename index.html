@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.0.2</title>
+<title>고르도 광산 타이쿤 v1.0.3</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -246,7 +246,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.0.2';
+const APPVER='v1.0.3';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -310,7 +310,8 @@ const CATROWS=[],CARCAT={};(function(){const m={};CARS.forEach((c,i)=>{(m[c[2]]=
 const carPrev=i=>CARCAT[i]?CARCAT[i].prev:-1;
 const SELL_R=16, SW_BASE=50000;
 /* 사장 직접 채굴(1.0.1): 처음부터 채굴 알바 자리에 들어감. 월급 0, 피로·교대·충성도 없음, 파업 중에도 캠. 채굴 ×BOSS_X */
-const BOSS_X=2;
+/* 1.0.3: 사장 혼자 시작(알바·로봇 없음). 사장 채굴력 = 회사 레벨+1 (1레벨 ×2 ~ 10레벨 ×11). 사장은 1초에 BOSS_SELL개 직접 팖 */
+const bossX=()=>1+(S.co||1), BOSS_SELL=4;
 /* 채굴 알바 등급: p 뽑힐 확률, x 채굴량 배수, w 월급 */
 const GRADE={S:{p:.01,x:4,w:30000,c:'#ff5d73'},A:{p:.04,x:2.5,w:16000,c:'#f2c14e'},B:{p:.15,x:1.7,w:10000,c:'#4fd17a'},C:{p:.30,x:1.3,w:7000,c:'#5cb6ff'},D:{p:.50,x:1,w:5000,c:'#9aa3a0'}};
 const GORD='SABCD', SEV=3;
@@ -348,7 +349,7 @@ const COST={
  crafter:3000000,crLv:l=>3000000*Math.pow(2.2,l)};
 
 /* ===== 상태 ===== */
-function fresh(){return {v:2,total:0,inv:{},w:0,fw:0,fa:{},ws:['D'],wimg:[Math.floor(Math.random()*Math.max(1,NW))],wfat:[0],wrest:[0],wforce:[0],wburn:[0],wshift:[0],wcarOwn:[-1],wloy:[LOY_START],gift:{},wcarDur:[100],wcarDead:[0],cdur:{},shift3:1,shiftCur:0,shiftT:0,ms:[],sw:1,co:1,mgr:{on:0,dir:'all',log:[],t:0},got:{},hist:[],gear:0,pick:0,cap:0,payT:0,strike:0,wages:0,autoU:0,auto:{},lock:{},fever:0,fevers:0,ev:{k:'',t:0},evN:{cop:0,mob:0},
+function fresh(){return {v:2,total:0,inv:{},w:0,fw:0,fa:{},ws:[],wimg:[],wfat:[],wrest:[],wforce:[],wburn:[],wshift:[],wcarOwn:[],wloy:[],gift:{},wcarDur:[],wcarDead:[],cdur:{},shift3:1,shiftCur:0,shiftT:0,ms:[],sw:0,co:1,mgr:{on:0,dir:'all',log:[],t:0},got:{},hist:[],gear:0,pick:0,cap:0,payT:0,strike:0,wages:0,autoU:0,auto:{},lock:{},fever:0,fevers:0,ev:{k:'',t:0},evN:{cop:0,mob:0},
  fur:{lv:0,on:{iron:1,sulfur:1,copper:1,gold:1,dia:1,sapph:1,aqua:1},b:0},rares:0,cr:{u:0,lv:0,on:{},p:{},made:{},slots:[]},
  bm:1,cars:[],car:-1,wcar:{want:0,t:0},carBad:0,tab:'work',last:Date.now(),seen:0,money:START_MONEY};}
 let S=fresh();
@@ -378,7 +379,7 @@ const evX=it=>ITEM[it].craft&&S.ev.t>0&&EVENTS[S.ev.k]?EVENTS[S.ev.k].x:1;
 const price=it=>Math.round((S.fever>0?feverPrice(it):ITEM[it].npc)*evX(it));
 const gearEff=()=>S.gear;
 const nW=()=>S.ws.length, nM=()=>S.ms.length;
-const power=()=>S.ws.reduce((a,g)=>a+GRADE[g].x,0)+(S.bm?BOSS_X:0);
+const power=()=>S.ws.reduce((a,g)=>a+GRADE[g].x,0)+(S.bm?bossX():0);
 const TEAM_MAX=16;const wCapL=l=>l<4?8:16, sCapL=l=>l<3?2:4, fCapL=l=>l<3?2:l<7?4:8, mCapL=l=>l<3?1:l<6?2:4;
 const mMax=()=>Math.min(mCapL(S.co),TEAM_MAX-nW());
 const FW_WAGE=6000, fMax=()=>fCapL(S.co);
@@ -431,10 +432,11 @@ function step(dt){
   if(nM()&&!S.strike){S.mgr.t=(S.mgr.t||0)+dt;if(S.mgr.t>=1){S.mgr.t=0;for(const d of S.ms)mgrAct(d);}}
   if(!S.strike){if(S.shift3){S.shiftT=(S.shiftT||0)+dt;if(S.shiftT>=SHIFT_LEN){S.shiftT-=SHIFT_LEN;S.shiftCur=((S.shiftCur||0)+1)%3;shiftRot=1;}}let ap=0;for(let i=0;i<S.ws.length;i++){const off=S.wforce[i]||(S.shift3&&(S.wshift[i]||0)!==S.shiftCur);if(!off&&!S.wrest[i]){S.wfat[i]=(S.wfat[i]||0)+FATIG_UP*dt;if(S.wfat[i]>=100){S.wfat[i]=100;S.wrest[i]=1;S.wburn[i]=(S.wburn[i]||0)+1;}else ap+=GRADE[S.ws[i]].x*loyX(i);}else{S.wfat[i]=(S.wfat[i]||0)-FATIG_DN*dt;if(S.wfat[i]<=0){S.wfat[i]=0;S.wrest[i]=0;}if((S.wfat[i]||0)<30)S.wburn[i]=Math.max(0,(S.wburn[i]||0)-BURN_DECAY*dt);}}for(let i=S.ws.length-1;i>=0;i--)if((S.wburn[i]||0)>=BURN_MAX){S.wburn[i]=0;S.wfat[i]=100;S.wrest[i]=1;S.wloy[i]=Math.max(0,(S.wloy[i]??LOY_START)-32);burnQuit=1;}
    const r=ap*(1+gearEff())/WORK_T*dt*(1-failP());for(const [it,p] of DROPS)addItem(it,r*p*(it==='coal'?COAL_AVG:1));
-   if(S.sw){let bud=S.sw*SELL_R*dt;const rv=crReserve();for(const k of sellOrder()){if(bud<=0)break;const n=Math.min(bud,have(k)-(rv[k]||0));if(n>0){S.inv[k]-=n;gain(n*price(k));bud-=n;}}}
+   if(S.sw)sellBud(S.sw*SELL_R*dt);
    S.payT+=dt;if(S.payT>=PAY_T)payWage();}
  }
- if(S.bm){const r=BOSS_X*(1+gearEff())/WORK_T*dt*(1-failP());for(const [it,p] of DROPS)addItem(it,r*p*(it==='coal'?COAL_AVG:1));}
+ if(S.bm){const r=bossX()*(1+gearEff())/WORK_T*dt*(1-failP());for(const [it,p] of DROPS)addItem(it,r*p*(it==='coal'?COAL_AVG:1));}
+ sellBud(BOSS_SELL*dt);
  {S.fur.b=(S.fur.b||0)+furRate()*dt;let idle=true;
   for(const o of furOrder()){if(!S.fur.on[o])continue;const g=PROD[o],k=Math.floor(Math.min(S.fur.b,have(o),have('coal'),cap()-have(g)));
    if(k>=1){idle=false;S.inv[o]-=k;S.inv.coal-=k;S.fur.b-=k;const r=rareN(k);if(r){S.inv['R_'+g]=have('R_'+g)+r;got('R_'+g,r);S.rares+=r;S.lock['R_'+g]=1;newRare.push(g);}if(k-r>0)addItem(g,k-r);}}
@@ -448,6 +450,7 @@ function step(dt){
  if(S.ev.t>0){S.ev.t=Math.max(0,S.ev.t-dt);if(!S.ev.t)S.ev.k='';}
  if(S.wcar&&S.wcar.want){S.wcar.t-=dt;if(S.wcar.t<=0){S.wcar.want=0;S.wcar.t=0;{const cd=noCar();for(const i of cd)S.wloy[i]=Math.max(0,(S.wloy[i]??LOY_START)-32);if(cd.length)wcarQuit=1;}}}
 }
+function sellBud(bud){const rv=crReserve();for(const k of sellOrder()){if(bud<=0)break;const n=Math.min(bud,have(k)-(rv[k]||0));if(n>0){S.inv[k]-=n;gain(n*price(k));bud-=n;}}}
 const CRAFT_RESERVE=32;const crReserve=()=>{const r={};if(S.cr.u)for(const sl of S.cr.slots){const rc=RECIPE[sl.k];if(rc)for(const it in rc.m)r[it]=(r[it]||0)+rc.m[it]*CRAFT_RESERVE;}return r;};
 const sellOrder=()=>SELLS.filter(k=>!S.lock[k]).sort((a,b)=>ITEM[b].npc-ITEM[a].npc);
 const buyCost=r=>r.buy.reduce((s,b)=>s+b[1]*b[2],0);
@@ -475,7 +478,7 @@ const VIEW={
   <div class="sub" style="margin:6px 0 12px">📦 창고 · 품목마다 <b data-v="cap"></b>개까지</div>
   <div class="card" id="wCard"><h3>👷 채굴 알바 <span class="tag g">${nW()} / ${wMax()}명</span> <span class="tag">알바 곡괭이 ${gearEff()+1}단계</span></h3><div class="sub" data-v="pay" style="font-weight:700;color:#c9d1cd;margin:2px 0"></div>
    <div class="sub">${WORK_T}초마다 ${1+gearEff()}개 × 등급 배수 · 실패 ${Math.round(failP()*100)}%</div>
-   <div class="bar"><i data-w="pay"></i></div><div class="bossmine"><img src="${bossSrc()}" alt=""><div class="grow">${S.bm?`<b>👑 사장님 직접 채굴 중</b><div class="sub">채굴 ×${BOSS_X} · 월급 0원 · 피로·교대 없이 늘 캠</div>`:`<b>👑 사장님은 쉬는 중</b><div class="sub">다시 들어가면 채굴 ×${BOSS_X}, 월급 0원</div>`}</div><button class="btn mini ${S.bm?'':'pri'}" data-a="bmTog">${S.bm?'빠지기':'들어가기'}</button></div>${nW()?shiftUI():''}${crewW()}<div class="gtab">${[...GORD].map(g=>`<div><b style="color:${GRADE[g].c}">${g}등급</b> ${S.ws.filter(x=>x===g).length}명<br>확률 ${Math.round(GRADE[g].p*100)}%<br>채굴 ×${GRADE[g].x}<br>월급 ${F(GRADE[g].w)}</div>`).join('')}</div>
+   <div class="bar"><i data-w="pay"></i></div><div class="bossmine"><img src="${bossSrc()}" alt=""><div class="grow">${S.bm?`<b>👑 사장님 직접 채굴 중</b><div class="sub">채굴 ×${bossX()} (회사 레벨로 올라감) · 월급 0원 · 피로·교대 없이 늘 캠</div>`:`<b>👑 사장님은 쉬는 중</b><div class="sub">다시 들어가면 채굴 ×${bossX()}, 월급 0원</div>`}</div><button class="btn mini ${S.bm?'':'pri'}" data-a="bmTog">${S.bm?'빠지기':'들어가기'}</button></div>${nW()?shiftUI():''}${crewW()}<div class="gtab">${[...GORD].map(g=>`<div><b style="color:${GRADE[g].c}">${g}등급</b> ${S.ws.filter(x=>x===g).length}명<br>확률 ${Math.round(GRADE[g].p*100)}%<br>채굴 ×${GRADE[g].x}<br>월급 ${F(GRADE[g].w)}</div>`).join('')}</div>
    <div class="row">${nW()>=wMax()?`<button class="btn no" data-a="hire">채굴 알바 ${nW()}명 (최대)<small>${S.co<CO_MAX?'회사 레벨을 올리면 더 고용':'더 고용할 수 없음'}</small></button>`:costB('채굴 알바 고용',COST.worker(nW()),'hire','','pri')}${lowIdx()>=0?costB(S.ws[lowIdx()]+'등급 알바 교육 ('+TRAIN[S.ws[lowIdx()]].p*100+'%)',TRAIN[S.ws[lowIdx()]].c,'train',lowIdx()):''}${costB('알바 곡괭이 '+(S.gear+2)+'단계로',COST.gear(S.gear),'gear','')}</div></div>`;},
  sell(){
   return `<div class="card"><div class="row" style="margin-top:0"><div class="grow sub" data-v="sellNote"></div><button class="btn pri sellb" data-a="sellAll">모두 판매 <span data-v="sellAll"></span></button></div>
@@ -483,7 +486,7 @@ const VIEW={
    <button class="btn mini sellb" data-a="sell" data-x="${k}">판매</button> <button class="btn mini ${S.lock[k]?'on':''}" data-a="lock" data-x="${k}" title="모두 판매와 판매 알바에게서 빼고 모아 두기">🔒</button></td></tr>`).join('')}</table>
   </div>
   <div class="card" id="swCard"><h3>🤖 판매 로봇 <span class="tag g">${S.sw} / ${sMax()}대</span><span class="sp"></span><span class="sub" data-v="pay"></span></h3>
-   <div class="sub">한 대당 1초에 ${SELL_R}개 · 유지비 ${W(WAGE)}</div>
+   <div class="sub">한 대당 1초에 ${SELL_R}개 · 유지비 ${W(WAGE)} · 👑 사장님도 1초에 ${BOSS_SELL}개씩 직접 팔아요</div>
    ${crew(S.sw,'🧑‍💼','sell')}<div class="row">${S.sw>=sMax()?`<button class="btn no" data-a="hireS">판매 로봇 ${S.sw}대 (최대)<small>${S.co<CO_MAX?'회사 레벨을 올리면 더 고용':'더 고용할 수 없음'}</small></button>`:costB('판매 로봇 구입',COST.sworker(S.sw),'hireS','','pri')}${S.sw?`<button class="btn" data-a="fireS">한 대 처분</button>`:''}</div></div>
 `;},
  make(){const n=Object.keys(PROD).filter(o=>S.fur.on[o]).length;
@@ -500,8 +503,8 @@ const VIEW={
   return h;},
  co(){const nx=S.co<CO_MAX;
   return `<div class="card bosscard" data-a="boss"><img src="${bossSrc()}" alt=""><div><h3 style="margin:0">👑 사장님</h3><div class="sub">${car()?'🚗 '+car()[0]+' 타는 중 · 내구도 '+Math.ceil(bDur())+(bDur()>0?'':' (고장!)'):'아직 차가 없습니다'} · 차 ${S.cars.length}대 · 직원 ${nW()}명</div></div></div><div class="card"><h3>🏢 회사 <span class="tag g">${S.co}레벨</span>${nx?'':' <span class="tag">최고 레벨</span>'}</h3>
-   <div class="sub">채굴 알바 최대 <b>${wCapL(S.co)}명</b> · 판매 로봇 최대 <b>${sMax()}대</b> · 가공 로봇 최대 <b>${fMax()}대</b> · 관리인 최대 <b>${mCapL(S.co)}명</b> · 창고 <b>${F(capBase())}개</b> · 알바 채굴 실패 <b>${Math.round(failP()*100)}%</b></div>
-   ${nx?`<div class="sub" style="margin-top:4px">${S.co+1}레벨이 되면: 채굴 알바 최대 ${wCapL(S.co+1)}명 · 판매 로봇 ${sCapL(S.co+1)}대 · 가공 로봇 ${fCapL(S.co+1)}대 · 관리인 ${mCapL(S.co+1)}명 · 창고 ${F(capBase(S.co+1))}개 · 실패 ${Math.round(Math.max(.1,FAIL0-.01*S.co)*100)}%</div><div class="row">${costB('회사 '+(S.co+1)+'레벨로 승급',COST.co(S.co),'upCo','','pri')}</div>`:''}</div>
+   <div class="sub">채굴 알바 최대 <b>${wCapL(S.co)}명</b> · 판매 로봇 최대 <b>${sMax()}대</b> · 가공 로봇 최대 <b>${fMax()}대</b> · 관리인 최대 <b>${mCapL(S.co)}명</b> · 창고 <b>${F(capBase())}개</b> · 알바 채굴 실패 <b>${Math.round(failP()*100)}%</b> · 👑 사장 채굴 <b>×${bossX()}</b></div>
+   ${nx?`<div class="sub" style="margin-top:4px">${S.co+1}레벨이 되면: 채굴 알바 최대 ${wCapL(S.co+1)}명 · 판매 로봇 ${sCapL(S.co+1)}대 · 가공 로봇 ${fCapL(S.co+1)}대 · 관리인 ${mCapL(S.co+1)}명 · 창고 ${F(capBase(S.co+1))}개 · 사장 채굴 ×${S.co+2} · 실패 ${Math.round(Math.max(.1,FAIL0-.01*S.co)*100)}%</div><div class="row">${costB('회사 '+(S.co+1)+'레벨로 승급',COST.co(S.co),'upCo','','pri')}</div>`:''}</div>
   <div class="card" id="mgCard"><h3>👔 관리인 <span class="tag g">${nM()} / ${mMax()}명</span></h3>
    <div class="sub">월급 ${W(mgrWage())}</div>
    ${S.ms.map((d,i)=>`<div class="mrow"><i class="mgico"></i><b>관리인 ${i+1}</b><select data-mgr="${i}">${Object.entries(DIRS).map(([k,v])=>`<option value="${k}" ${d===k?'selected':''}>${v.n}: ${v.d}</option>`).join('')}</select><button class="btn mini" data-a="fireM" data-x="${i}">내보내기</button></div>`).join('')}
@@ -798,11 +801,11 @@ const TUT_KEY='gordo-tycoon-tut';
 const TUT=[
  {h:'👋 고르도 광산 타이쿤',b:'이 게임은 서버에서 <b>지루한 노동</b>을 하는 동안 옆에 띄워 두고 즐기는 <b>보조 게임</b>이에요. 주인공은 서버에서의 일이고, 이 게임은 그 시간을 덜 지루하게 해 주는 친구예요. 창을 <b>켜 둔 동안에만</b> 알아서 굴러가요. 최소화해 두거나 뒤에 깔아 둬도 되고, 가끔 들여다보면 돼요. 창을 끄면 광산도 같이 쉬어요.<br><br>1분짜리 안내를 볼게요. 언제든 <b>건너뛰기</b>로 나갈 수 있고, ≡ 메뉴에서 다시 볼 수 있어요.'},
  {s:'#alm',h:'🍔💧 노동 도우미',b:'일하다 깜빡하기 쉬운 <b>배고픔·목마름</b>을 대신 챙겨 줘요. 동그라미를 눌러 지금 수치를 넣으면 0이 되기 전에 소리로 알려 줘요. 먹거나 마시면 <b>먹었음/마셨음</b>을 누르세요.'},
- {t:'work',s:'.mbox',h:'⛏️ 광산',b:'알바들이 알아서 캐요. 위쪽 칸은 창고에 쌓인 자원이에요. 빨간 테두리는 꽉 찬 칸이에요. 원석은 못 팔고 <b>주괴·제작품만</b> 팔 수 있어요.'},
+ {t:'work',s:'.mbox',h:'⛏️ 광산',b:'처음엔 👑 <b>사장님 혼자</b> 캐고 팔아요. 알바를 뽑으면 같이 캐요. 위쪽 칸은 창고에 쌓인 자원이에요. 빨간 테두리는 꽉 찬 칸이에요. 원석은 못 팔고 <b>주괴·제작품만</b> 팔 수 있어요.'},
  {t:'work',s:'#wCard',h:'👷 채굴 알바',b:'고용하고 교육해서 등급을 올려요. 알바는 <b>3교대</b>로 번갈아 일해요. 그림을 <b>끌어서</b> 조를 바꾸고, <b>누르면</b> 선물·차·수리·휴식 메뉴가 떠요.'},
- {t:'sell',s:'#tabs [data-x="sell"]',h:'💰 판매',b:'판매 로봇이 주괴와 제작품을 자동으로 팔아요. 🔒를 누르면 그 품목은 안 팔아요. 🔥 피버타임엔 비싸게 팔려요.'},
+ {t:'sell',s:'#tabs [data-x="sell"]',h:'💰 판매',b:'사장님과 판매 로봇이 주괴와 제작품을 자동으로 팔아요. 🔒를 누르면 그 품목은 안 팔아요. 🔥 피버타임엔 비싸게 팔려요.'},
  {t:'make',s:'#tabs [data-x="make"]',h:'🔥 가공·제작',b:'화로가 원석+석탄으로 주괴를 만들어요. 제작소 칸을 <b>눌러</b> 만들 제작품을 고르면 재료값보다 비싸게 팔려요. 빨간 칸은 재료가 모자란 칸이에요.'},
- {t:'co',s:'#tabs [data-x="co"]',h:'🏢 회사',b:'회사 레벨을 올리면 직원·로봇 수와 창고가 늘어요. 월급을 못 주면 파업하니 돈을 조금 남겨 두세요.'},
+ {t:'co',s:'#tabs [data-x="co"]',h:'🏢 회사',b:'회사 레벨을 올리면 직원·로봇 수와 창고, <b>사장님 채굴력</b>이 늘어요. 월급을 못 주면 파업하니 돈을 조금 남겨 두세요.'},
  {t:'car',s:'#tabs [data-x="car"]',h:'🚗 차고',b:'차를 모으면 1대마다 수입 +2%. 타는 차는 창고와 피버 시간을 늘려 줘요. 차는 내구도가 닳으니 수리하고, 필요 없으면 팔 수 있어요. 직원에게 차를 사 주면 직원도 차를 타고 캐요.'},
  {t:'shop',s:'#tabs [data-x="shop"]',h:'🛒 상점',b:'직원 충성도는 천천히 줄어요. 음식과 옷을 사서 주면 올라가요. 충성도가 높으면 더 많이 캐요.'},
  {t:'work',s:'#menuB',h:'≡ 메뉴',b:'튜토리얼은 여기서 언제든 다시 볼 수 있어요. 창은 켜 둔 채로 일하러 가 볼까요? 광산은 그동안 알아서 커 있을 거예요.'}];
