@@ -373,7 +373,7 @@ const COST={
  crafter:3000000,crLv:l=>3000000*Math.pow(2.2,l)};
 
 /* ===== 상태 ===== */
-function fresh(){return {v:2,total:0,inv:{},w:0,fw:0,fa:{},ws:[],wname:[],bname:'',bface:-1,wimg:[],wfat:[],wrest:[],wforce:[],wburn:[],wshift:[],wcarOwn:[],wloy:[],gift:{},wcarDur:[],wcarDead:[],cdur:{},shift3:1,shiftCur:0,shiftT:0,ms:[],sw:0,co:1,mgr:{on:0,dir:'all',log:[],t:0,keep:0,fix:1,gift:1,ct:0},got:{},hist:[],gear:0,pick:0,cap:0,payT:0,strike:0,wages:0,autoU:0,auto:{},lock:{},fever:0,fevers:0,ev:{k:'',t:0},evN:{cop:0,mob:0},
+function fresh(){return {v:2,total:0,inv:{},w:0,fw:0,fa:{},ws:[],wname:[],bname:'',bimg:'',wimg:[],wfat:[],wrest:[],wforce:[],wburn:[],wshift:[],wcarOwn:[],wloy:[],gift:{},wcarDur:[],wcarDead:[],cdur:{},shift3:1,shiftCur:0,shiftT:0,ms:[],sw:0,co:1,mgr:{on:0,dir:'all',log:[],t:0,keep:0,fix:1,gift:1,ct:0},got:{},hist:[],gear:0,pick:0,cap:0,payT:0,strike:0,wages:0,autoU:0,auto:{},lock:{},fever:0,fevers:0,ev:{k:'',t:0},evN:{cop:0,mob:0},
  fur:{lv:0,on:{iron:1,sulfur:1,copper:1,gold:1,dia:1,sapph:1,aqua:1},b:0},rares:0,cr:{u:0,lv:0,on:{},p:{},made:{},slots:[]},
  bm:1,ach:{},cars:[],car:-1,wcar:{want:0,t:0},carBad:0,tab:'work',last:Date.now(),seen:0,money:START_MONEY};}
 let S=fresh();
@@ -653,12 +653,12 @@ function fireAsk(kind,idx){idx=+idx||0;const n=kind==='w'?nW():kind==='s'?S.sw:k
 function feverFx(){if(!FXON)return;const e=$('fv');let h='';for(let i=0;i<16;i++){const a=Math.PI*2*i/16,d=170+Math.random()*200;h+=`<span class="sp" style="--dx:${Math.round(Math.cos(a)*d)}px;--dy:${Math.round(Math.sin(a)*d)}px">${i%2?'🔥':'💰'}</span>`;}
  e.innerHTML=h+'<b>FEVER TIME!</b><small>유저 손님이 몰려옵니다 · 지금 비싸게 파세요</small>';e.classList.remove('on');void e.offsetWidth;e.classList.add('on');document.body.classList.add('shake');setTimeout(()=>document.body.classList.remove('shake'),460);setTimeout(()=>{e.classList.remove('on');e.innerHTML='';},2050);}
 {let h='';for(let i=0;i<8;i++)h+=`<span style="left:${(i*12.5+Math.random()*4).toFixed(1)}%;--sx:${Math.round(Math.random()*80-40)}px;animation-duration:${(2.6+Math.random()*2.6).toFixed(2)}s;animation-delay:${(-Math.random()*4).toFixed(2)}s">${i%4?'🔥':'💰'}</span>`;$('embers').innerHTML=h;}
-const bossSrc=()=>(S.bface>=0&&NW&&WIMGS[S.bface])||bu(CIMG.boss)||BOSS0.hire||BOSS0.fire||'';
-function bossPick(){const cur=S.bface>=0?S.bface:-1,cell=(i,src,lb)=>`<span class="imgslot fg" style="cursor:pointer;${i===cur?'box-shadow:0 0 0 3px var(--gold),0 0 12px var(--gold)':''}" onclick="bossSet(${i})"><img src="${src}" alt=""><span class="il">${i===cur?'✔ ':''}${lb}</span></span>`;
- let h='<h2>🖼️ 사장님 프로필 바꾸기</h2><p class="sub">마음에 드는 얼굴을 누르면 바로 바뀌어요. (무료)</p><div class="imged">'+cell(-1,BOSS0.hire||BOSS0.fire,'기본');
- for(let i=0;i<WSLOTS&&i<NW;i++)h+=cell(i,WIMGS[i],(i+1)+'번');
- modal(h+'</div>',[['닫기',null,'pri']]);}
-window.bossSet=function(i){S.bface=i;save();R();toast('👑 사장님 프로필을 바꿨어요');bossPick();};
+const bossSrc=()=>(typeof S.bimg==='string'&&S.bimg.startsWith('data:image/')&&S.bimg)||BOSS0.hire||BOSS0.fire||'';
+function bossPick(){const cur=bossSrc();
+ modal(`<h2>🖼️ 사장님 프로필 바꾸기</h2><div class="hiw"><img src="${cur}" alt="" style="box-shadow:0 0 0 3px var(--gold)"></div><p class="sub">내 PC나 휴대폰에 있는 사진을 골라 주세요. 가운데를 정사각형으로 잘라 작게 줄여서 이 기기에만 저장해요.</p><input id="bossFile" type="file" accept="image/*" style="display:none">`,
+ [['📁 사진 고르기',()=>{},'pri'],...(S.bimg?[['기본 독수리로',()=>{S.bimg='';save();R();toast('기본 프로필로 돌렸어요');}]]:[]),['닫기']]);
+ const inp=$('bossFile'),btn=$('mBtns').querySelector('button');btn.onclick=e=>{e.stopPropagation();inp.click();};
+ inp.onchange=()=>{const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),Z=128;c.width=Z;c.height=Z;const x=c.getContext('2d'),sd=Math.min(im.width,im.height);x.drawImage(im,(im.width-sd)/2,(im.height-sd)/2,sd,sd,0,0,Z,Z);let url='';try{url=c.toDataURL('image/webp',0.82);}catch(_){}if(!url.startsWith('data:image/webp'))url=c.toDataURL('image/jpeg',0.82);S.bimg=url;save();R();toast('👑 사장님 프로필을 바꿨어요');bossPick();};im.onerror=()=>toast('이미지를 읽지 못했어요');im.src=ev.target.result;};r.readAsDataURL(f);};}
 function R(){if(drg&&drg.gh)return;{const b=$('bossImg'),u=bossSrc();if(b&&b.getAttribute('src')!==u)b.setAttribute('src',u);}document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.x===S.tab));
  const v=$('view'),st=v.scrollTop;v.innerHTML=(VIEW[S.tab]||VIEW.work)();v.scrollTop=st;chart();grab();U();}
 function val(k){const [a,b]=k.split(':');switch(a){
