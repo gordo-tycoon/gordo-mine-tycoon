@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.0.7</title>
+<title>고르도 광산 타이쿤 v1.0.8</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -248,7 +248,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.0.7';
+const APPVER='v1.0.8';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -366,7 +366,9 @@ const trim=s=>s.includes('.')?s.replace(/\.?0+$/,''):s;
 const K=n=>{n=Math.floor(n+1e-6);for(const [v,u] of [[1e9,'B'],[1e6,'M'],[1e3,'k']])if(n>=v){const x=n/v;return trim((x<10?Math.floor(x*10)/10:Math.floor(x)).toFixed(x<10?1:0))+u;}return ''+n;};
 function F(n){n=Math.floor(n+1e-6);if(n>=1e8)return trim((n/1e8).toFixed(n>=1e10?0:2))+'억';if(n>=1e5)return trim((n/1e4).toFixed(n>=1e6?0:1))+'만';return n.toLocaleString('ko-KR');}
 const W=n=>F(n)+'원';
-const bonus=()=>1+.02*S.cars.length;
+/* 1.0.8: 차 1대 수입 보너스는 차값에 따라 다름 (사용자). 3천만 미만 1% · 1억 미만 2% · 2억 미만 3% · 5억 미만 4% · 5억 이상 5% */
+const carPct=k=>{const p=CARS[k]?CARS[k][1]:0;return p<3e7?1:p<1e8?2:p<2e8?3:p<5e8?4:5;};
+const bonus=()=>1+S.cars.reduce((a,k)=>a+carPct(k),0)/100;
 const car=()=>S.car>=0?CARS[S.car]:null;
 /* 차 내구도: 타는 동안 100→0 약 2시간 16분. 직원 차는 0 된 뒤 SCRAP_T초(약 34분) 지나면 폐차. 사장 차는 폐차 없이 타는 차 효과(창고·피버)만 꺼짐.
    수리비 = 차값 × REPAIR_X × 닳은 비율. 차 팔기 = 차값 × SELL_X */
@@ -573,10 +575,10 @@ const VIEW={
   rows.forEach((row,r)=>row.list.forEach(idx=>pos[idx]={x:px(colOf(idx)),y:py(r)}));
   let lines='';rows.forEach(row=>row.list.forEach(idx=>{const pv=carPrev(idx);if(pv<0||!pos[pv])return;const a=pos[pv],b=pos[idx],x1=a.x+nw,y1=a.y+nh/2,x2=b.x,y2=b.y+nh/2,own=S.cars.includes(idx),ok=S.cars.includes(pv);lines+=`<path d="M${x1} ${y1} C${x1+28} ${y1} ${x2-28} ${y2} ${x2} ${y2}" fill="none" stroke="${own?'#3fd99a':ok?'#5c6b78':'#2a3038'}" stroke-width="${own?2.5:2}"/>`;}));
   let heads='';for(let co=0;co<=maxC;co++)heads+=`<span class="thead" style="left:${px(co)+nw/2}px">T${co+1}</span>`;
-  let nodes='';rows.forEach(row=>row.list.forEach(idx=>{const c=CARS[idx],own=S.cars.includes(idx),unl=carUnlocked(idx),rid=S.car===idx,cls=own?'own':unl?'buy':'lk';nodes+=`<button class="tnode ${cls}" data-a="carInfo" data-x="${idx}" style="left:${pos[idx].x}px;top:${pos[idx].y}px;width:${nw}px;height:${nh}px"><span class="vico" style="background-image:url(${cIc(c)})">${('')?`<img src="${''}" alt="" loading="lazy" onload="this.parentNode.style.backgroundImage='none'" onerror="this.remove()">`:''}</span><span class="tn">${c[0]}</span><span class="tp">${own?(rid?'🚗 타는 중':'보유'):unl?W(c[1]):'🔒'}</span></button>`;}));
+  let nodes='';rows.forEach(row=>row.list.forEach(idx=>{const c=CARS[idx],own=S.cars.includes(idx),unl=carUnlocked(idx),rid=S.car===idx,cls=own?'own':unl?'buy':'lk';nodes+=`<button class="tnode ${cls}" data-a="carInfo" data-x="${idx}" style="left:${pos[idx].x}px;top:${pos[idx].y}px;width:${nw}px;height:${nh}px"><span class="vico" style="background-image:url(${cIc(c)})">${('')?`<img src="${''}" alt="" loading="lazy" onload="this.parentNode.style.backgroundImage='none'" onerror="this.remove()">`:''}</span><span class="tn">${c[0]}</span><span class="tp">${own?(rid?'🚗 타는 중':'보유'):unl?W(c[1]):'🔒'} · +${carPct(idx)}%</span></button>`;}));
   return `<div class="card"><h3>🌳 차고 테크트리 <span class="tag g">${S.cars.length} / ${CARS.length}대</span></h3></div>
   <div class="treebox"><div class="treelabs" style="padding-top:${pad+headH}px">${rows.map(r=>`<div style="height:${rowH}px">${r.cat}</div>`).join('')}</div><div class="treewrap"><div class="tree" style="width:${Wd}px;height:${Hd}px"><svg width="${Wd}" height="${Hd}" style="position:absolute;inset:0;pointer-events:none">${lines}</svg>${heads}${nodes}</div></div></div>
-  <div class="card"><div class="sub">🟩 보유 · ⬜ 구매 가능 · ⬛ 잠김 · 1대마다 수입 +2%</div></div>`;}
+  <div class="card"><div class="sub">🟩 보유 · ⬜ 구매 가능 · ⬛ 잠김 · 차마다 수입 보너스 (3천만 미만 +1% · 1억 미만 +2% · 2억 미만 +3% · 5억 미만 +4% · 5억 이상 +5%) · 지금 합계 <b>+${Math.round((bonus()-1)*100)}%</b></div></div>`;}
 };
 let shSel=-1;let drg=null,dragEnd=0;
 document.addEventListener('pointerdown',e=>{const w=e.target.closest('.shcol .wk');if(!w||(e.button||0)>0)return;drg={i:+w.dataset.x,x:e.clientX,y:e.clientY,el:w,gh:null};});
@@ -785,7 +787,7 @@ function giveWCars(){const top=Math.max(0,...S.cars.map(x=>CARS[x][1])),pool=CAR
 function carDesireTrig(){if(noCar().length){S.wcar.want=1;S.wcar.t=CARDSR_T;}}
 function carBad(x){if(Math.random()>=CAR_BAD_P)return;const pr=CARS[x][1],tire=Math.random()<.6;let loss=Math.round(pr*(tire?.08:.15));loss=Math.min(loss,Math.floor(S.money));if(loss<1)return;S.money-=loss;S.carBad=(S.carBad||0)+loss;const im=IMG[tire?'_마피아_캐릭터':'_경찰_캐릭터'];
  modal(`<h2>${tire?'🛞 타이어 탈취!':'🚓 차량 압류!'}</h2><div class="hiw">${im?`<img src="${im}" alt="">`:''}</div><div class="say">“${tire?'크큭, 이 타이어 좋은 거네. 좀 챙겨 가지.':'불법 주정차 차량입니다. 견인합니다. 벌금 내고 찾아가세요.'}”</div><p class="sub" style="margin:10px 0 0">${CARS[x][0]}의 ${tire?'타이어를 도둑맞아 교체비':'견인 벌금'} <b style="color:#ff6b6b">${W(loss)}</b>을 썼습니다.</p>`,[['어쩔 수 없지…',null,'pri']],5);}
-function doBuyCar(x){x=+x;if(S.cars.includes(x)){toast('이미 가지고 있는 차입니다');return;}if(!carUnlocked(x)){toast('🔒 앞 단계 차('+CARS[x-1][0]+')를 먼저 사야 합니다');return;}if(!pay(CARS[x][1]))return;S.cars.push(x);S.car=x;carDesireTrig();toast(CARS[x][0]+' 구매! 모든 수입 +2%');save();R();carBad(x);}
+function doBuyCar(x){x=+x;if(S.cars.includes(x)){toast('이미 가지고 있는 차입니다');return;}if(!carUnlocked(x)){toast('🔒 앞 단계 차('+CARS[x-1][0]+')를 먼저 사야 합니다');return;}if(!pay(CARS[x][1]))return;S.cars.push(x);S.car=x;carDesireTrig();toast(CARS[x][0]+' 구매! 모든 수입 +'+carPct(x)+'%');save();R();carBad(x);}
 
 /* ===== 누르기 ===== */
 const ACT={
@@ -797,7 +799,7 @@ const ACT={
  train(x){trainAsk(x);return 'skip';},
  hireF(){if((S.fw||0)>=fMax()){toast('회사 '+S.co+'레벨에서는 화로 알바를 '+fMax()+'명까지 고용할 수 있습니다'+(S.co<CO_MAX?'. 회사 탭에서 승급하세요':''));return;}if(pay(COST.fworker(S.fw||0))){if(!staff()){S.payT=0;S.strike=0;}S.fw=(S.fw||0)+1;save();R();hireFx('f');return 'skip';}},
  carInfo(x){x=+x;const c=CARS[x],own=S.cars.includes(x),ic=cIc(c),ph='';
-  modal(`<h2>${c[0]} <span class="tag">${c[2]}</span></h2><div class="cbig">${ic?`<span class="vico cf" style="background-image:url(${ic})"></span>`:'🚗'}${ph?`<img class="rp" src="${ph}" alt="" loading="lazy" onload="const p=this.previousElementSibling;if(p&&p.classList.contains('cf'))p.remove()" onerror="this.remove()">`:''}</div><table class="it"><tr><td>가격</td><td>${W(c[1])}</td></tr><tr><td>최고속력</td><td>${c[4]?c[4]+'km/h':'정보 없음'}</td></tr><tr><td>짐칸</td><td>${c[3]}칸 (창고 +${c[3]*16}개)</td></tr><tr><td>상태</td><td>${own?(S.car===x?'타는 중':'가지고 있음'):'아직 없음'}</td></tr>${own?`<tr><td>내구도</td><td>${bDur(x)>0?Math.ceil(bDur(x))+' / 100':'<b class="warn">고장 (타는 차 효과 꺼짐)</b>'}</td></tr>`:''}</table><p class="sub" style="margin:10px 0 0">1대마다 수입 +2% · 타는 차: 창고 +짐칸, 피버 시간 늘어남</p>`,
+  modal(`<h2>${c[0]} <span class="tag">${c[2]}</span></h2><div class="cbig">${ic?`<span class="vico cf" style="background-image:url(${ic})"></span>`:'🚗'}${ph?`<img class="rp" src="${ph}" alt="" loading="lazy" onload="const p=this.previousElementSibling;if(p&&p.classList.contains('cf'))p.remove()" onerror="this.remove()">`:''}</div><table class="it"><tr><td>가격</td><td>${W(c[1])}</td></tr><tr><td>최고속력</td><td>${c[4]?c[4]+'km/h':'정보 없음'}</td></tr><tr><td>짐칸</td><td>${c[3]}칸 (창고 +${c[3]*16}개)</td></tr><tr><td>상태</td><td>${own?(S.car===x?'타는 중':'가지고 있음'):'아직 없음'}</td></tr>${own?`<tr><td>내구도</td><td>${bDur(x)>0?Math.ceil(bDur(x))+' / 100':'<b class="warn">고장 (타는 차 효과 꺼짐)</b>'}</td></tr>`:''}</table><p class="sub" style="margin:10px 0 0">이 차 수입 보너스 <b>+${carPct(x)}%</b> (비싼 차일수록 큼) · 타는 차: 창고 +짐칸, 피버 시간 늘어남</p>`,
   [...(own?[...(bDur(x)<100?[['🔧 수리 '+W(fixCost(x,bDur(x))),()=>{ACT.bFix(x);save();R();ACT.carInfo(x);},bDur(x)>0?'':'pri']]:[]),['💸 팔기 '+W(Math.floor(c[1]*SELL_X)),()=>ACT.sellCar(x)],...(S.car===x?[]:[['이 차 타기',()=>{S.car=x;save();R();toast(c[0]+'에 탔습니다');},'pri']])]:(carUnlocked(x)?[['구매 '+W(c[1]),()=>doBuyCar(x),S.money>=c[1]?'pri':'no']]:[['🔒 앞 차를 먼저 구매',null]])),['닫기']]);voxInit(c);return 'skip';},
  v3d(x){setV3d(+x===1);toast(V3D?'🔄 차를 누르면 360°로 봐요':'🖼️ 차를 누르면 2D 그림으로 봐요');},
  faUp(x){if(faSum()>=(S.fw||0)){toast('배정할 화로 알바가 없습니다. 다른 원석에서 빼거나 더 고용하세요');return;}S.fa[x]=faN(x)+1;},
@@ -824,7 +826,7 @@ const ACT={
  wFixAll(){const L=brokeW();const c=L.reduce((a,i)=>a+wFixCost(i),0);if(!L.length)return 'skip';if(!pay(c))return 'skip';for(const i of L){S.wcarDur[i]=100;S.wcarDead[i]=0;addLoy(i,LOY_FIX);}toast('🔧 직원 차 '+L.length+'대 수리 완료 (충성도 +'+LOY_FIX+'씩)');},
  bFix(x){x=+x;const c=fixCost(x,bDur(x));if(c<=0||!pay(c))return 'skip';S.cdur[x]=100;toast('🔧 '+CARS[x][0]+' 수리 완료');},
  sellCar(x){x=+x;const c=CARS[x];if(!S.cars.includes(x))return 'skip';const v=Math.floor(c[1]*SELL_X);
-  modal(`<h2>💸 ${c[0]} 팔기</h2><p><b>${W(v)}</b>에 팝니다 (차값의 ${SELL_X*100}%). 팔면 차를 모은 보너스(+2%)도 하나 줄어요.${S.car===x?' 지금 타는 차라서 남은 차 중 가장 비싼 차로 갈아탑니다.':''}</p>`,[['팔기',()=>{S.cars=S.cars.filter(k=>k!==x);delete S.cdur[x];if(S.car===x){S.car=S.cars.length?S.cars.reduce((a,b)=>CARS[b][1]>CARS[a][1]?b:a):-1;}S.money+=v;save();R();toast('💸 '+c[0]+' 팔아서 '+W(v)+' 받았습니다');},'pri'],['그만두기']]);return 'skip';},
+  modal(`<h2>💸 ${c[0]} 팔기</h2><p><b>${W(v)}</b>에 팝니다 (차값의 ${SELL_X*100}%). 팔면 이 차의 수입 보너스(+${carPct(x)}%)도 없어져요.${S.car===x?' 지금 타는 차라서 남은 차 중 가장 비싼 차로 갈아탑니다.':''}</p>`,[['팔기',()=>{S.cars=S.cars.filter(k=>k!==x);delete S.cdur[x];if(S.car===x){S.car=S.cars.length?S.cars.reduce((a,b)=>CARS[b][1]>CARS[a][1]?b:a):-1;}S.money+=v;save();R();toast('💸 '+c[0]+' 팔아서 '+W(v)+' 받았습니다');},'pri'],['그만두기']]);return 'skip';},
  giftGive(x){const [a,k]=String(x).split(':'),i=+a,it=SHOP[k];if(!it||!S.ws[i]||!(S.gift[k]>0))return 'skip';S.gift[k]--;const b=Math.floor(S.wloy[i]??LOY_START);addLoy(i,it.l);save();R();toast(it.e+' '+S.ws[i]+'등급 알바에게 '+it.n+'! 충성도 '+b+' → '+Math.floor(S.wloy[i]));giftPick(i);return 'skip';},
  shopBuy(x){const [k,n0]=String(x).split(':'),it=SHOP[k],n=+n0||1;if(!it)return 'skip';if(!pay(it.c*n))return 'skip';S.gift[k]=(S.gift[k]||0)+n;toast(it.e+' '+it.n+' '+n+'개 샀습니다');},
  shopAll(k){const it=SHOP[k];if(!it)return 'skip';const ord=S.ws.map((g,i)=>i).sort((a,b)=>(S.wloy[a]??0)-(S.wloy[b]??0));let n=0;for(const i of ord){if(!(S.gift[k]>0))break;if((S.wloy[i]??0)>=100)continue;S.gift[k]--;addLoy(i,it.l);n++;}toast(n?it.e+' '+n+'명에게 '+it.n+'을(를) 나눠 줬습니다 (충성도 낮은 순)':'줄 사람이 없거나 선물이 없어요');},
@@ -848,6 +850,7 @@ window.clrImg=function(ev,kind,idx){ev.preventDefault();ev.stopPropagation();if(
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
+ {v:'v1.0.8',l:['🚗 차 수입 보너스가 <b>차값에 따라</b> 달라져요: 3천만 미만 +1% · 1억 미만 +2% · 2억 미만 +3% · 5억 미만 +4% · 5억 이상 +5%. (예전엔 모두 +2%)','🌳 차고 테크트리에 차마다 보너스 %와 지금 합계가 보여요.']},
  {v:'v1.0.7',l:['🐛 채굴 알바가 16명이면 관리인을 못 뽑던 문제를 고쳤어요. 이제 관리인은 알바 인원과 따로 세요 (회사 1~2레벨 1명, 3~5레벨 2명, 6레벨부터 4명).','👔 관리인은 회사 탭의 <b>관리인 고용</b> 버튼으로 직접 뽑아요.']},
  {v:'v1.0.6',l:['🎓 알바 교육 성공 확률 상승: C→B <b>30% → 40%</b>, B→A <b>15% → 20%</b>.']},
  {v:'v1.0.5',l:['👔 <b>관리인이 똑똑해졌어요.</b> 들인 돈을 가장 빨리 되찾는 것부터 사고, 본전 뽑기 힘든 건 돈이 넉넉할 때만 사요.','💰 관리인이 <b>남길 돈</b>을 정할 수 있어요 (회사 탭 관리인 칸).','🔧 차 수리, 🍔 충성도 챙기기를 관리인에게 맡길 수 있어요.','👀 관리인이 <b>다음에 살 것</b>과 본전 시간을 보여 줘요.','📝 새 버전이 나오면 이렇게 패치노트가 떠요. ≡ 메뉴에서 다시 볼 수 있어요.']},
@@ -867,7 +870,7 @@ const TUT=[
  {t:'sell',s:'#tabs [data-x="sell"]',h:'💰 판매',b:'사장님과 판매 로봇이 주괴와 제작품을 자동으로 팔아요. 🔒를 누르면 그 품목은 안 팔아요. 🔥 피버타임엔 비싸게 팔려요.'},
  {t:'make',s:'#tabs [data-x="make"]',h:'🔥 가공·제작',b:'화로가 원석+석탄으로 주괴를 만들어요. 제작소 칸을 <b>눌러</b> 만들 제작품을 고르면 재료값보다 비싸게 팔려요. 빨간 칸은 재료가 모자란 칸이에요.'},
  {t:'co',s:'#tabs [data-x="co"]',h:'🏢 회사',b:'회사 레벨을 올리면 직원·로봇 수와 창고, <b>사장님 채굴력</b>이 늘어요. 월급을 못 주면 파업하니 돈을 조금 남겨 두세요.'},
- {t:'car',s:'#tabs [data-x="car"]',h:'🚗 차고',b:'차를 모으면 1대마다 수입 +2%. 타는 차는 창고와 피버 시간을 늘려 줘요. 차는 내구도가 닳으니 수리하고, 필요 없으면 팔 수 있어요. 직원에게 차를 사 주면 직원도 차를 타고 캐요.'},
+ {t:'car',s:'#tabs [data-x="car"]',h:'🚗 차고',b:'차를 모으면 차마다 수입이 +1~5% 늘어요(비싼 차일수록 큼). 타는 차는 창고와 피버 시간을 늘려 줘요. 차는 내구도가 닳으니 수리하고, 필요 없으면 팔 수 있어요. 직원에게 차를 사 주면 직원도 차를 타고 캐요.'},
  {t:'shop',s:'#tabs [data-x="shop"]',h:'🛒 상점',b:'직원 충성도는 천천히 줄어요. 음식과 옷을 사서 주면 올라가요. 충성도가 높으면 더 많이 캐요.'},
  {t:'work',s:'#menuB',h:'≡ 메뉴',b:'튜토리얼은 여기서 언제든 다시 볼 수 있어요. 창은 켜 둔 채로 일하러 가 볼까요? 광산은 그동안 알아서 커 있을 거예요.'}];
 let tutI=-1;
