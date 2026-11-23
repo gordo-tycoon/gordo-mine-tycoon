@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.1.0</title>
+<title>고르도 광산 타이쿤 v1.1.1</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -201,6 +201,8 @@ body.shake #view{animation:shake .45s}
 #mine .rest i{position:absolute;right:-5px;top:-9px;font-size:10px;font-style:normal;animation:zz 2.2s ease-in-out infinite}
 @keyframes zz{0%{opacity:0;transform:translate(0,4px) scale(.7)}40%{opacity:1}100%{opacity:0;transform:translate(5px,-8px) scale(1.1)}}
 #mine .rest b{position:absolute;left:0;right:0;bottom:1px;text-align:center;font-size:9px;color:#9fb0c2;font-weight:600}#mine .rest em{font-size:10px;color:#9fb0c2;font-style:normal}
+#mine .down{position:absolute;inset:0;z-index:5;background:rgba(40,0,8,.72);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:16px;color:#fff}#mine .down b{font-size:18px;color:#ff8a98}#mine .down span{font-size:12.5px;line-height:1.5}
+.almb{position:absolute;left:6px;bottom:108px;display:flex;flex-direction:column;gap:2px;z-index:2;pointer-events:none}.almb span{font-size:10.5px;padding:1px 6px;border-radius:6px;background:rgba(10,14,13,.7);color:#e8eee9;white-space:nowrap}.almb span.g{box-shadow:inset 0 0 0 1px #4fd17a;color:#9ff0bd}.almb span.w{box-shadow:inset 0 0 0 1px #ff5d73;color:#ffb3bd}
 #mine .cmt{position:absolute;bottom:4px;left:-30%;z-index:3;animation:cmt 5s linear forwards;pointer-events:none;display:flex;flex-direction:column;align-items:center}
 #mine .cmt i{display:block;width:64px;height:32px;background:center/contain no-repeat;image-rendering:pixelated}#mine .cmt b{font-size:10.5px;background:rgba(0,0,0,.65);color:#fff;padding:1px 6px;border-radius:6px;white-space:nowrap;margin-bottom:2px}
 @keyframes cmt{to{left:110%}}
@@ -262,7 +264,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.1.0';
+const APPVER='v1.1.1';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -474,7 +476,7 @@ const got=(it,n)=>{S.got[it]=(S.got[it]||0)+n;};
 const ic=k=>`<span class="ic">${ITEM[k].e}${IMG[ITEM[k].n]?`<img src="${IMG[ITEM[k].n]}" alt="">`:''}</span>`;
 const carImg=c=>{const ph='',ic=cIc(c);return `<span class="cimg"><span class="vico cf" style="background-image:url(${ic})"></span>${ph?`<img class="rp" src="${ph}" alt="" loading="lazy" onload="const p=this.previousElementSibling;if(p&&p.classList.contains('cf'))p.remove()" onerror="this.remove()">`:(ic?'':'🚗')}</span>`;};
 let acc=0,rate=0;
-function gain(x){x*=bonus();S.money+=x;S.total+=x;acc+=x;return x;}
+function gain(x){x*=bonus()*(almNone()?ALM_NONE_X:1);S.money+=x;S.total+=x;acc+=x;return x;}
 function rareN(k){if(k<200){let c=0;for(let i=0;i<k;i++)if(Math.random()<RARE_P)c++;return c;}return Math.floor(k*RARE_P+Math.random());}
 let newRare=[];
 function addItem(it,n){got(it,n);S.inv[it]=Math.min(cap(),have(it)+n);}
@@ -485,17 +487,18 @@ function aidChk(dt){if(S.aidCd>0)S.aidCd=Math.max(0,S.aidCd-dt);if(!S.strike){S.
 function mgrWage(){return MGR_WAGE0*(S.co||1);}
 function payWage(){const c=wageAll();if(S.money>=c){S.money-=c;S.wages+=c;S.strike=0;S.payT=0;return true;}S.strike=1;return false;}
 function step(dt){
+ bossHp(dt);if(S.bdown)return;
  if(staff()){
   if(S.strike)payWage();
   aidChk(dt);
   if(nM()&&!S.strike){S.mgr.t=(S.mgr.t||0)+dt;if(S.mgr.t>=1){S.mgr.t=0;for(let n=0;n<nM()&&mgrBuy();n++);S.mgr.ct=(S.mgr.ct||0)+1;if(S.mgr.ct>=10){S.mgr.ct=0;mgrChores();}}}
   if(!S.strike){if(S.shift3){S.shiftT=(S.shiftT||0)+dt;if(S.shiftT>=SHIFT_LEN){S.shiftT-=SHIFT_LEN;S.shiftCur=((S.shiftCur||0)+1)%3;shiftRot=1;}}let ap=0;for(let i=0;i<S.ws.length;i++){const off=S.wforce[i]||(S.shift3&&(S.wshift[i]||0)!==S.shiftCur);if(!off&&!S.wrest[i]){S.wfat[i]=(S.wfat[i]||0)+FATIG_UP*dt;if(S.wfat[i]>=100){S.wfat[i]=100;S.wrest[i]=1;S.wburn[i]=(S.wburn[i]||0)+1;S.burnN=(S.burnN||0)+1;}else ap+=GRADE[S.ws[i]].x*loyX(i);}else{S.wfat[i]=(S.wfat[i]||0)-FATIG_DN*dt;if(S.wfat[i]<=0){S.wfat[i]=0;S.wrest[i]=0;}if((S.wfat[i]||0)<30)S.wburn[i]=Math.max(0,(S.wburn[i]||0)-BURN_DECAY*dt);}}for(let i=S.ws.length-1;i>=0;i--)if((S.wburn[i]||0)>=BURN_MAX){S.wburn[i]=0;S.wfat[i]=100;S.wrest[i]=1;S.wloy[i]=Math.max(0,(S.wloy[i]??LOY_START)-32);burnQuit=1;}
-   const r=ap*(1+gearEff())/WORK_T*dt*(1-failP());for(const [it,p] of DROPS)addItem(it,r*p*(it==='coal'?COAL_AVG:1));
+   const r=ap*almX()*(1+gearEff())/WORK_T*dt*(1-failP());for(const [it,p] of DROPS)addItem(it,r*p*(it==='coal'?COAL_AVG:1));
    if(S.sw)sellBud(S.sw*SELL_R*dt);
    S.payT+=dt;if(S.payT>=PAY_T)payWage();}
  }
  S.playT=(S.playT||0)+dt;if(S.bm)S.bossT=(S.bossT||0)+dt;
- if(S.bm){const r=bossX()*(1+gearEff())/WORK_T*dt*(1-failP());for(const [it,p] of DROPS)addItem(it,r*p*(it==='coal'?COAL_AVG:1));}
+ if(S.bm){const r=bossX()*almX()*bossHungry()*(1+gearEff())/WORK_T*dt*(1-failP());for(const [it,p] of DROPS)addItem(it,r*p*(it==='coal'?COAL_AVG:1));}
  sellBud(BOSS_SELL*dt);
  {S.fur.b=(S.fur.b||0)+furRate()*dt;let idle=true;
   for(const o of furOrder()){if(!S.fur.on[o])continue;const g=PROD[o],k=Math.floor(Math.min(S.fur.b,have(o),have('coal'),cap()-have(g)));
@@ -519,13 +522,14 @@ function run(sec){if(sec<=0)return;const n=Math.min(1000,Math.max(1,Math.ceil(se
 /* ===== 화면 ===== */
 const mineW=()=>{const W=[];if(S.strike)return W;for(let i=0;i<nW();i++){if(S.wforce[i]||S.wrest[i]||(S.shift3&&(S.wshift[i]??0)!==S.shiftCur))continue;W.push(i);}
  return W.sort((a,b)=>((S.wcarOwn[b]>=0)-(S.wcarOwn[a]>=0))||GORD.indexOf(S.ws[a])-GORD.indexOf(S.ws[b]));};
-const restW=()=>S.ws.map((g,i)=>i).filter(i=>S.strike||S.wforce[i]||S.wrest[i]||(S.shift3&&(S.wshift[i]??0)!==S.shiftCur));
-const mineSig=()=>{const W=mineW();return restW().slice(0,5).join('.')+'/b'+(S.bm?(carOn()?S.car:'y'):'n')+':'+W.slice(0,4).map(i=>S.ws[i]+(S.wcarOwn[i]??-1)+((S.wcarDur[i]??100)>0?'':'x')).join(',')+'|'+W.length;};
+const restW0=0;const restW=()=>S.ws.map((g,i)=>i).filter(i=>S.strike||S.wforce[i]||S.wrest[i]||(S.shift3&&(S.wshift[i]??0)!==S.shiftCur));
+const mineSig=()=>{const W=mineW();return (S.bdown?'D':'')+restW().slice(0,5).join('.')+'/b'+(S.bm?(carOn()?S.car:'y'):'n')+':'+W.slice(0,4).map(i=>S.ws[i]+(S.wcarOwn[i]??-1)+((S.wcarDur[i]??100)>0?'':'x')).join(',')+'|'+W.length;};
 function mineScene(){const W=mineW(),B=S.bm?1:0,sh=W.slice(0,4-B),n=sh.length+B,sc=n<=2?3:2;let h='';
  if(B){const c=carOn(),ic=c?rIc(c):'',x=Math.round(.5*100/n);h+=`<div class="rider s${sc}${ic?' oncar':''}" data-i="b" style="left:${x}%;--gc:#f2c14e"><i class="mn"></i>${ic?`<i class="mcar" style="background-image:url(${ic})"></i>`:''}<b class="rg">👑 사장${c?' · '+c[0]:''}</b></div>`;}
  sh.forEach((i,k)=>{k+=B;const x=Math.round((k+.5)*100/n),ck=S.wcarOwn[i],c=ck>=0?CARS[ck]:null,ic=c?rIc(c):'';
   h+=`<div class="rider s${sc}${ic?' oncar':''}" data-i="${i}" style="left:${x}%;--gc:${GRADE[S.ws[i]].c};animation-delay:-${(k*.17).toFixed(2)}s"><i class="mn" style="animation-delay:-${(k*.16).toFixed(2)}s"></i>${ic?`<i class="mcar${(S.wcarDur[i]??100)>0?'':' dead'}" style="background-image:url(${ic})"></i>`:''}<b class="rg">${S.ws[i]}${c?' · '+c[0]:''}</b></div>`;});
  const cars=W.filter(i=>S.wcarOwn[i]>=0).length;
+ h+='<div id="almb" class="almb"></div>';if(S.bdown)h+='<div class="down"><b>🚑 사장님이 쓰러졌어요!</b><span>광산이 멈췄어요. 🍔·💧 동그라미를 눌러 먹었음/마셨음을 하면 바로 일어나요.</span></div>';
  {const R0=restW();if(R0.length)h+=`<div class="rest" title="휴게실">${R0.slice(0,4).map((i,k)=>`<span style="--gc:${GRADE[S.ws[i]].c}"><img src="${wsrc(i)}" alt=""><i style="animation-delay:-${(k*.7).toFixed(1)}s">💤</i></span>`).join('')}${R0.length>4?`<em>+${R0.length-4}</em>`:''}<b>☕ 휴게실</b></div>`;}
  return `<div id="mine" aria-hidden="true" data-sig="${mineSig()}"><div class="cave"></div>${h}<div class="cap">${n?`광부 ${W.length+B}명이 캐는 중${cars?` · 🚗 ${cars}명은 자기 차 타고!`:'…'}${W.length+B>4?' (앞 4명만 보여요)':''}`:S.strike?'월급을 못 받아 파업 중… ✊':'지금은 다들 쉬는 중… 😴'}</div>${n?'<span class="spk">✨</span><span class="spk b">⛏️</span>':''}</div>`;}
 const costB=(label,cost,a,x,cls)=>`<button class="btn ${cls||''}" data-a="${a}" data-x="${x??''}" data-c="${cost}">${label}<small>${W(cost)}</small></button>`;
@@ -882,15 +886,19 @@ const TALK={
  S:['S등급의 손놀림, 잘 보세요','다이아가 저를 알아봐요','저한테 걸리면 돌도 금이 돼요'],
  D:['저도 언젠가 S등급 될 거예요!','교육 한 번만 보내 주세요…','아직 곡괭이 잡는 법 연습 중이에요'],
  strike:['월급 주세요!','돈 없으면 곡괭이도 없다!','파업 중입니다 ✊'],
+ hungry:['사장님 배고프시죠? 뭐라도 드세요!','사장님 배에서 소리 나는 거 다 들려요','밥은 먹고 다니세요, 사장님','햄버거 하나 사 오실래요?','사장님 굶으면 우리도 힘 빠져요','편의점 다녀오세요! 광산은 저희가 지킬게요'],
+ thirsty:['사장님 물 좀 드세요!','목소리 갈라지셨어요. 물!','광산 먼지 마시면 목말라요. 한 잔 하세요','물 마시는 것도 일이에요, 사장님'],
+ fed:['사장님 밥 드시니까 우리도 힘이 나요!','든든하게 먹고 왔으니 한 판 캐 볼까','오늘 사장님 얼굴에 생기가 도네요'],
+ faint:['사장님 쓰러지시겠어요! 빨리 뭐라도!','사장님이 곡괭이를 못 드세요…','사장님! 정신 차리세요! 밥!'],
  boss:['자자, 오늘도 힘내 봅시다!','우리 회사 업적 몇 개 땄더라','다음 차는 뭘 사지…','교육비가 아깝긴 한데 다 투자야','관리인 친구가 알뜰하게 사더라고','오늘 장부 보니까 흐뭇하네','사장이 솔선수범해야지','이 곡괭이로 회사를 키웠지','내가 왕년에 아쿠아마린을 열 개나…','다들 햄버거 하나씩 쏜다!','월급날까지 조금만 버텨!','회사 레벨 올리면 나도 더 잘 캔다고']};
 /* 둘이 주고받는 대화: [A, B] */
 const DIA=[['너 어제 아쿠아마린 봤다며?','아니, 그냥 파란 페트병이었어'],['우리 사장님 진짜 직접 캐시네','그러니까 우리도 쉴 수가 없잖아'],['점심 뭐 먹을래?','석탄… 아니 순대국'],['교육 또 떨어졌어…','괜찮아, 난 세 번 떨어졌어'],['경찰 오면 뭐라고 해?','"저희는 정직한 광산입니다"'],['너 차 생겼다며!','응, 근데 할부야'],['이 굴 끝에 뭐가 있을까?','더 많은 석탄'],['피곤해 죽겠다','휴게실 자리 비었더라. 가 봐'],['판매 로봇 이름 지어 줄까?','삐빅이 어때'],['사파이어 캐면 뭐 할 거야?','반지 만들어서 고백할 거야'],['너 월급 얼마 받아?','그런 건 묻는 거 아니야'],['고르도가 무슨 뜻이야?','아무도 몰라. 그게 매력이지'],['오늘 몇 개 캤어?','세는 거 포기했어'],['나 성형하고 왔어','…누구세요?'],['사장님 차 몇 대야?','세다가 헷갈렸어'],['밤 근무 어때?','조용해서 좋은데 무서워'],['번아웃 왔었다며','응, 푹 자고 나니 살 것 같아'],['드릴 드라이버 그거 어디다 써?','묻지 마. 그냥 팔아'],['총알 12개씩 나오는 거 신기하지 않아?','난 그게 제일 무서워'],['다음 월급날 언제야?','곧. 아마도. 제발'],['너 S등급이라며?','등급은 숫자일 뿐이야'],['곡괭이 강화했대','어쩐지 손이 가볍더라'],['관리인님이 또 뭐 샀어','본전 뽑는 거래. 믿어 보자'],['햄버거 또 나눠 준대!','이 회사 오래 다녀야겠다'],['휴게실에서 누가 코 골았어','…나 아니야'],['오늘 단속 나온대','쇠지렛대는 공구라고 우기자'],['차 내구도 다 됐어','관리인님한테 수리 맡겼지?'],['우리 업적 몇 개야?','실패 훈장이 더 많아'],['교대 시간이다!','5분만 더… 아니 칼퇴!'],['광산 노래 하나 할까?','곡괭이 박자에 맞춰서!'],['나 어제 철 300개 캤어','거짓말. 280개였어']];
 let tChat=0,chatLast='';
 function chatPick(a){const o=a==='b'?null:+a,g=o==null?'':S.ws[o];if(!S.ws[o]&&o!=null)return '';
- if(o==null)return rp(TALK.boss);
+ if(o==null){const st=almState();if(st.zero)return rp(['배가… 너무 고프다…','물… 물 한 잔만…','눈앞이 핑 도네…']);if(st.hg&&Math.random()<.5)return '슬슬 뭐 좀 먹어야겠다';if(st.th&&Math.random()<.5)return '목이 칼칼하네. 물 마셔야지';if(almBufN()&&Math.random()<.4)return '든든하게 먹으니 곡괭이가 가볍구먼!';return rp(TALK.boss);}
  const pool=[...TALK.base];const add=(k,n)=>{for(let j=0;j<n;j++)pool.push(...TALK[k]);};
  if((S.wfat[o]||0)>60)add('tired',3);const l=S.wloy[o]??LOY_START;if(l<LOY_LOW)add('lowloy',3);else if(l>=LOY_HIGH)add('highloy',2);
- if(S.wcarOwn[o]>=0)add('car',2);else if(S.cars.length)add('nocar',1);if(S.fever>0)add('fever',6);if(S.ev.t>0)add(S.ev.k,6);if(S.shiftCur===2)add('night',1);if(g==='S'||g==='A')add('S',1);if(g==='D')add('D',1);
+ if(S.wcarOwn[o]>=0)add('car',2);else if(S.cars.length)add('nocar',1);if(S.fever>0)add('fever',6);if(S.ev.t>0)add(S.ev.k,6);if(S.shiftCur===2)add('night',1);{const st=almState();if(st.zero)add('faint',4);else{if(st.hg)add('hungry',5);if(st.th)add('thirsty',5);}if(almBufN())add('fed',1);}if(g==='S'||g==='A')add('S',1);if(g==='D')add('D',1);
  let t;for(let k=0;k<4;k++){t=rp(pool);if(t!==chatLast)break;}chatLast=t;return t;}
 const rp=a=>a[Math.floor(Math.random()*a.length)];
 function bubble(el,t,delay){const m=$('mine');if(!m||!el||!t)return;setTimeout(()=>{if(!el.isConnected)return;const b=document.createElement('div');b.className='bub';b.textContent=t;m.appendChild(b);{const W0=m.clientWidth,w=b.offsetWidth,x=parseFloat(el.style.left)/100*W0;b.style.left=Math.max(w/2+4,Math.min(W0-w/2-4,x))+'px';}setTimeout(()=>b.remove(),5600);},delay||0);}
@@ -911,12 +919,13 @@ const ACH=[
  {id:'aq',e:'💠',n:'푸른 전설',d:'아쿠아마린 첫 채굴',c:()=>(S.got.aqua||0)>=1},{id:'r1',e:'✨',n:'최상급!',d:'최상급 제품 첫 획득',c:()=>(S.rares||0)>=1},{id:'r10',e:'🌠',n:'행운아',d:'최상급 제품 10개',c:()=>(S.rares||0)>=10},
  {id:'fv10',e:'🔥',n:'불타는 장사꾼',d:'피버타임 10번',c:()=>S.fevers>=10},{id:'fv50',e:'☄️',n:'피버 중독',d:'피버타임 50번',c:()=>S.fevers>=50},{id:'mob',e:'🕴️',n:'뒷골목 단골',d:'범죄 흥행 10번',c:()=>(S.evN.mob||0)>=10},
  {id:'bt',e:'⛏️',n:'현장형 사장',d:'사장님 직접 채굴 1시간',c:()=>(S.bossT||0)>=3600},{id:'p1',e:'⏰',n:'성실 출근',d:'켜 둔 시간 1시간',c:()=>(S.playT||0)>=3600},{id:'p10',e:'📅',n:'개근상',d:'켜 둔 시간 10시간',c:()=>(S.playT||0)>=36000},{id:'p50',e:'🗿',n:'광산의 일부',d:'켜 둔 시간 50시간',c:()=>(S.playT||0)>=180000},
+ {id:'ml10',e:'🍱',n:'삼시세끼',d:'알리미 제때 챙기기 10번',c:()=>(S.mealOk||0)>=10},{id:'ml50',e:'🥗',n:'자기관리 끝판왕',d:'제때 챙기기 50번',c:()=>(S.mealOk||0)>=50},{id:'bf',e:'💪',n:'든든한 사장님',d:'배고픔·목마름 버프 동시에',c:()=>almBufN()>=2},
  {id:'tf1',f:1,e:'🥉',n:'쓴맛',d:'알바 교육 실패 1번',c:()=>(S.trainF||0)>=1},{id:'tf10',f:1,e:'🥈',n:'교육비 기부천사',d:'교육 실패 10번',c:()=>(S.trainF||0)>=10},{id:'tf50',f:1,e:'🥇',n:'불굴의 교관',d:'교육 실패 50번',c:()=>(S.trainF||0)>=50},{id:'tf200',f:1,e:'🎖️',n:'실패의 신',d:'교육 실패 200번',c:()=>(S.trainF||0)>=200},
  {id:'cp5',f:1,e:'🚨',n:'단골 손님',d:'경찰 단속 5번',c:()=>(S.evN.cop||0)>=5},{id:'cp30',f:1,e:'🚔',n:'경찰서 VIP',d:'경찰 단속 30번',c:()=>(S.evN.cop||0)>=30},
  {id:'cb1',f:1,e:'🛞',n:'첫 견인',d:'차 사고 1번',c:()=>(S.carBadN||0)>=1},{id:'cb10',f:1,e:'🧾',n:'과태료 수집가',d:'차 사고 10번',c:()=>(S.carBadN||0)>=10},
  {id:'bn1',f:1,e:'🥵',n:'과로 주의',d:'번아웃 1번',c:()=>(S.burnN||0)>=1},{id:'bn10',f:1,e:'⚖️',n:'노동청 단골',d:'번아웃 10번',c:()=>(S.burnN||0)>=10},
  {id:'ad1',f:1,e:'🎁',n:'조합의 손길',d:'지원금 1번',c:()=>(S.aidC||0)>=1},{id:'ad5',f:1,e:'🙏',n:'구조 요청 장인',d:'지원금 5번',c:()=>(S.aidC||0)>=5},
- {id:'fc1',f:1,e:'💉',n:'새 얼굴',d:'성형 1번',c:()=>(S.faceN||0)>=1},{id:'fc10',f:1,e:'🪞',n:'성형 중독',d:'성형 10번',c:()=>(S.faceN||0)>=10}];
+ {id:'mm1',f:1,e:'😵',n:'아사 직전',d:'알리미가 0이 된 적 1번',c:()=>(S.mealMiss||0)>=1},{id:'mm10',f:1,e:'🦴',n:'굶기의 달인',d:'알리미 0 10번',c:()=>(S.mealMiss||0)>=10},{id:'dn1',f:1,e:'🚑',n:'응급실 직행',d:'사장님 쓰러짐 1번',c:()=>(S.downN||0)>=1},{id:'dn5',f:1,e:'🛌',n:'불사조 사장',d:'쓰러졌다 일어나기 5번',c:()=>(S.downN||0)>=5},{id:'fc1',f:1,e:'💉',n:'새 얼굴',d:'성형 1번',c:()=>(S.faceN||0)>=1},{id:'fc10',f:1,e:'🪞',n:'성형 중독',d:'성형 10번',c:()=>(S.faceN||0)>=10}];
 const achCell=a=>{const ok=S.ach&&S.ach[a.id];return `<div class="ach ${ok?'':'no'} ${a.f?'f':''}"><span class="me">${a.e}</span><div><b>${a.n}</b><br><small>${a.d}</small></div></div>`;};
 function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c());if(!nw.length){S.achInit=1;return;}for(const a of nw)S.ach[a.id]=Date.now();
  if(!S.achInit){S.achInit=1;toast('🏅 지금까지 한 일로 업적 '+nw.length+'개를 달성했어요! 수집함에서 확인하세요');return;}
@@ -924,6 +933,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
+ {v:'v1.1.1',t:'🍔 알리미 × 광산',l:['❤️ <b>사장님 체력</b>이 생겼어요. 배고픔·목마름 알리미 중 하나라도 0이 되면 체력이 10분에 걸쳐 0까지 줄어요. 0이 되면 <b>사장님이 쓰러져 광산 전체가 멈춰요</b>(월급·충성도도 같이 멈춤, 잃는 건 없음). 🍔·💧 동그라미에서 먹었음/마셨음을 누르면 바로 일어나요.','🍔 <b>0이 되기 전에</b> 먹었음/마셨음을 누르면 10분 동안 <b>든든 버프</b>: 채굴 +10% (둘 다면 +20%).','⚠️ 알리미를 <b>하나도 안 켜 두면</b> 수입 −20%. 동그라미를 눌러 켜 두세요.','💬 알림이 울릴 때쯤이면 알바들이 “사장님 밥 드세요!” 하고 챙겨 줘요.','🏅 끼니 업적과 🎖️ 굶은 훈장·쓰러짐 훈장이 생겼어요. 광산 화면 왼쪽 아래에 체력·버프가 보여요.']},
  {v:'v1.1.0',t:'🎉 대규모 패치',l:['⛏️ <b>살아 있는 광산.</b> 일하는 알바들이 수다를 떨고(말풍선), 쉬는 조는 휴게실에서 꾸벅꾸벅 졸아요. 교대 시간엔 출퇴근 차가 지나가요.','💬 <b>알바 수다 200줄 넘게.</b> 피곤할 때, 충성도, 차, 피버, 단속, 밤 근무, 등급마다 하는 말이 달라요. 둘이 주고받는 대화도 있어요.','🏅 <b>업적·훈장.</b> 수집함 탭에서 확인해요. 잘한 것만이 아니라 교육 실패, 단속, 견인, 번아웃 같은 <b>실패 훈장</b>도 있어요.','📖 수집함에 업적 진행 상황(몇 개 달성)이 보여요.']}];
 function patchShow(from){let L=PATCH;if(from){const i=PATCH.findIndex(p=>p.v===from);if(i>=0)L=PATCH.slice(0,i);}if(!L.length)L=PATCH.slice(0,1);
  modal(`<h2>📝 패치노트</h2>${L.map(p=>`<div class="sec">${p.v}${p.t?' '+p.t:''}${p.v===APPVER?' <span class="tag g">지금 버전</span>':''}</div><ul class="pnote">${p.l.map(x=>`<li>${x}</li>`).join('')}</ul>`).join('')}`,[['확인',null,'pri']]);}
@@ -1062,6 +1072,8 @@ setInterval(()=>{const now=Date.now(),dt=Math.max(0,Math.min(TICK_MAX,(now-tPrev
  if(loyQuit){loyQuit=0;if(!document.hidden){toast('💔 충성도가 바닥난 알바가 회사를 떠났습니다. 상점에서 선물을 사서 주세요');R();}}
  if(burnQuit){burnQuit=0;if(!document.hidden){toast('🔥 번아웃! 과로한 알바가 쓰러져 푹 쉬는 중입니다 (충성도 −32). 3교대나 휴식으로 막으세요');R();}}
  if(shiftRot){shiftRot=0;if(!document.hidden&&S.tab==='work'){R();commuteFx();}}
+ if(bossDown){bossDown=0;R();modal('<h2>🚑 사장님이 쓰러졌어요!</h2><p>배고픔·목마름을 너무 오래 놔둬서 사장님 체력이 0이 됐어요. <b>광산 전체가 멈췄어요</b> (월급·충성도도 멈춰서 잃는 건 없어요).</p><p>🍔·💧 동그라미를 눌러 <b>먹었음/마셨음</b>을 하면 바로 일어나요.</p>',[['알겠어',null,'pri']]);}
+ if(bossUp){bossUp=0;R();toast('💪 사장님이 일어났어요! 광산 다시 가동 (체력 30)');}
  if(now-tChat>=8000){tChat=now;if(!document.hidden)chatTick();}
  if(now-tAch>=3000){tAch=now;achChk();}
  if(now-tRoll>=1000){if(now-tRoll<3000&&!document.hidden){if(S.fever<=0&&Math.random()<FEVER_P)startFever();if(S.ev.t<=0&&S.cr.u&&Math.random()<EV_P)startEvent(Math.random()<.5?'cop':'mob');}tRoll=now;}
@@ -1084,19 +1096,40 @@ $('alm').innerHTML=['hg','th'].map(k=>`<button class="ring" id="r_${k}" title="$
 function almTick(){const now=Date.now();let w=false;
  for(const k of ['hg','th']){const a=ALM[k],el=$('r_'+k),left=a?a.end-now:0;
   if(a){if(!(a.fired&1)&&a.warn>0&&left<=a.warn*60000&&left>0){a.fired|=1;almAlert(k,false);almSaveQ();}
-   if(!(a.fired&2)&&left<=0){a.fired|=2;almAlert(k,true);almSaveQ();}}
+   if(!(a.fired&2)&&left<=0){a.fired|=2;S.mealMiss=(S.mealMiss||0)+1;almAlert(k,true);almSaveQ();}}
   const fr=a?Math.max(0,Math.min(1,left/(ALMFULL[k]*60000))):0,warn=a&&left<=a.warn*60000;if(warn)w=true;
   el.querySelector('.fg').style.strokeDashoffset=RC*(1-fr);el.querySelector('.fg').style.stroke=warn?'#ff5d73':ALMC[k];
   el.querySelector('b').textContent=a?(left>0?Math.ceil(left/60000)+'분':'0!'):ALMNAME[k];el.classList.toggle('off',!a);el.classList.toggle('w',!!(a&&left<=0));}
- document.title=(w?'⚠ ':'')+document.title.replace(/^⚠ /,'');}
+ document.title=(w?'⚠ ':'')+document.title.replace(/^⚠ /,'');almBadge();}
+/* 1.1.1 알리미 × 광산: 제때(0 되기 전) 먹었음/마셨음 → 10분 든든 버프(채굴 +10% 각각). 0이 되면 사장 채굴 절반 */
+const ALM_BUF=600000;
+const almBufOn=k=>S.abuf&&S.abuf[k]>Date.now(), almBufN=()=>(almBufOn('hg')?1:0)+(almBufOn('th')?1:0);
+const almX=()=>1+.1*almBufN();
+function almState(){const now=Date.now(),o={hg:0,th:0,zero:0};for(const k of ['hg','th']){const a=ALM[k];if(!a)continue;const left=a.end-now;if(left<=0)o.zero=1;else if(left<=Math.max(a.warn||0,3)*60000)o[k]=1;}return o;}
+const bossHungry=()=>1;
+/* 사장 체력: 알리미 하나라도 0이면 10분에 100→0. 아니면 5분에 0→100(버프 있으면 2배). 0이면 쓰러짐(S.bdown): 광산 전체 정지, 먹었음/마셨음으로 0이 아닌 상태가 되면 체력 30으로 일어남 */
+const HP_DN=100/600, HP_UP=100/300, ALM_NONE_X=.8;
+const almNone=()=>!ALM.hg&&!ALM.th;
+function bossHp(dt){if(S.bhp==null)S.bhp=100;const z=almState().zero;
+ if(S.bdown){if(!z){S.bdown=0;S.bhp=30;bossUp=1;}return;}
+ if(z){S.bhp=Math.max(0,S.bhp-HP_DN*dt);if(S.bhp<=0){S.bdown=1;S.downN=(S.downN||0)+1;bossDown=1;}}
+ else S.bhp=Math.min(100,S.bhp+HP_UP*(almBufN()?2:1)*dt);}
+let bossDown=0,bossUp=0;
+function almFed(k,old){if(!old)return;const late=old.end<=Date.now();if(late){toast('😮‍💨 늦게나마 '+(k==='hg'?'먹었어요':'마셨어요')+'. 사장님 기운 회복! (버프는 제때 챙길 때만)');return;}
+ if(!S.abuf)S.abuf={};S.abuf[k]=Date.now()+ALM_BUF;S.mealOk=(S.mealOk||0)+1;save();toast((k==='hg'?'🍔 든든':'💧 상쾌')+' 버프! 10분 동안 채굴 +10%');}
+function almBadge(){const el=document.getElementById('almb');if(!el)return;const now=Date.now(),st=almState();let h='';
+ for(const k of ['hg','th'])if(almBufOn(k))h+=`<span class="g">${ALMIC[k]} ${k==='hg'?'든든':'상쾌'} +10% · ${Math.ceil((S.abuf[k]-now)/60000)}분</span>`;
+ if(almNone())h+='<span class="w">⚠️ 알리미 꺼짐 · 수입 −20%</span>';else h=`<span class="${(S.bhp??100)<40?'w':'g'}">❤️ 사장 체력 ${Math.ceil(S.bhp??100)}${S.bdown?' · 쓰러짐!':''}</span>`+h;
+ if(st.zero)h+='<span class="w">😵 배고픔/목마름 0 · 체력 줄어드는 중</span>';else{if(st.hg)h+='<span class="w">🍔 곧 배고파요</span>';if(st.th)h+='<span class="w">💧 곧 목말라요</span>';}
+ if(el.innerHTML!==h)el.innerHTML=h;}
 function almSaveQ(){try{localStorage.setItem('gordo-alarm',JSON.stringify(ALM));}catch(e){}}
 function almSet(k){const a=ALM[k],cur=a?Math.max(0,Math.round((a.end-Date.now())/(ALMFULL[k]*600))):100;
  modal(`<h3>${ALMIC[k]} ${ALMNAME[k]} 타이머</h3><div class="sub">100에서 0까지 ${ALMFULL[k]}분</div><div class="almf"><label>지금 수치 <input type="number" id="almV" min="0" max="100" value="${cur}"></label><label>0 되기 <input type="number" id="almW" min="0" max="${ALMFULL[k]}" value="${a?a.warn:(k==='hg'?5:3)}">분 전에 알림</label></div><div class="almvol"><span>🔊 알람 음량</span><input type="range" id="almVol" min="0" max="100" step="5" value="${ALMVOL}" oninput="almVol(this.value)" onchange="almVol(this.value);beep(1)"><b id="almVolT">${ALMVOL?ALMVOL+'%':'끔'}</b><button type="button" class="btn mini" onclick="beep(2)">들어보기</button></div>`,
  [...(a?[['끄기',()=>{delete ALM[k];almSave();}]]:[]),[k==='hg'?'먹었음 (100)':'마셨음 (100)',()=>almGo(k,100)],[a?'수정':'시작',()=>almGo(k,+$('almV').value),'pri']]);}
-function almGo(k,v){const w=Math.max(0,+$('almW').value||0);ALM[k]={end:Date.now()+Math.max(0,Math.min(100,v||0))/100*ALMFULL[k]*60000,warn:w,fired:0};
+function almGo(k,v){if((+v||0)>=90)almFed(k,ALM[k]);const w=Math.max(0,+$('almW').value||0);ALM[k]={end:Date.now()+Math.max(0,Math.min(100,v||0))/100*ALMFULL[k]*60000,warn:w,fired:0};
  if('Notification' in window&&Notification.permission==='default'){try{Notification.requestPermission();}catch(e){}}almSave();}
 ['hg','th'].forEach(k=>$('r_'+k).onclick=()=>almSet(k));$('almOk').onclick=()=>{$('almT').style.display='none';};
-addEventListener('storage',e=>{if(e.key==='gordo-alarm'){try{ALM=JSON.parse(e.newValue||'{}')||{};}catch(_){}almTick();}});
+addEventListener('storage',e=>{if(e.key==='gordo-alarm'){const old=ALM;try{ALM=JSON.parse(e.newValue||'{}')||{};}catch(_){}for(const k of ['hg','th'])if(old[k]&&ALM[k]&&ALM[k].end>old[k].end+60000&&ALM[k].end-Date.now()>=ALMFULL[k]*60000*.9)almFed(k,old[k]);almTick();}});
 setInterval(almTick,1000);almTick();
 addEventListener('beforeunload',save);document.addEventListener('visibilitychange',()=>{if(document.hidden)save();});
 R();
