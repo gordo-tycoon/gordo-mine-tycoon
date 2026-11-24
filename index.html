@@ -294,6 +294,19 @@ body.fever #tabs button[data-x=work],body.fever #segBar button[data-x=sell]{colo
 .vt .plus{font-size:26px;line-height:46px;margin-top:8px}
 .vt.add{box-shadow:none;outline:1px dashed #56606a;outline-offset:-1px;justify-content:center}.vt.add .vl{background:rgba(255,255,255,.08);color:var(--dim)}
 @media (max-width:420px){.sact{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.trn{position:relative;width:150px;height:150px;margin:6px auto 12px}
+.trf{position:absolute;inset:19px;border-radius:50%}
+.trf img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;box-shadow:0 0 0 3px var(--gc);animation:trpulse 1.7s ease-in-out 1 both}
+.trf .rg{position:absolute;inset:-12px;border-radius:50%;border:3px dashed var(--gn);opacity:.9;animation:trspin 1.7s cubic-bezier(.5,0,.3,1) 1 both}
+.trn .te{position:absolute;font-size:26px;font-style:normal;opacity:0;animation:trpop 1.7s ease-out 1 both}
+.trn .te.a{left:-6px;top:10px}.trn .te.b{right:-8px;top:22px;animation-delay:.25s}.trn .te.c{left:8px;bottom:0;animation-delay:.5s}.trn .te.d{right:2px;bottom:6px;animation-delay:.75s}
+.trg{display:flex;align-items:center;gap:10px;justify-content:center;font-size:18px}
+.trb{flex:none;width:150px;height:10px;border-radius:5px;background:#101312;box-shadow:inset 0 0 0 1px var(--tileB);overflow:hidden}
+.trb i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--acc),var(--gold));transform-origin:left;animation:trbar 1.7s linear 1 both}
+@keyframes trspin{from{transform:rotate(0) scale(.86);opacity:.2}60%{opacity:1}to{transform:rotate(540deg) scale(1.04);opacity:1}}
+@keyframes trpulse{0%,100%{transform:scale(1)}25%{transform:scale(1.04) rotate(-2deg)}50%{transform:scale(1)}75%{transform:scale(1.04) rotate(2deg)}}
+@keyframes trpop{0%{opacity:0;transform:translateY(10px) scale(.5)}25%{opacity:1;transform:translateY(-4px) scale(1.15)}70%{opacity:1;transform:translateY(-10px) scale(1)}100%{opacity:0;transform:translateY(-22px) scale(.9)}}
+@keyframes trbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 </style>
 </head>
 <body>
@@ -317,7 +330,7 @@ body.fever #tabs button[data-x=work],body.fever #segBar button[data-x=sell]{colo
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.4.2';
+const APPVER='v1.4.3';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -763,7 +776,13 @@ function sfMenu(k,i){const a=sfA(k),o=a&&a[i];if(!o)return;MFN=[];const fat=Math
  <p class="sub" style="margin:8px 0 0">판매·가공 직원은 교대·충성도가 없어요. 피로가 100이 되면 스스로 잠깐(약 ${Math.round(100/SF_DN)}초) 쉬고 다시 일해요.</p>`;
  h+=`<div class="sact" style="grid-template-columns:repeat(3,minmax(0,1fr))">${B('✏️','이름 짓기',()=>nameAsk(k+':'+i))}${B('📒','직원 도감',imgEditor)}${B('👋','내보내기',()=>fireAsk(k,i),'퇴직금 '+W(wg*SEV))}</div>`;
  modal(h,[['닫기',null,'pri']]);}
-function trainAsk(i){i=+i;const g=S.ws[i],t=TRAIN[g];if(!t)return;if(!pay(t.c))return;const [ok,,to]=trainDo(i);save();R();const im=ok?(IMG['_채용_캐릭터']||IMG['_해고_캐릭터']):IMG['_해고_캐릭터'],t2=TRAIN[S.ws[i]];
+function trainAsk(i){i=+i;const g=S.ws[i],t=TRAIN[g];if(!t)return;if(!pay(t.c))return;const [ok,,to]=trainDo(i);save();R();trainFx(i,g,to,()=>trainRes(i,g,t,ok,to));}
+/* 1.4.3 교육 중 모션(봉다방처럼): 얼굴 둘레 점선 고리가 돌고 📚✏️💡📝가 튀어 오르고, 등급 바가 1.7초 동안 참. 결과는 교육을 누를 때 이미 정해짐 */
+const TRFX_MS=1700;
+function trainFx(i,g,to,done){if(!FXON){done();return;}const nm=wNm(i)?escH(wNm(i)):g+'등급 '+wJob(i),gc=GRADE[g].c,gn=GRADE[to].c;
+ modal(`<h2>📚 ${nm} 교육 중…</h2><div class="trn" style="--gc:${gc};--gn:${gn}"><div class="trf"><img src="${wsrc(i)}" alt=""><i class="rg"></i></div><span class="te a">📚</span><span class="te b">✏️</span><span class="te c">💡</span><span class="te d">📝</span></div><div class="trg"><b style="color:${gc}">${g}</b><span class="trb"><i></i></span><b style="color:${gn}">${to}</b></div><p class="sub" style="text-align:center;margin:10px 0 0">열심히 배우는 중이에요…</p>`,[]);
+ const tok=mTok;setTimeout(()=>{if(mTok===tok)done();else toast('📚 교육 결과가 나왔어요. 직원 얼굴을 눌러 확인하세요');},TRFX_MS);}
+function trainRes(i,g,t,ok,to){const im=ok?(IMG['_채용_캐릭터']||IMG['_해고_캐릭터']):IMG['_해고_캐릭터'],t2=TRAIN[S.ws[i]];
  modal(`<h2>${ok?`🎓 교육 성공! <span style="color:${GRADE[to].c}">${to}등급</span>이 됐습니다`:'📚 교육 실패...'}</h2><div class="hiw">${im?`<img src="${im}" alt="">`:''}</div><div class="say">“${ok?'사장님! 저 이제 '+to+'등급이에요! 월급도 올려 주시는 거죠? 헤헤':'죄송해요 사장님... 졸았어요... 한 번만 더 가르쳐 주세요...'}”</div><p class="sub" style="margin:10px 0 0">${ok?'채굴량 ×'+GRADE[to].x+' · 월급 '+W(GRADE[to].w):'교육비 '+W(t.c)+'만 나갔습니다. 등급은 '+g+'등급 그대로입니다.'}</p>`,
  [...(t2?[['한 번 더 교육 '+W(t2.c),()=>trainAsk(i)]]:[]),['확인',null,'pri']]);}
 function fireAsk(kind,idx){idx=+idx||0;const n=kind==='w'?S.ws.length:kind==='s'?S.sw:kind==='f'?(S.fw||0):nM();if(n<1||idx>=n)return;const g=kind==='w'?S.ws[idx]:'';const so=null;const job=g?(wNm(idx)?escH(wNm(idx))+' · ':'')+g+'등급 '+wJob(idx):so?(sfNm(so)?escH(sfNm(so))+' · ':'')+sfJob(kind):{m:'관리인 '+(idx+1)}[kind];const wg=kind==='m'?mgrWage():kind==='f'?FW_WAGE:g?GRADE[g].w:WAGE,sev=wg*SEV;
@@ -1088,6 +1107,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
+ {v:'v1.4.3',t:'교육 모션',l:['📚 직원을 교육하면 <b>교육 중 모션</b>이 나와요. 얼굴 둘레 고리가 돌고 📚✏️💡📝가 튀어 오르며, 등급 바가 다 차면 결과가 떠요.','⚙️ ≡ 메뉴 > 설정에서 이펙트를 끄면 모션 없이 바로 결과가 떠요.']},
  {v:'v1.4.2',t:'새 얼굴 5명',l:['👥 새 직원 얼굴 <b>5명</b>이 들어왔어요. 직원 얼굴은 모두 <b>34가지</b>예요.','🙂 직원을 꽉 채워도(채굴 20 + 판매 4 + 가공 8 = 32명) 이제 <b>얼굴이 겹치지 않아요</b>. 이미 겹쳐 있던 얼굴은 새 얼굴로 바뀌어요.']},
  {v:'v1.4.1',t:'모두 같은 캐릭터 직원',l:['🧑‍💼 판매 직원·가공 직원도 채굴 알바와 똑같이 <b>등급(D~S+)</b>이 있어요. 등급이 높을수록 더 많이 팔고 더 많이 구워요. 월급도 등급마다 달라요.','📚 <b>교육 · 🚗 차 사 주기 · 💗 충성도 · 🎁 선물 · 🏖️ 유급 휴가 · ✏️ 이름 짓기</b>를 판매·가공 직원에게도 할 수 있어요. 얼굴을 누르면 채굴 알바와 같은 캐릭터 창이 떠요.','☕ 판매·가공 직원은 지금처럼 번아웃 없이 알아서 잠깐씩 쉬어요. 교대는 없어요.','🔀 이제 모두 같은 <b>캐릭터 직원</b>이에요. 직원 탭에서 얼굴을 <b>끌어서</b> 조 칸 · 판매 칸 · 가공 칸에 놓거나, 얼굴을 누르고 <b>부서 바꾸기</b>로 채굴 · 판매 · 가공 사이를 언제든 무료로 옮길 수 있어요(부서마다 회사 레벨별 최대 인원은 그대로).','🔄 지금 있던 판매·가공 직원은 <b>D등급</b>으로 시작해요. 얼굴과 이름은 그대로예요.']},
  {v:'v1.4.0',t:'4교대 · 직원 20명',l:['👷 채굴 알바가 <b>4교대</b>로 바뀌고 <b>최대 20명</b>(회사 Lv.8부터, 조마다 5명)까지 쓸 수 있어요. 한 번에 일하는 사람이 줄어든 만큼 <b>한 명이 캐는 양이 늘어서</b>, 같은 인원이면 캐는 양은 예전과 같아요. 예전 편성은 1~4조에 고르게 다시 나눠 드려요.','🧑‍💼 <b>판매 로봇 · 가공 로봇이 사람 직원</b>이 됐어요. 갖고 있던 로봇 수만큼 판매 직원·가공 직원으로 바뀌어 있어요. 얼굴도 생기고 이름도 지어 줄 수 있어요.','👥 판매 직원·가공 직원도 <b>직원 탭</b>에서 고용하고 관리해요. 얼굴을 누르면 내보낼 사람을 골라 내보낼 수 있어요.','☕ 판매·가공 직원은 <b>번아웃이 없어요</b>. 피곤해지면 알아서 잠깐(약 30초) 쉬고 돌아와요.','🪪 직원 얼굴을 누르면 뜨는 <b>캐릭터 창</b>을 새로 꾸몄어요. 얼굴·피로·충성도·개인차·교육이 한눈에 보이고, 아래 버튼으로 바로 해요.','💾 세이브를 <b>.gordo 파일</b>로 내보내고 불러올 수 있어요. 예전에 복사해 둔 세이브 글자도 그대로 불러올 수 있어요.']},
