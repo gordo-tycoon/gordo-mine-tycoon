@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고르도 광산 타이쿤 v1.2.2</title>
+<title>고르도 광산 타이쿤 v1.3.0</title>
 <style>
 :root{--acc:#3fd99a;--accT:rgba(63,217,154,.14);--accL:rgba(63,217,154,.55);--bg:#141716;--pan:#1b1f1e;--tile:#232726;--tileB:#383d3b;--text:#e9edeb;--dim:#8d9692;--gold:#f2c14e;--red:#ff7b6b;--fev:#ff9d3c;--c:12px}
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#3a403e transparent}
@@ -243,6 +243,43 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 .stRow{display:flex;gap:10px;margin-top:10px}.stG{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;background:#101312;border:1px solid var(--tileB);border-radius:10px;color:#fff;cursor:pointer;font:inherit}.stG:hover{border-color:#ffc83a}.stG img{width:72px;height:72px;image-rendering:pixelated}.stG b{font-size:14px}.stG span{font-size:11.5px;opacity:.7;text-align:center}
 .mcat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.mcat .btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:16px 8px 14px;text-align:center}.mcat .me{font-size:34px;line-height:1.1}.mcat .btn.w{grid-column:1/-1;flex-direction:row;justify-content:center;gap:12px;padding:12px 10px;text-align:left}.mcat .btn.w>span:last-child{display:flex;flex-direction:column;gap:2px}.mcat b{font-size:15.5px}.mcat small{font-size:11.5px;line-height:1.35;opacity:.7;font-weight:400;word-break:keep-all}
 .mopt{display:flex;flex-direction:column;gap:6px;margin-top:6px}.mopt .btn{display:block;width:100%;margin:0;text-align:left;padding:10px 12px}
+/* ===== 1.3.0: 봉다방 타이쿤과 같은 화면 틀 ===== */
+button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+#top{padding-top:max(10px,env(safe-area-inset-top,0px))}#menuB{flex:none}
+#tabs button{padding:11px 2px;font-size:14px}
+body.fever #tabs button[data-x=work],body.fever #segBar button[data-x=sell]{color:var(--fev)}
+#segBar{display:flex;gap:6px;margin:0 auto 10px;max-width:620px}
+#segBar button{flex:1;border:0;padding:9px 4px;font-weight:800;font-size:13.5px;color:var(--dim);background:var(--tile);box-shadow:inset 0 0 0 1px var(--tileB);white-space:nowrap}
+#segBar button.on{color:var(--acc);background:var(--accT);box-shadow:inset 0 0 0 1px var(--acc)}
+.card h3{flex-wrap:wrap}.sub:empty{display:none}
+.good{color:var(--acc)}.tag.r{background:rgba(255,80,90,.16);color:var(--red)}.tag.y{background:rgba(255,200,60,.14);color:var(--gold)}
+.secs{font-weight:400;color:var(--dim);letter-spacing:0}
+.mbox{max-width:620px;margin:0 auto}
+#sline{max-width:620px;margin:8px auto 10px}#sline .chip b{font-weight:800}
+.ic.big{width:48px;height:48px;margin:0;font-size:28px}.ic.big .rbico{width:44px;height:44px}
+.car:last-child{border-bottom:0}.car .sub{display:block}.car .sub b,.car b .tag{display:inline}.car b .tag{vertical-align:1px;margin-left:2px}
+.car .bb{display:flex;gap:5px;flex:none}.car .bb .btn{min-width:66px;padding:7px 6px}
+.car .gv{display:block;margin-top:5px}
+.kmt{margin-top:8px}.kmt .kn{display:flex;align-items:center;gap:2px;font-weight:700;white-space:normal;word-break:keep-all}.kmt .ic{width:34px;height:34px}.kmt td.price{color:var(--gold);font-weight:700}body.fever .kmt td.price{color:var(--fev)}
+.crew.bots{gap:6px 10px;padding:10px 12px 8px;min-height:68px}
+.frows{margin-top:8px}.frow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.frow .fi{cursor:pointer;flex:none}.frow .ic{width:38px;height:38px;margin:0;font-size:22px}.frow b{font-size:13.5px}.frow .grow>b{display:block}.frow .fp{color:var(--gold);font-weight:700;font-size:12px;margin-left:3px}.frow .sub{display:block}.frow.off .fi,.frow.off .grow{opacity:.45}.frow>.btn.mini{min-width:46px;flex:none}
+.upg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:6px}
+.upt{border:0;font:inherit;color:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 9px;background:#101312;box-shadow:inset 0 0 0 1px var(--tileB);min-width:0}.upt:hover{box-shadow:inset 0 0 0 1px var(--acc)}
+.upt .ue{font-size:40px;line-height:64px;height:64px}.upt b{font-size:13px;white-space:nowrap}.upt .lv{font-size:11.5px;font-weight:800;line-height:1.5;padding:0 8px;border-radius:8px;background:#1b2321;color:#cfe9dd;box-shadow:inset 0 0 0 1px var(--tileB)}.upt small{font-size:11.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.upbig{font-size:84px;line-height:1.2;text-align:center;margin:0 0 8px}
+.crg{gap:7px;margin-top:10px}
+.crs{position:relative;padding:10px 4px 7px;border-radius:12px;background:linear-gradient(180deg,#202725,#121615);box-shadow:inset 0 0 0 1px var(--tileB),0 2px 0 rgba(0,0,0,.35);overflow:hidden}
+.crs::before{content:"";position:absolute;left:0;right:0;top:0;height:60%;background:radial-gradient(ellipse at 50% 0,rgba(63,217,154,.2),transparent 70%);pointer-events:none}
+.crs>*{position:relative}.crs .ic{background:transparent;box-shadow:none}.crs .ic img{background:transparent;filter:drop-shadow(0 3px 3px rgba(0,0,0,.55))}
+.crs .bar{height:5px;border-radius:4px;background:#0c0f0e;width:84%}.crs .bar i{border-radius:4px;background:linear-gradient(90deg,#2fb07c,#7fe8bd)}
+.crs.emp::before,.crs.add::before{display:none}.crs.emp,.crs.add{background:#141615;box-shadow:none;outline:1px dashed #56606a;outline-offset:-1px}.crs.add:hover{outline-color:var(--acc)}
+.crs.stuck{box-shadow:inset 0 0 0 1.5px var(--red),0 2px 0 rgba(0,0,0,.35)}.crs.stuck::before{background:radial-gradient(ellipse at 50% 0,rgba(255,123,107,.24),transparent 70%)}
+#toast{text-align:center}
+@media (max-width:480px){#top{gap:8px;padding-left:10px;padding-right:10px}#top h1{font-size:14px}#money{font-size:20px}}
+@media (max-width:400px){.car .bb .btn{min-width:58px}.mchips .rchip .ic{width:22px;height:22px}.mchips .rchip b{font-size:11px}}
+#rate{white-space:nowrap;line-height:1.35}#top h1{min-width:0;overflow:hidden;text-overflow:ellipsis}.frow .fp{white-space:nowrap}
+@media (max-width:400px){#top h1 small{display:none}}
 </style>
 </head>
 <body>
@@ -254,8 +291,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 </div>
 <div id="fever" data-a="tab" data-x="sell"></div><div id="evBar" data-a="tab" data-x="sell"></div>
 <div id="tabs">
- <button data-a="tab" data-x="work">광산</button><button data-a="tab" data-x="sell">판매</button>
- <button data-a="tab" data-x="make">가공</button><button data-a="tab" data-x="co">회사</button><button data-a="tab" data-x="bag">수집함</button><button data-a="tab" data-x="car">차고</button><button data-a="tab" data-x="shop">상점</button>
+ <button data-a="mtab" data-x="work">광산</button><button data-a="mtab" data-x="staff">직원</button><button data-a="mtab" data-x="co">회사</button><button data-a="mtab" data-x="shop">상점</button>
 </div>
 <div id="view"></div>
 <div id="evFx"></div><div id="embers"></div><div id="fv"></div>
@@ -267,7 +303,7 @@ body.nofx :not(#mine,#mine *),body.nofx :not(#mine *)::before,body.nofx :not(#mi
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.2.2';
+const APPVER='v1.3.0';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -361,7 +397,7 @@ const SHIFT_LEN=256, BURN_MAX=4, BURN_DECAY=1/128;
 const LOY_DN=100/16384, LOY_START=64, LOY_CAR=64, LOY_LOW=16, LOY_HIGH=80, LOY_LOWX=.5, LOY_HIGHX=1.25;
 const TOON_COST=500000000,TOON_N='망해가는 카페, 내가 살린다!';
 function toonView(){const im=IMG['_웹툰_카페'];modal(`<h2>📖 ${TOON_N}</h2>${im?`<img src="${im}" alt="웹툰" style="display:block;width:100%;border-radius:6px">`:''}<p class="sub" style="margin:8px 0 0">고르도 광산 타이쿤 특별 웹툰 · 4컷</p>`,[['닫기',null,'pri']]);}
-const toonCard=where=>{const own=S.toon;return `<div class="card shopit"><span style="font-size:34px;line-height:1">📖</span><div class="grow"><b>웹툰 「${TOON_N}」</b> <span class="tag">${own?'보유':'4컷 웹툰'}</span><div class="sub">${own?'언제든 다시 볼 수 있어요':'카페를 살리러 간 독수리 이야기. 한 번 사면 계속 볼 수 있어요'}</div></div><div class="sbtn">${own?'<button class="btn pri" data-a="toonView">보기</button>':where==='shop'?costB('사기',TOON_COST,'toonBuy',''):''}</div></div>`;};
+const toonCard=where=>{const own=S.toon;return `<div class="card"><h3>📖 웹툰 <span class="tag ${own?'g':''}">${own?'보유':'4컷 웹툰'}</span></h3>${buyRow('📖','「'+TOON_N+'」',own?'언제든 다시 볼 수 있어요':'카페를 살리러 간 독수리 이야기. 한 번 사면 계속 볼 수 있어요',own?'<button class="btn pri" data-a="toonView">보기</button>':where==='shop'?costB('사기',TOON_COST,'toonBuy','','pri'):'')}</div>`;};
 const SHOP={water:{n:'물',e:'💧',l:2,c:2000},coffee:{n:'커피',e:'☕',l:4,c:4000},croi:{n:'크로아상',e:'🥐',l:8,c:8000},burger:{n:'햄버거',e:'🍔',l:16,c:16000},
  tee:{n:'티셔츠',e:'👕',l:24,c:32000,cl:1},hood:{n:'후드티',e:'🧥',l:32,c:64000,cl:1},work:{n:'작업복',e:'🦺',l:48,c:128000,cl:1},suit:{n:'정장',e:'🤵',l:64,c:256000,cl:1}};
 const loyX=i=>{const l=S.wloy[i]??LOY_START;return l<LOY_LOW?LOY_LOWX:l>=LOY_HIGH?LOY_HIGHX:1;};
@@ -546,65 +582,88 @@ function mineScene(){const W=mineW(),B=S.bm?1:0,sh=W.slice(0,4-B),n=sh.length+B,
  {const R0=restW();if(R0.length)h+=`<div class="rest" title="휴게실">${R0.slice(0,4).map((i,k)=>`<span style="--gc:${GRADE[S.ws[i]].c}"><img src="${wsrc(i)}" alt=""><i style="animation-delay:-${(k*.7).toFixed(1)}s">💤</i></span>`).join('')}${R0.length>4?`<em>+${R0.length-4}</em>`:''}<b>☕ 휴게실</b></div>`;}
  return `<div id="mine" aria-hidden="true" data-sig="${mineSig()}"><div class="cave"></div>${h}<div class="cap">${n?`광부 ${W.length+B}명이 캐는 중${cars?` · 🚗 ${cars}명은 자기 차 타고!`:'…'}${W.length+B>4?' (앞 4명만 보여요)':''}`:S.strike?'월급을 못 받아 파업 중… ✊':'지금은 다들 쉬는 중… 😴'}</div>${n?'<span class="spk">✨</span><span class="spk b">⛏️</span>':''}</div>`;}
 const costB=(label,cost,a,x,cls)=>`<button class="btn ${cls||''}" data-a="${a}" data-x="${x??''}" data-c="${cost}">${label}<small>${W(cost)}</small></button>`;
+/* 1.3.0: 봉다방 타이쿤과 같은 화면 틀. 큰 탭 4개 + 그 안의 작은 탭. S.tab에는 예전과 같은 화면 이름(work·sell·make·co·bag·car·shop)과 새 staff가 들어감 */
+const GROUP={work:'work',sell:'work',make:'work',staff:'staff',co:'co',bag:'co',car:'shop',shop:'shop'};
+const SEGS={work:[['work','⛏️ 광산'],['sell','💰 판매'],['make','🔥 가공']],co:[['co','🏢 회사'],['bag','🎒 수집함']],shop:[['car','🚘 차고'],['shop','💝 선물']]};
+const segBar=()=>{const g=SEGS[GROUP[S.tab]];return g?`<div id="segBar">${g.map(([k,n])=>`<button class="${S.tab===k?'on':''}" data-a="tab" data-x="${k}">${n}</button>`).join('')}</div>`:'';};
+const buyRow=(icon,name,sub,btn)=>`<div class="car"><span class="ic big">${icon}</span><div class="grow"><b>${name}</b><span class="sub">${sub}</span></div>${btn||''}</div>`;
+const UPT={
+ gear:{e:'⛏️',n:'알바 곡괭이',lv:()=>S.gear+1,cost:()=>COST.gear(S.gear),a:'gear',d:()=>`알바가 ${WORK_T}초마다 캐는 양이 1개 늘어요. 지금은 한 번에 <b>${1+gearEff()}개</b> × 등급 배수예요.`},
+ fur:{e:'🔥',n:'화로',lv:()=>S.fur.lv+1,cost:()=>COST.fur(S.fur.lv),a:'furLv',d:()=>`화로가 더 빨리 구워요. 지금은 <b>${trim(furT().toFixed(1))}초</b>마다 <b>${furBatch()}개</b>를 만들어요.`},
+ crLv:{e:'🛠️',n:'작업대',lv:()=>S.cr.lv+1,cost:()=>COST.crLv(S.cr.lv),a:'crLv',d:()=>'제작소의 모든 칸이 빨라져요.'}};
+const upTile=k=>{const u=UPT[k];if(k==='crLv'&&!S.cr.u)return `<button class="upt" data-a="tab" data-x="make" title="제작소 · 가공에서 지을 수 있어요"><span class="ue">🛠️</span><b>제작소</b><span class="lv">아직 없음</span><small>${W(COST.crafter)}</small></button>`;
+ return `<button class="upt" data-a="upInfo" data-x="${k}" title="${u.n} · 눌러서 강화"><span class="ue">${u.e}</span><b>${u.n}</b><span class="lv">${u.lv()}단계</span><small>${W(u.cost())}</small></button>`;};
 const VIEW={
- shop(){const n=nW(),L=S.ws.map((g,i)=>i).sort((a,b)=>(S.wloy[a]??0)-(S.wloy[b]??0));
-  return `  ${toonCard('shop')}${Object.keys(SHOP).map(k=>{const it=SHOP[k];return `<div class="card shopit">${sIc(k)}<div class="grow"><b>${it.n}</b> <span class="tag">${it.cl?'옷':'음식'}</span><div class="sub">충성도 +${it.l} · 가진 것 <b>${S.gift[k]||0}</b>개</div></div><div class="sbtn">${costB('1개',it.c,'shopBuy',k+':1')}${costB('8개',it.c*8,'shopBuy',k+':8')}${(S.gift[k]||0)&&n?`<button class="btn pri" data-a="shopAll" data-x="${k}">나눠 주기</button>`:''}</div></div>`;}).join('')}
-  <div class="card"><h3>💗 직원 충성도 <span class="tag">낮은 순</span></h3>${n?L.map(i=>{const g=S.ws[i],l=S.wloy[i]??LOY_START;return `<div class="loyrow" data-a="fireW" data-x="${i}"><img src="${wsrc(i)}" alt="" style="box-shadow:0 0 0 2px ${GRADE[g].c}"><b style="color:${GRADE[g].c}">${g}</b><div class="bar grow"><i data-w="loy:${i}" style="background:${l<LOY_LOW?'#ff5d5d':l>=LOY_HIGH?'#ff6fa8':'#f2a14e'}"></i></div><span class="sub" data-v="loy:${i}"></span></div>`;}).join(''):'<div class="sub">아직 채굴 알바가 없습니다.</div>'}</div>`;},
+ shop(){const tot=Object.keys(SHOP).reduce((a,k)=>a+(S.gift[k]||0),0),n=nW();
+  return `${toonCard('shop')}<div class="card"><h3>💝 충성도 선물 <span class="tag ${tot?'g':''}">가진 것 ${tot}개</span></h3><div class="sub">음식과 옷을 사서 주면 직원 충성도가 올라가요. <b>나눠 주기</b>는 충성도가 낮은 직원부터 줘요. 한 명에게만 줄 때는 직원 얼굴을 눌러 주세요.</div>
+  ${Object.keys(SHOP).map(k=>{const it=SHOP[k],h=S.gift[k]||0;return `<div class="car">${sIc(k).replace('class="ic"','class="ic big"')}<div class="grow"><b>${it.n} <span class="tag">${it.cl?'옷':'음식'}</span></b><span class="sub">충성도 +${it.l} · 가진 것 <b>${h}</b>개</span>${h&&n?`<button class="btn mini on gv" data-a="shopAll" data-x="${k}">나눠 주기</button>`:''}</div><div class="bb">${costB('1개',it.c,'shopBuy',k+':1','pri')}${costB('8개',it.c*8,'shopBuy',k+':8','pri')}</div></div>`;}).join('')}</div>`;},
+ staff(){const n=nW(),L=S.ws.map((g,i)=>i).sort((a,b)=>(S.wloy[a]??0)-(S.wloy[b]??0));
+  return `<div class="card" id="wCard"><h3>👷 채굴 알바 <span class="tag g">${nWA()} / ${wMax()}명</span>${nVac()?` <span class="tag">🏖️ 휴가 ${nVac()}명</span>`:''}</h3><div class="sub" data-v="pay" style="font-weight:700;color:#c9d1cd;margin:2px 0"></div>
+   <div class="bar"><i data-w="pay"></i></div>
+   <div class="sub" style="margin-top:8px">${n?'얼굴을 <b>끌어서</b> 다른 조 칸에 놓으면 옮겨져요. <b>누르면</b> 이름·선물·차·휴가·교육 메뉴가 나와요.':'아직 채굴 알바가 없어요. 고용하면 사장님과 같이 캐요.'}</div>
+   ${n?shiftUI():''}${crewW()}
+   <div class="row">${nWA()>=wMax()?`<button class="btn no" data-a="hire">채굴 알바 ${nWA()}명 (최대)<small>${S.co<CO_MAX?'회사 레벨을 올리면 더 고용':'더 고용할 수 없음'}</small></button>`:costB('채굴 알바 고용',COST.worker(nW()),'hire','','pri')}${lowIdx()>=0?costB(S.ws[lowIdx()]+'등급 알바 교육 ('+TRAIN[S.ws[lowIdx()]].p*100+'%)',TRAIN[S.ws[lowIdx()]].c,'train',lowIdx()):''}</div></div>
+  <div class="card"><h3>📋 등급 <span class="tag">고용할 때 확률 · 채굴 배수 · 월급</span></h3><div class="gtab">${[...GORD].map(g=>`<div><b style="color:${GRADE[g].c}">${g}</b> ${S.ws.filter(x=>x===g).length}명<br>확률 ${+(GRADE[g].p*100).toFixed(1)}%<br>채굴 ×${GRADE[g].x}<br>월급 ${F(GRADE[g].w)}</div>`).join('')}</div></div>
+  <div class="card"><h3>💗 직원 충성도 <span class="tag">낮은 순</span></h3>${n?L.map(i=>{const g=S.ws[i],l=S.wloy[i]??LOY_START;return `<div class="loyrow" data-a="fireW" data-x="${i}"><img src="${wsrc(i)}" alt="" style="box-shadow:0 0 0 2px ${GRADE[g].c}"><b style="color:${GRADE[g].c}">${g}</b><div class="bar grow"><i data-w="loy:${i}" style="background:${l<LOY_LOW?'#ff5d5d':l>=LOY_HIGH?'#ff6fa8':'#f2a14e'}"></i></div><span class="sub" data-v="loy:${i}"></span></div>`;}).join(''):'<div class="sub">아직 채굴 알바가 없습니다.</div>'}
+   <div class="row"><button class="btn" data-a="tab" data-x="shop">💝 선물 사러 가기</button></div></div>`;},
  work(){
   return `<div class="mbox">${mineScene()}<div class="mchips">${ORES.map(it=>`<span class="chip rchip" data-chip="${it}" data-a="info" data-x="${it}" title="${ITEM[it].n}">${ic(it)}<b data-v="inv:${it}"></b></span>`).join('')}</div></div>
+  <div class="dropr" id="sline"><span class="chip">📦 창고 품목마다 <b data-v="cap"></b>개</span><span class="chip">👷 알바 <b>${nWA()} / ${wMax()}</b></span><span class="chip">⛏️ 채굴력 <b>×${trim(power().toFixed(1))}</b></span></div>
+  ${nW()?'':`<div class="card"><h3>👋 같이 캘 알바가 필요해요</h3><div class="sub">지금은 사장님 혼자 캐고 있어요. <b>직원</b> 탭에서 채굴 알바를 고용하면 같이 캐요.</div><div class="row"><button class="btn pri" data-a="tab" data-x="staff">👷 알바 고용하러 가기</button></div></div>`}
   ${brokeW().length||(car()&&bDur()<25)?`<div class="card"><h3>🔧 수리가 필요한 차</h3><div class="sub">${brokeW().length?`직원 차 ${brokeW().length}대가 많이 닳았어요(내구도 50 미만). 0이 된 뒤 ${Math.round(SCRAP_T/60)}분이 지나면 폐차돼요.`:''}${car()&&bDur()<25?` 사장님 차 ${car()[0]} 내구도 ${Math.ceil(bDur())}${bDur()>0?'':' · 고장이라 창고·피버 효과 꺼짐'}.`:''}</div><div class="row">${brokeW().length?costB('직원 차 모두 수리',brokeW().reduce((a,i)=>a+wFixCost(i),0),'wFixAll',''):''}${car()&&bDur()<100?costB('사장 차 수리',fixCost(S.car,bDur()),'bFix',S.car):''}</div></div>`:''}
   ${S.wcar&&S.wcar.want?`<div class="card bad"><h3>🚗 직원들이 술렁입니다</h3><div class="sub">사장님 차를 보고 ${wcarWho().map(i=>`<b style="color:${GRADE[S.ws[i]].c}">${S.ws[i]}등급</b>`).join(', ')} 알바 ${wcarWho().length}명이 차를 사 달라고 합니다. <b data-v="wcarT"></b> 안에 사 주지 않으면 이 알바들 충성도가 32씩 떨어집니다.</div><div class="row">${costB('차 사 주기 ('+wcarWho().length+'명)',carDesireCost(),'wcarBuy','','pri')}</div></div>`:''}
-  <div class="sub" style="margin:6px 0 12px">📦 창고 · 품목마다 <b data-v="cap"></b>개까지</div>
-  <div class="card" id="wCard"><h3>👷 채굴 알바 <span class="tag g">${nWA()} / ${wMax()}명</span>${nVac()?` <span class="tag">🏖️ 휴가 ${nVac()}명</span>`:''} <span class="tag">알바 곡괭이 ${gearEff()+1}단계</span></h3><div class="sub" data-v="pay" style="font-weight:700;color:#c9d1cd;margin:2px 0"></div>
-   <div class="sub">${WORK_T}초마다 ${1+gearEff()}개 × 등급 배수 · 실패 ${Math.round(failP()*100)}%</div>
-   <div class="bar"><i data-w="pay"></i></div><div class="bossmine"><img src="${bossSrc()}" alt=""><div class="grow">${S.bm?`<b>👑 ${escH(bTitle())} 직접 채굴 중</b><div class="sub">채굴 ×${bossX()} (회사 레벨로 올라감) · 월급 0원 · 피로·교대 없이 늘 캠</div>`:`<b>👑 사장님은 쉬는 중</b><div class="sub">다시 들어가면 채굴 ×${bossX()}, 월급 0원</div>`}</div><button class="btn mini ${S.bm?'':'pri'}" data-a="bmTog">${S.bm?'빠지기':'들어가기'}</button><button class="btn mini" data-a="bName" title="사장님 이름" style="margin-left:4px">✏️</button></div>${nW()?shiftUI():''}${crewW()}<div class="gtab">${[...GORD].map(g=>`<div><b style="color:${GRADE[g].c}">${g}등급</b> ${S.ws.filter(x=>x===g).length}명<br>확률 ${+(GRADE[g].p*100).toFixed(1)}%<br>채굴 ×${GRADE[g].x}<br>월급 ${F(GRADE[g].w)}</div>`).join('')}</div>
-   <div class="row">${nWA()>=wMax()?`<button class="btn no" data-a="hire">채굴 알바 ${nWA()}명 (최대)<small>${S.co<CO_MAX?'회사 레벨을 올리면 더 고용':'더 고용할 수 없음'}</small></button>`:costB('채굴 알바 고용',COST.worker(nW()),'hire','','pri')}${lowIdx()>=0?costB(S.ws[lowIdx()]+'등급 알바 교육 ('+TRAIN[S.ws[lowIdx()]].p*100+'%)',TRAIN[S.ws[lowIdx()]].c,'train',lowIdx()):''}${costB('알바 곡괭이 '+(S.gear+2)+'단계로',COST.gear(S.gear),'gear','')}</div></div>`;},
+  <div class="card"><h3>👑 사장님 <span class="tag g">채굴 ×${bossX()}</span></h3><div class="bossmine"><img src="${bossSrc()}" alt=""><div class="grow">${S.bm?`<b>${escH(bTitle())} 직접 채굴 중</b><div class="sub">채굴 ×${bossX()} (회사 레벨로 올라감) · 월급 0원 · 피로·교대 없이 늘 캠</div>`:`<b>사장님은 쉬는 중</b><div class="sub">다시 들어가면 채굴 ×${bossX()}, 월급 0원</div>`}</div><button class="btn mini ${S.bm?'':'pri'}" data-a="bmTog">${S.bm?'빠지기':'들어가기'}</button><button class="btn mini" data-a="bName" title="사장님 이름" style="margin-left:4px">✏️</button></div></div>
+  <div class="card"><h3>⛏️ 채굴 장비 <span class="tag g">알바 곡괭이 ${gearEff()+1}단계</span></h3><div class="sub">알바는 ${WORK_T}초마다 ${1+gearEff()}개 × 등급 배수만큼 캐요 · 실패 ${Math.round(failP()*100)}%</div>
+   ${buyRow('⛏️','알바 곡괭이 <span class="tag">'+(gearEff()+1)+'단계</span>','강화하면 한 번에 캐는 양이 1개 늘어요',costB((S.gear+2)+'단계로',COST.gear(S.gear),'gear','','pri'))}</div>`;},
  sell(){
-  return `<div class="card"><div class="row" style="margin-top:0"><div class="grow sub" data-v="sellNote"></div><button class="btn pri sellb" data-a="sellAll">모두 판매 <span data-v="sellAll"></span></button></div>
-  <table class="it"><tr><th>품목</th><th>보유</th><th data-v="priceH"></th><th></th></tr>${SELLS.concat(RARES.filter(k=>have(k)>=1)).map(k=>`<tr><td data-a="info" data-x="${k}" style="cursor:pointer">${ic(k)}${ITEM[k].n}</td><td data-v="${ITEM[k].rare?'have':'inv'}:${k}"></td><td class="price ${ITEM[k].craft?'cr':''}" data-v="price:${k}"></td><td>
+  return `<div class="card"><h3>💰 제품 판매 <span class="tag g">자동 판매 중</span></h3><div class="sub" data-v="sellNote"></div>
+  ${buyRow('💰','모두 판매','🔒 잠근 품목만 빼고 한 번에 · <b data-v="sellAll"></b>','<button class="btn pri sellb" data-a="sellAll">모두 판매</button>')}
+  <table class="it kmt"><tr><th>품목</th><th>보유</th><th data-v="priceH"></th><th></th></tr>${SELLS.concat(RARES.filter(k=>have(k)>=1)).map(k=>`<tr><td data-a="info" data-x="${k}" style="cursor:pointer"><span class="kn">${ic(k)}${ITEM[k].n}</span></td><td data-v="${ITEM[k].rare?'have':'inv'}:${k}"></td><td class="price ${ITEM[k].craft?'cr':''}" data-v="price:${k}"></td><td>
    <button class="btn mini sellb" data-a="sell" data-x="${k}">판매</button> <button class="btn mini ${S.lock[k]?'on':''}" data-a="lock" data-x="${k}" title="모두 판매와 판매 알바에게서 빼고 모아 두기">🔒</button></td></tr>`).join('')}</table>
   </div>
   <div class="card" id="swCard"><h3>🤖 판매 로봇 <span class="tag g">${S.sw} / ${sMax()}대</span><span class="sp"></span><span class="sub" data-v="pay"></span></h3>
    <div class="sub">한 대당 1초에 ${SELL_R}개 · 유지비 ${W(WAGE)} · 👑 사장님도 1초에 ${BOSS_SELL}개씩 직접 팔아요</div>
-   ${crew(S.sw,'🧑‍💼','sell')}<div class="row">${S.sw>=sMax()?`<button class="btn no" data-a="hireS">판매 로봇 ${S.sw}대 (최대)<small>${S.co<CO_MAX?'회사 레벨을 올리면 더 고용':'더 고용할 수 없음'}</small></button>`:costB('판매 로봇 구입',COST.sworker(S.sw),'hireS','','pri')}${S.sw?`<button class="btn" data-a="fireS">한 대 처분</button>`:''}</div></div>
+   ${crew(S.sw,'🧑‍💼','sell bots')}<div class="row">${S.sw>=sMax()?`<button class="btn no" data-a="hireS">판매 로봇 ${S.sw}대 (최대)<small>${S.co<CO_MAX?'회사 레벨을 올리면 더 고용':'더 고용할 수 없음'}</small></button>`:costB('🤖 판매 로봇 한 대 더',COST.sworker(S.sw),'hireS','','pri')}${S.sw?`<button class="btn" data-a="fireS">한 대 처분</button>`:''}</div></div>
 `;},
- make(){const n=Object.keys(PROD).filter(o=>S.fur.on[o]).length;
-  let h=`<div class="sec">화로</div><div class="card"><h3>🔥 화로 <span class="tag">${S.fur.lv+1}단계</span><span class="sp"></span><span class="chip" data-need="coal:1">⚫ 석탄 <b data-v="have:coal"></b></span></h3>
+ make(){
+  let h=`<div class="card"><h3>🔥 화로 <span class="tag g">${S.fur.lv+1}단계</span><span class="sp"></span><span class="chip" data-need="coal:1">⚫ 석탄 <b data-v="have:coal"></b></span></h3>
   <div class="sub">원석 1 + 석탄 1 → 제품 1 · <b data-v="furT"></b>초마다 <b data-v="furBatch"></b>개</div><div class="bar"><i data-w="fur"></i></div>
-  ${furOrder().map(o=>{const g=PROD[o];return `<div class="row"><button class="btn mini ${S.fur.on[o]?'on':''}" data-a="furOn" data-x="${o}">${S.fur.on[o]?'켜짐':'꺼짐'}</button><span class="grow">${ic(o)}${ITEM[o].n} <b data-v="have:${o}"></b> → ${ic(g)}${ITEM[g].n} <b data-v="have:${g}"></b> <span class="sub">${F(ITEM[g].npc)}원</span></span>${S.fw?`<span class="fa"><button class="btn mini" data-a="faDn" data-x="${o}">−</button><b title="배정된 가공 로봇">🤖${faN(o)}</b><button class="btn mini" data-a="faUp" data-x="${o}">+</button></span>`:''}</div>`;}).join('')}
-  <div class="sub" style="margin-top:10px"><b>🤖 가공 로봇 <span class="tag g">${S.fw||0} / ${fMax()}대</span></b> 유지비 ${W(FW_WAGE)} · 남은 로봇 <b>${(S.fw||0)-faSum()}대</b>.</div>${crew(S.fw||0,'🧑‍🍳','')}
-  <div class="row">${(S.fw||0)>=fMax()?`<button class="btn no" data-a="hireF">가공 로봇 ${S.fw}대 (최대)<small>${S.co<CO_MAX?'회사 레벨을 올리면 더 고용':'더 고용할 수 없음'}</small></button>`:costB('가공 로봇 구입',COST.fworker(S.fw||0),'hireF','','pri')}${S.fw?'<button class="btn" data-a="fireF">한 대 처분</button>':''}${costB('화로 '+(S.fur.lv+2)+'단계로',COST.fur(S.fur.lv),'furLv','')}</div></div>`;
-  h+=`<div class="sec">제작소</div>`;
-  if(!S.cr.u)h+=`<div class="card"><div class="sub">제작품 5종</div><div class="row">${costB('제작소 짓기',COST.crafter,'buyCr','','pri')}</div></div>`;
+  <div class="frows">${furOrder().map(o=>{const g=PROD[o],on=S.fur.on[o];return `<div class="frow ${on?'':'off'}"><span class="fi" data-a="info" data-x="${g}">${ic(g)}</span><div class="grow"><b>${ITEM[g].n} <span class="fp">${F(ITEM[g].npc)}원</span></b><span class="sub">${ITEM[o].n} <b data-v="have:${o}"></b> → 제품 <b data-v="have:${g}"></b></span></div>${S.fw?`<span class="fa"><button class="btn mini" data-a="faDn" data-x="${o}">−</button><b title="배정된 가공 로봇">🤖${faN(o)}</b><button class="btn mini" data-a="faUp" data-x="${o}">+</button></span>`:''}<button class="btn mini ${on?'on':''}" data-a="furOn" data-x="${o}">${on?'켜짐':'꺼짐'}</button></div>`;}).join('')}</div>
+  ${buyRow('🔥','화로 <span class="tag">'+(S.fur.lv+1)+'단계</span>','강화하면 더 빨리 구워요',costB((S.fur.lv+2)+'단계로',COST.fur(S.fur.lv),'furLv','','pri'))}</div>
+  <div class="card"><h3>🤖 가공 로봇 <span class="tag g">${S.fw||0} / ${fMax()}대</span></h3><div class="sub">유지비 ${W(FW_WAGE)} · 남은 로봇 <b>${(S.fw||0)-faSum()}대</b> · 화로 줄의 − + 로 원석마다 배정해요</div>${crew(S.fw||0,'🧑‍🍳','bots')}
+  <div class="row">${(S.fw||0)>=fMax()?`<button class="btn no" data-a="hireF">가공 로봇 ${S.fw}대 (최대)<small>${S.co<CO_MAX?'회사 레벨을 올리면 더 고용':'더 고용할 수 없음'}</small></button>`:costB('🤖 가공 로봇 한 대 더',COST.fworker(S.fw||0),'hireF','','pri')}${S.fw?'<button class="btn" data-a="fireF">한 대 처분</button>':''}</div></div>`;
+  if(!S.cr.u)h+=`<div class="card"><h3>🛠️ 제작소 <span class="tag">아직 없음</span></h3>${buyRow('🛠️','제작소 짓기','제작품 5종',costB('짓기',COST.crafter,'buyCr','','pri'))}</div>`;
   else{
-   h+=`<div class="card"><h3>🛠️ 제작 슬롯 <span class="tag g">${S.cr.slots.length} / ${CR_MAX}</span></h3><div class="crg">${S.cr.slots.map((sl,i)=>{const r=RECIPE[sl.k];return `<button class="crs ${r?'':'emp'}" data-a="crPick" data-x="${i}" data-crn="${i}">${r?`${ic(sl.k)}<span class="cn">${r.n}</span><span class="bar"><i data-w="cs:${i}"></i></span><span class="cc"><b data-v="inv:${sl.k}"></b></span>`:'<span class="plus">＋</span><span class="cn">비어 있음</span>'}</button>`;}).join('')}${S.cr.slots.length<CR_MAX?`<button class="crs add" data-a="crSlot" data-c="${COST.crSlot(S.cr.slots.length)}"><span class="plus">➕</span><span class="cn">칸 추가</span><span class="cc">${W(COST.crSlot(S.cr.slots.length))}</span></button>`:''}</div>
-    <div class="row">${costB('작업대 '+(S.cr.lv+2)+'단계로 (모든 칸 빨라짐)',COST.crLv(S.cr.lv),'crLv','')}</div></div>`;}
+   h+=`<div class="card"><h3>🛠️ 제작소 <span class="tag g">제작 칸 ${S.cr.slots.length} / ${CR_MAX}</span><span class="tag">누르면 만들 것을 골라요</span></h3><div class="crg">${S.cr.slots.map((sl,i)=>{const r=RECIPE[sl.k];return `<button class="crs ${r?'':'emp'}" data-a="crPick" data-x="${i}" data-crn="${i}">${r?`${ic(sl.k)}<span class="cn">${r.n}</span><span class="bar"><i data-w="cs:${i}"></i></span><span class="cc"><b data-v="inv:${sl.k}"></b></span>`:'<span class="plus">＋</span><span class="cn">비어 있음</span>'}</button>`;}).join('')}${S.cr.slots.length<CR_MAX?`<button class="crs add" data-a="crSlot" data-c="${COST.crSlot(S.cr.slots.length)}"><span class="plus">＋</span><span class="cn">칸 추가</span><span class="cc">${W(COST.crSlot(S.cr.slots.length))}</span></button>`:''}</div>
+    ${buyRow('🛠️','작업대 <span class="tag">'+(S.cr.lv+1)+'단계</span>','강화하면 모든 칸이 빨라져요',costB((S.cr.lv+2)+'단계로',COST.crLv(S.cr.lv),'crLv','','pri'))}</div>`;}
   return h;},
  co(){const nx=S.co<CO_MAX;
-  return `<div class="card bosscard" data-a="boss"><img src="${bossSrc()}" alt=""><div><h3 style="margin:0">👑 사장님</h3><div class="sub">${car()?'🚗 '+car()[0]+' 타는 중 · 내구도 '+Math.ceil(bDur())+(bDur()>0?'':' (고장!)'):'아직 차가 없습니다'} · 차 ${S.cars.length}대 · 직원 ${nW()}명</div></div></div><div class="card"><h3>🏢 회사 <span class="tag g">${S.co}레벨</span>${nx?'':' <span class="tag">최고 레벨</span>'}</h3>
-   <div class="sub">채굴 알바 최대 <b>${wCapL(S.co)}명</b> · 판매 로봇 최대 <b>${sMax()}대</b> · 가공 로봇 최대 <b>${fMax()}대</b> · 관리인 최대 <b>${mCapL(S.co)}명</b> · 창고 <b>${F(capBase())}개</b> · 알바 채굴 실패 <b>${Math.round(failP()*100)}%</b> · 👑 사장 채굴 <b>×${bossX()}</b></div>
-   ${nx?`<div class="sub" style="margin-top:4px">${S.co+1}레벨이 되면: 채굴 알바 최대 ${wCapL(S.co+1)}명 · 판매 로봇 ${sCapL(S.co+1)}대 · 가공 로봇 ${fCapL(S.co+1)}대 · 관리인 ${mCapL(S.co+1)}명 · 창고 ${F(capBase(S.co+1))}개 · 사장 채굴 ×${S.co+2} · 실패 ${Math.round(Math.max(.1,FAIL0-.01*S.co)*100)}%</div><div class="row">${costB('회사 '+(S.co+1)+'레벨로 승급',COST.co(S.co),'upCo','','pri')}</div>`:''}</div>
-  <div class="card" id="mgCard"><h3>👔 관리인 <span class="tag g">${nM()} / ${mMax()}명</span></h3>
-   <div class="sub">월급 ${W(mgrWage())}</div>
+  return `<div class="card"><div class="bosscard" data-a="boss"><img src="${bossSrc()}" alt=""><div><h3 style="margin:0">👑 ${escH(bTitle())}</h3><div class="sub">${car()?'🚗 '+car()[0]+' 타는 중 · 내구도 '+Math.ceil(bDur())+(bDur()>0?'':' (고장!)'):'아직 차가 없습니다'} · 차 ${S.cars.length}대 · 직원 ${nW()}명</div></div></div></div>
+  <div class="card" id="mgCard"><h3>👔 관리인의 살림 <span class="tag ${nM()?'g':''}">${nM()} / ${mMax()}명</span><span class="tag">월급 ${W(mgrWage())}</span></h3>
+   <div class="sub">관리인은 들인 돈을 가장 빨리 되찾는 것부터 알아서 사요. 본전까지 1시간 넘게 걸리는 건 돈이 넉넉할 때만 사요.</div>
    ${S.ms.map((d,i)=>`<div class="mrow"><i class="mgico"></i><b>관리인 ${i+1}</b><select data-mgr="${i}">${Object.entries(DIRS).map(([k,v])=>`<option value="${k}" ${d===k?'selected':''}>${v.n}: ${v.d}</option>`).join('')}</select><button class="btn mini" data-a="fireM" data-x="${i}">내보내기</button></div>`).join('')}
-   ${nM()?`<div class="sub" style="margin-top:6px">관리인은 들인 돈을 가장 빨리 되찾는 것부터 사요. 본전까지 1시간 넘게 걸리는 건 돈이 넉넉할 때만 사요.</div>
-   <div class="mopt"><span class="sub">남길 돈</span>${[0,1e6,1e7,1e8].map(v=>`<button class="btn mini ${(S.mgr.keep||0)===v?'on':''}" data-a="mgKeep" data-x="${v}">${v?W(v):'월급 4번치'}</button>`).join('')}</div>
-   <div class="mopt"><button class="btn mini ${S.mgr.fix?'on':''}" data-a="mgFix">🔧 차 수리 ${S.mgr.fix?'맡김':'안 맡김'}</button><button class="btn mini ${S.mgr.gift?'on':''}" data-a="mgGift">🍔 충성도 챙기기 ${S.mgr.gift?'맡김':'안 맡김'}</button></div>
-   <div class="mlog"><b>다음에 살 것</b> <span data-v="mnext"></span><br><b>최근에 한 일</b><br><span data-v="mlog"></span></div>`:''}
+   ${nM()?`<div class="row"><span class="sub">남길 돈</span>${[0,1e6,1e7,1e8].map(v=>`<button class="btn mini ${(S.mgr.keep||0)===v?'on':''}" data-a="mgKeep" data-x="${v}">${v?W(v):'월급 4번치'}</button>`).join('')}</div>
+   <div class="row"><button class="btn mini ${S.mgr.fix?'on':''}" data-a="mgFix">🔧 차 수리 ${S.mgr.fix?'맡김':'안 맡김'}</button><button class="btn mini ${S.mgr.gift?'on':''}" data-a="mgGift">🍔 충성도 챙기기 ${S.mgr.gift?'맡김':'안 맡김'}</button></div>
+   <div class="sec">다음에 살 것</div><div class="mlog" style="margin-top:0"><span data-v="mnext"></span></div><div class="sec">최근에 한 일</div><div class="mlog" style="margin-top:0"><span data-v="mlog"></span></div>`:''}
    <div class="row">${nM()>=mMax()?`<button class="btn no" data-a="hireM">관리인 ${nM()}명 (최대)<small>${mMax()<4?'회사 레벨을 올리면 더 고용':'더 고용할 수 없음'}</small></button>`:costB('관리인 고용',MGR_COST*Math.pow(3,nM()),'hireM','','pri')}</div></div>
+  <div class="card"><h3>🏢 고르도 광산 <span class="tag g">Lv.${S.co}</span>${nx?'':' <span class="tag">최고 레벨</span>'}</h3>
+   <div class="sub">채굴 알바 최대 <b>${wCapL(S.co)}명</b> · 판매 로봇 최대 <b>${sMax()}대</b> · 가공 로봇 최대 <b>${fMax()}대</b> · 관리인 최대 <b>${mCapL(S.co)}명</b> · 창고 <b>${F(capBase())}개</b> · 알바 채굴 실패 <b>${Math.round(failP()*100)}%</b> · 👑 사장 채굴 <b>×${bossX()}</b></div>
+   ${nx?`<div class="sub" style="margin-top:4px">Lv.${S.co+1}이 되면: <span class="good">채굴 알바 최대 ${wCapL(S.co+1)}명 · 판매 로봇 ${sCapL(S.co+1)}대 · 가공 로봇 ${fCapL(S.co+1)}대 · 관리인 ${mCapL(S.co+1)}명 · 창고 ${F(capBase(S.co+1))}개 · 사장 채굴 ×${S.co+2} · 실패 ${Math.round(Math.max(.1,FAIL0-.01*S.co)*100)}%</span></div><div class="row">${costB('회사 승급 (Lv.'+(S.co+1)+')',COST.co(S.co),'upCo','','pri')}</div>`:''}
+   <div class="sec">🔧 강화 <small class="secs">그림을 누르면 올릴 수 있어요</small></div><div class="upg">${['gear','fur','crLv'].map(upTile).join('')}</div></div>
   <div class="card"><h3>📊 장부</h3><div class="sub">번 돈 <b data-v="total"></b> · 단속 ${S.evN.cop}번 · 범죄 흥행 ${S.evN.mob}번 · 준 월급 <b data-v="wages"></b> · 준 퇴직금 ${W(S.sev||0)} · 피버타임 ${S.fevers}번 · 차 사고 ${W(S.carBad||0)} · 차 ${S.cars.length}대</div>
   <div class="sub" style="margin-top:8px">가진 돈 그래프 <span data-v="histSpan"></span></div><div id="chart"></div></div>`;},
  bag(){const cell=k=>{const g=S.got[k]>0,r=ITEM[k].rare;return `<button class="slot ${g?'':'none'} ${r?'rare':''}" data-a="info" data-x="${k}">${ic(k)}<span class="nm">${g||!r?ITEM[k].n:'???'}</span><span class="ct" data-v="have0:${k}"></span></button>`;};
-  const all=ORES.concat(Object.values(PROD),CRAFTS,RARES),n=all.filter(k=>S.got[k]>0).length;
-  const an=ACH.filter(a=>S.ach&&S.ach[a.id]).length;
-  return `<div class="card"><h3>🎒 수집함 <span class="tag g">품목 ${n} / ${all.length}</span> <span class="tag g">차 ${S.cars.length} / ${CARS.length}</span> <span class="tag g">업적 ${an} / ${ACH.length}</span></h3></div>${S.toon?toonCard('bag'):''}
-  <div class="sec">🏅 업적</div><div class="achg">${ACH.filter(a=>!a.f).map(achCell).join('')}</div>
-  <div class="sec">🎖️ 실패 훈장 <span class="sub">망해도 남는 게 있다</span></div><div class="achg">${ACH.filter(a=>a.f).map(achCell).join('')}</div>
-  <div class="sec">광석</div><div class="grid">${ORES.map(cell).join('')}</div>
-  <div class="sec">가공 제품</div><div class="grid">${Object.values(PROD).map(cell).join('')}</div>
-  <div class="sec">제작품</div><div class="grid">${CRAFTS.map(cell).join('')}</div>
-  <div class="sec">🌟 최상급 제품</div><div class="grid">${RARES.map(cell).join('')}</div>
-  <div class="sec">차 <span class="vsw inl"><button class="${V3D?'':'on'}" data-a="v3d" data-x="0">2D</button><button class="${V3D?'on':''}" data-a="v3d" data-x="1">360°</button></span></div><div class="grid">${CARS.map((c,i)=>`<button class="slot ${S.cars.includes(i)?'':'none'}" data-a="carInfo" data-x="${i}">${carImg(c)}<span class="nm">${c[0]}</span>${S.car===i?'<span class="ct">타는 중</span>':''}</button>`).join('')}</div>`;},
+  const all=ORES.concat(Object.values(PROD),CRAFTS,RARES),n=all.filter(k=>S.got[k]>0).length,cnt=L=>L.filter(k=>S.got[k]>0).length+' / '+L.length;
+  const an=ACH.filter(a=>S.ach&&S.ach[a.id]).length,A1=ACH.filter(a=>!a.f),A2=ACH.filter(a=>a.f),ac=L=>L.filter(a=>S.ach&&S.ach[a.id]).length+' / '+L.length;
+  const sec=(t,tag,body,sub)=>`<div class="card"><h3>${t} <span class="tag g">${tag}</span>${sub?`<span class="tag">${sub}</span>`:''}</h3>${body}</div>`;
+  return `<div class="dropr" id="sline" style="margin-top:0"><span class="chip">품목 <b>${n} / ${all.length}</b></span><span class="chip">차 <b>${S.cars.length} / ${CARS.length}</b></span><span class="chip">업적 <b>${an} / ${ACH.length}</b></span></div>${S.toon?toonCard('bag'):''}
+  ${sec('🏅 업적',ac(A1),`<div class="achg">${A1.map(achCell).join('')}</div>`)}
+  ${sec('🎖️ 실패 훈장',ac(A2),`<div class="achg">${A2.map(achCell).join('')}</div>`,'망해도 남는 게 있다')}
+  ${sec('⛏️ 광석',cnt(ORES),`<div class="grid">${ORES.map(cell).join('')}</div>`)}
+  ${sec('🔥 가공 제품',cnt(Object.values(PROD)),`<div class="grid">${Object.values(PROD).map(cell).join('')}</div>`)}
+  ${sec('🛠️ 제작품',cnt(CRAFTS),`<div class="grid">${CRAFTS.map(cell).join('')}</div>`)}
+  ${sec('🌟 최상급 제품',cnt(RARES),`<div class="grid">${RARES.map(cell).join('')}</div>`)}
+  <div class="card"><h3>🚘 차 <span class="tag g">${S.cars.length} / ${CARS.length}</span><span class="sp"></span><span class="vsw inl"><button class="${V3D?'':'on'}" data-a="v3d" data-x="0">2D</button><button class="${V3D?'on':''}" data-a="v3d" data-x="1">360°</button></span></h3><div class="grid">${CARS.map((c,i)=>`<button class="slot ${S.cars.includes(i)?'':'none'}" data-a="carInfo" data-x="${i}">${carImg(c)}<span class="nm">${c[0]}</span>${S.car===i?'<span class="ct">타는 중</span>':''}</button>`).join('')}</div></div>`;},
  car(){const colW=110,rowH=84,pad=10,headH=22,nw=96,nh=66,voff=(rowH-nh)/2,rows=CATROWS,
   colOf=i=>{const cc=CARCAT[i];return i===0?0:(cc.cat==='오토바이'?cc.t:cc.t+1);},
   maxC=Math.max(...CARS.map((_,i)=>colOf(i))),Wd=pad*2+(maxC+1)*colW,Hd=pad+headH+rows.length*rowH+pad,
@@ -613,11 +672,11 @@ const VIEW={
   let lines='';rows.forEach(row=>row.list.forEach(idx=>{const pv=carPrev(idx);if(pv<0||!pos[pv])return;const a=pos[pv],b=pos[idx],x1=a.x+nw,y1=a.y+nh/2,x2=b.x,y2=b.y+nh/2,own=S.cars.includes(idx),ok=S.cars.includes(pv);lines+=`<path d="M${x1} ${y1} C${x1+28} ${y1} ${x2-28} ${y2} ${x2} ${y2}" fill="none" stroke="${own?'#3fd99a':ok?'#5c6b78':'#2a3038'}" stroke-width="${own?2.5:2}"/>`;}));
   let heads='';for(let co=0;co<=maxC;co++)heads+=`<span class="thead" style="left:${px(co)+nw/2}px">T${co+1}</span>`;
   let nodes='';rows.forEach(row=>row.list.forEach(idx=>{const c=CARS[idx],own=S.cars.includes(idx),unl=carUnlocked(idx),rid=S.car===idx,cls=own?'own':unl?'buy':'lk';nodes+=`<button class="tnode ${cls}" data-a="carInfo" data-x="${idx}" style="left:${pos[idx].x}px;top:${pos[idx].y}px;width:${nw}px;height:${nh}px"><span class="vico" style="background-image:url(${cIc(c)})">${('')?`<img src="${''}" alt="" loading="lazy" onload="this.parentNode.style.backgroundImage='none'" onerror="this.remove()">`:''}</span><span class="tn">${c[0]}</span><span class="tp">${own?(rid?'🚗 타는 중':'보유'):unl?W(c[1]):'🔒'} · +${carPct(idx)}%</span></button>`;}));
-  return `<div class="card"><h3>🌳 차고 테크트리 <span class="tag g">${S.cars.length} / ${CARS.length}대</span></h3></div>
+  return `<div class="card"><h3>🚘 차고 테크트리 <span class="tag g">${S.cars.length} / ${CARS.length}대</span><span class="tag">수입 +${Math.round((bonus()-1)*100)}%</span></h3><div class="sub">차를 누르면 정보가 나오고, 사거나 타거나 팔 수 있어요. 차마다 수입 보너스가 붙어요 (3천만 미만 +1% · 1억 미만 +2% · 2억 미만 +3% · 5억 미만 +4% · 5억 이상 +5%).</div>
   <div class="treebox"><div class="treelabs" style="padding-top:${pad+headH}px">${rows.map(r=>`<div style="height:${rowH}px">${r.cat}</div>`).join('')}</div><div class="treewrap"><div class="tree" style="width:${Wd}px;height:${Hd}px"><svg width="${Wd}" height="${Hd}" style="position:absolute;inset:0;pointer-events:none">${lines}</svg>${heads}${nodes}</div></div></div>
-  <div class="card"><div class="sub">🟩 보유 · ⬜ 구매 가능 · ⬛ 잠김 · 차마다 수입 보너스 (3천만 미만 +1% · 1억 미만 +2% · 2억 미만 +3% · 5억 미만 +4% · 5억 이상 +5%) · 지금 합계 <b>+${Math.round((bonus()-1)*100)}%</b></div></div>`;}
+  <div class="sub" style="margin-top:8px">🟩 보유 · ⬜ 구매 가능 · ⬛ 잠김</div></div>`;}
 };
-let shSel=-1;let drg=null,dragEnd=0;
+let shSel=-1;let drg=null,dragEnd=0,tabJump=0;
 document.addEventListener('pointerdown',e=>{const w=e.target.closest('.shcol .wk');if(!w||(e.button||0)>0)return;drg={i:+w.dataset.x,x:e.clientX,y:e.clientY,el:w,gh:null};});
 document.addEventListener('pointermove',e=>{if(!drg)return;const dx=e.clientX-drg.x,dy=e.clientY-drg.y;if(!drg.gh){if(dx*dx+dy*dy<64)return;const c=drg.el.cloneNode(true);c.removeAttribute('data-a');c.classList.remove('dragsrc');const g=document.createElement('div');g.className='crew ghostw';g.appendChild(c);document.body.appendChild(g);drg.gh=g;drg.el.classList.add('dragsrc');document.body.classList.add('dragging');}
  drg.gh.style.left=(e.clientX-27)+'px';drg.gh.style.top=(e.clientY-27)+'px';const t=document.elementFromPoint(e.clientX,e.clientY),c=t&&t.closest('.shcol');document.querySelectorAll('.shcol.over').forEach(x=>{if(x!==c)x.classList.remove('over');});if(c)c.classList.add('over');e.preventDefault();},{passive:false});
@@ -668,8 +727,8 @@ function bossPick(){const cur=bossSrc();
  [['📁 사진 고르기',()=>{},'pri'],...(S.bimg?[['기본 독수리로',()=>{S.bimg='';save();R();toast('기본 프로필로 돌렸어요');}]]:[]),['닫기']]);
  const inp=$('bossFile'),btn=$('mBtns').querySelector('button');btn.onclick=e=>{e.stopPropagation();inp.click();};
  inp.onchange=()=>{const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),Z=128;c.width=Z;c.height=Z;const x=c.getContext('2d'),sd=Math.min(im.width,im.height);x.drawImage(im,(im.width-sd)/2,(im.height-sd)/2,sd,sd,0,0,Z,Z);let url='';try{url=c.toDataURL('image/webp',0.82);}catch(_){}if(!url.startsWith('data:image/webp'))url=c.toDataURL('image/jpeg',0.82);S.bimg=url;save();R();toast('👑 사장님 프로필을 바꿨어요');bossPick();};im.onerror=()=>toast('이미지를 읽지 못했어요');im.src=ev.target.result;};r.readAsDataURL(f);};}
-function R(){if(drg&&drg.gh)return;{const b=$('bossImg'),u=bossSrc();if(b&&b.getAttribute('src')!==u)b.setAttribute('src',u);}document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.x===S.tab));
- const v=$('view'),st=v.scrollTop;v.innerHTML=(VIEW[S.tab]||VIEW.work)();v.scrollTop=st;chart();grab();U();}
+function R(){if(drg&&drg.gh)return;{const b=$('bossImg'),u=bossSrc();if(b&&b.getAttribute('src')!==u)b.setAttribute('src',u);}if(!VIEW[S.tab])S.tab='work';document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.x===GROUP[S.tab]));
+ const v=$('view'),st=tabJump?0:v.scrollTop;tabJump=0;v.innerHTML=segBar()+VIEW[S.tab]();v.scrollTop=st;chart();grab();U();}
 function val(k){const [a,b]=k.split(':');switch(a){
  case 'loy':return Math.floor(S.wloy[+b]??0)+'';
  case 'inv':return K(have(b))+'/'+K(cap());
@@ -699,7 +758,7 @@ let tapAt=-1e9;
 let EL={v:[],w:[],c:[],chip:[],need:[],crew:[],wf:[],crn:[]};
 function grab(){const q=x=>[...document.querySelectorAll(x)];EL={v:q('[data-v]'),w:q('[data-w]'),c:q('[data-c]'),chip:q('[data-chip]'),need:q('[data-need]'),crew:q('.crew'),wf:q('[data-wf]'),crn:q('[data-crn]')};}
 function U(){$('money').textContent=W(S.money);
- $('rate').innerHTML='수입 분당 '+W(rate)+(staff()?' · 월급 분당 '+(S.strike?'<span class="warn">못 줌</span>':W(wageAll()*60/PAY_T)):'');
+ $('rate').innerHTML='수입 분당 '+W(rate)+(staff()?'<br>월급 분당 '+(S.strike?'<span class="warn">못 줌</span>':W(wageAll()*60/PAY_T)):'');
  document.body.classList.toggle('fever',S.fever>0);document.body.classList.toggle('ev-cop',S.ev.t>0&&S.ev.k==='cop');document.body.classList.toggle('ev-mob',S.ev.t>0&&S.ev.k==='mob');if(S.ev.t>0){const E=EVENTS[S.ev.k];$('evBar').textContent=E.e+' '+E.n+'! 제작품 '+(E.x>1?E.x+'배':'절반')+' 가격 · '+Math.ceil(S.ev.t)+'초 남음';}if(S.fever>0)$('fever').textContent='🔥 피버타임! 유저 손님이 비싸게 사 갑니다 · '+Math.ceil(S.fever)+'초 남음 (눌러서 판매)';
  EL.v.forEach(e=>{const t=val(e.dataset.v);if(e.textContent!==t)e.textContent=t;});
  EL.w.forEach(e=>{const w=(wid(e.dataset.w)*100).toFixed(1)+'%';if(e.style.width!==w)e.style.width=w;});
@@ -817,9 +876,9 @@ const noCar=()=>S.ws.map((g,i)=>i).filter(i=>!(S.wcarOwn[i]>=0)),carDesireCost=(
 function wFix(i){const c=wFixCost(i);if(c<=0)return false;if(!pay(c))return false;S.wcarDur[i]=100;S.wcarDead[i]=0;addLoy(i,LOY_FIX);save();R();toast('🔧 '+S.ws[i]+'등급 알바 차 수리 완료 (충성도 +'+LOY_FIX+')');return true;}
 const brokeW=()=>S.ws.map((g,i)=>i).filter(i=>S.wcarOwn[i]>=0&&(S.wcarDur[i]??100)<50);
 function giftPick(i){i=+i;const g=S.ws[i];if(!g)return;const have=Object.keys(SHOP).filter(k=>(S.gift[k]||0)>0);
- modal(`<h2>🎁 <span style="color:${GRADE[g].c}">${g}등급</span> 알바에게 선물</h2><p class="sub">지금 충성도 <b>${Math.floor(S.wloy[i]??LOY_START)}</b>/100. 선물은 한 번 주면 사라지는 소모품이에요.</p>${have.length?`<div class="wcl">${have.map(k=>{const it=SHOP[k];return `<div class="wcrow">${sIc(k)}<div class="grow"><b>${it.n}</b> <span class="sub">× ${S.gift[k]}</span><br><span class="sub">충성도 +${it.l}</span></div><button class="btn pri" data-a="giftGive" data-x="${i}:${k}">주기</button></div>`;}).join('')}</div>`:'<p>가진 선물이 없어요. <b>상점</b> 탭에서 먼저 사 오세요.</p>'}`,[...(have.length?[]:[['🛒 상점 가기',()=>{S.tab='shop';R();}]]),['닫기']]);}
+ modal(`<h2>🎁 <span style="color:${GRADE[g].c}">${g}등급</span> 알바에게 선물</h2><p class="sub">지금 충성도 <b>${Math.floor(S.wloy[i]??LOY_START)}</b>/100. 선물은 한 번 주면 사라지는 소모품이에요.</p>${have.length?`<div class="wcl">${have.map(k=>{const it=SHOP[k];return `<div class="wcrow">${sIc(k)}<div class="grow"><b>${it.n}</b> <span class="sub">× ${S.gift[k]}</span><br><span class="sub">충성도 +${it.l}</span></div><button class="btn pri" data-a="giftGive" data-x="${i}:${k}">주기</button></div>`;}).join('')}</div>`:'<p>가진 선물이 없어요. <b>상점</b> 탭의 선물에서 먼저 사 오세요.</p>'}`,[...(have.length?[]:[['🛒 상점 가기',()=>{S.tab='shop';R();}]]),['닫기']]);}
 function wcarPick(i){i=+i;const g=S.ws[i];if(!g)return;const top=Math.max(0,...S.cars.map(x=>CARS[x][1]));
- if(!top){modal('<h2>🚗 차 사 주기</h2><p>사장님이 먼저 차를 사야 직원에게도 사 줄 수 있어요. 차고 탭에서 차를 사세요.</p>');return;}
+ if(!top){modal('<h2>🚗 차 사 주기</h2><p>사장님이 먼저 차를 사야 직원에게도 사 줄 수 있어요. 상점 탭의 차고에서 차를 사세요.</p>');return;}
  const cur=S.wcarOwn[i],list=CARS.map((c,k)=>k).filter(k=>CARS[k][1]<=top).sort((a,b)=>CARS[b][1]-CARS[a][1]);
  modal(`<h2>🚗 <span style="color:${GRADE[g].c}">${g}등급</span> 알바에게 차 사 주기</h2><p class="sub">사장님 차 중 가장 비싼 차(${W(top)})까지 고를 수 있어요. 차값은 그대로 나갑니다. 차가 있는 직원은 차 욕심으로 충성도가 떨어지지 않아요. 차를 사 주면 충성도 +${LOY_CAR}.${cur>=0&&CARS[cur]?' 지금 차: <b>'+CARS[cur][0]+'</b>':''}</p><div class="wcl">${list.map(k=>{const c=CARS[k],own=k===cur;return `<div class="wcrow">${carImg(c)}<div class="grow"><b>${c[0]}</b><br><span class="sub">${c[2]}</span></div>${own?'<button class="btn on">지금 차</button>':`<button class="btn ${S.money<c[1]?'no':'pri'}" data-a="wcarGive" data-x="${i}:${k}">사 주기<small>${W(c[1])}</small></button>`}</div>`;}).join('')}</div>`,[['닫기']]);}
 let scrapN=[];let wcarQuit=0,burnQuit=0,shiftRot=0,loyQuit=0;
@@ -834,7 +893,8 @@ function doBuyCar(x){x=+x;if(S.cars.includes(x)){toast('이미 가지고 있는 
 
 /* ===== 누르기 ===== */
 const ACT={
- tab(x){S.tab=x;},
+ tab(x){if(S.tab!==x)tabJump=1;S.tab=x;},mtab(x){const t=SEGS[x]?SEGS[x][0][0]:x;if(GROUP[S.tab]!==x){tabJump=1;S.tab=t;}else if(S.tab!==t){tabJump=1;S.tab=t;}},
+ upInfo(k){const u=UPT[k];if(!u)return 'skip';const c=u.cost();modal(`<h2>${u.e} ${u.n} <span class="tag g">${u.lv()}단계</span></h2><div class="upbig">${u.e}</div><p>${u.d()}</p>`,[[(u.lv()+1)+'단계로 '+W(c),()=>{ACT[u.a]();save();R();ACT.upInfo(k);},S.money>=c?'pri':'no'],['닫기']]);return 'skip';},
  mgKeep(x){S.mgr.keep=+x||0;toast('관리인이 '+(S.mgr.keep?W(S.mgr.keep):'월급 4번치')+'는 남겨 둡니다');},mgFix(){S.mgr.fix=S.mgr.fix?0:1;},mgGift(){S.mgr.gift=S.mgr.gift?0:1;},
  bName(){nameAsk('b');},
  bmTog(){S.bm=S.bm?0:1;toast(S.bm?'사장님이 직접 곡괭이를 들었습니다! ⛏️':'사장님이 채굴에서 빠졌습니다');},
@@ -974,6 +1034,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
+ {v:'v1.3.0',t:'화면 새 단장',l:['화면을 <b>봉다방 타이쿤</b>과 같은 틀로 바꿨어요. 큰 탭은 <b>광산 · 직원 · 회사 · 상점</b> 4개예요.','⛏️ <b>광산</b> 안에 광산 · 판매 · 가공, 🏢 <b>회사</b> 안에 회사 · 수집함, 🛒 <b>상점</b> 안에 차고 · 선물이 들어 있어요. 탭 아래 작은 버튼으로 오가요.','👷 채굴 알바 고용·3교대 편성·교육과 충성도는 새 <b>직원</b> 탭으로 옮겼어요.','🔧 회사 탭의 <b>강화</b> 칸에서 곡괭이·화로·작업대를 그림을 눌러 올릴 수 있어요(원래 자리에서도 돼요).','게임 내용과 수치는 그대로예요. 저장도 그대로 이어져요.']},
  {v:'v1.2.2',t:'≡ 메뉴 새 단장',l:['≡ 메뉴를 <b>직원 도감 · 안내 · 설정 · 세이브 · 봉다방게임즈</b>로 정리했어요. 큰 갈래를 누르면 그 안의 메뉴가 나와요.','⚙️ 설정에서 이펙트·후원 광고가 <b>켜졌는지 꺼졌는지</b> 바로 보여요(초록 테두리 = 켜짐).','💝 후원 안내와 저작권 안내는 🎮 봉다방게임즈 안으로 옮겼어요.']},
  {v:'v1.2.1',t:'🎮 봉다방게임즈',l:['🎮 ≡ 메뉴에 <b>봉다방게임즈</b>가 생겼어요. 고르도 광산 타이쿤을 만든 곳이에요.','☕ <b>봉다방 타이쿤</b> 아이콘을 누르면 다음 게임 <b>COMING SOON</b> 포스터를 볼 수 있어요. 아직 준비 중이에요!']},
  {v:'v1.2.0',t:'🏖️ 유급 휴가 대규모 패치',l:['🏖️ <b>유급 휴가</b> — 알바 얼굴을 누르고 <b>🏖️ 유급 휴가 보내기</b>. 휴가 중엔 휴가 보너스로 <b>월급 2배</b>, 대신 쉬는 동안 <b>충성도가 쑥쑥</b> 올라가요(1분에 +3). 한 번에 최대 6명까지 보낼 수 있어요.','👷 <b>빈자리엔 새 알바</b> — 휴가 간 알바는 인원에서 빠져요. 그 자리에 새 알바를 뽑아 직원 도감을 채워 보세요! 대신 감당할 월급이 많아져요.','🏠 휴가는 언제든 <b>휴가 끝내고 복귀</b>로 돌아올 수 있어요. 일하는 자리가 비어 있어야 해요.','⛏️ 채굴 조는 <b>조마다 최대 6명</b>까지만 들어가요. 넘친 알바는 미편성 대기로 빠져요.','👥 채굴 알바 최대 인원 <b>16명 → 18명</b> (회사 8레벨부터).','🏅 업적 \'워라밸\' 추가.']},
@@ -1022,12 +1083,12 @@ const TUT=[
  {h:'👋 고르도 광산 타이쿤',b:'이 게임은 서버에서 <b>지루한 노동</b>을 하는 동안 옆에 띄워 두고 즐기는 <b>보조 게임</b>이에요. 주인공은 서버에서의 일이고, 이 게임은 그 시간을 덜 지루하게 해 주는 친구예요. 창을 <b>켜 둔 동안에만</b> 알아서 굴러가요. 최소화해 두거나 뒤에 깔아 둬도 되고, 가끔 들여다보면 돼요. 창을 끄면 광산도 같이 쉬어요.<br><br>1분짜리 안내를 볼게요. 언제든 <b>건너뛰기</b>로 나갈 수 있고, ≡ 메뉴에서 다시 볼 수 있어요.'},
  {s:'#alm',h:'🍔💧 노동 도우미',b:'일하다 깜빡하기 쉬운 <b>배고픔·목마름</b>을 대신 챙겨 줘요. 동그라미를 눌러 지금 수치를 넣으면 0이 되기 전에 소리로 알려 줘요. 먹거나 마시면 <b>먹었음/마셨음</b>을 누르세요.'},
  {t:'work',s:'.mbox',h:'⛏️ 광산',b:'처음엔 👑 <b>사장님 혼자</b> 캐고 팔아요. 알바를 뽑으면 같이 캐요. 위쪽 칸은 창고에 쌓인 자원이에요. 빨간 테두리는 꽉 찬 칸이에요. 원석은 못 팔고 <b>주괴·제작품만</b> 팔 수 있어요.'},
- {t:'work',s:'#wCard',h:'👷 채굴 알바',b:'고용하고 교육해서 등급을 올려요. 알바는 <b>3교대</b>로 번갈아 일해요. 그림을 <b>끌어서</b> 조를 바꾸고, <b>누르면</b> 선물·차·수리·휴식 메뉴가 떠요.'},
- {t:'sell',s:'#tabs [data-x="sell"]',h:'💰 판매',b:'사장님과 판매 로봇이 주괴와 제작품을 자동으로 팔아요. 🔒를 누르면 그 품목은 안 팔아요. 🔥 피버타임엔 비싸게 팔려요.'},
- {t:'make',s:'#tabs [data-x="make"]',h:'🔥 가공·제작',b:'화로가 원석+석탄으로 주괴를 만들어요. 제작소 칸을 <b>눌러</b> 만들 제작품을 고르면 재료값보다 비싸게 팔려요. 빨간 칸은 재료가 모자란 칸이에요.'},
+ {t:'staff',s:'#wCard',h:'👷 직원',b:'고용하고 교육해서 등급을 올려요. 알바는 <b>3교대</b>로 번갈아 일해요. 그림을 <b>끌어서</b> 조를 바꾸고, <b>누르면</b> 선물·차·수리·휴식 메뉴가 떠요.'},
+ {t:'sell',s:'#segBar [data-x="sell"]',h:'💰 판매',b:'사장님과 판매 로봇이 주괴와 제작품을 자동으로 팔아요. 🔒를 누르면 그 품목은 안 팔아요. 🔥 피버타임엔 비싸게 팔려요.'},
+ {t:'make',s:'#segBar [data-x="make"]',h:'🔥 가공·제작',b:'화로가 원석+석탄으로 주괴를 만들어요. 제작소 칸을 <b>눌러</b> 만들 제작품을 고르면 재료값보다 비싸게 팔려요. 빨간 칸은 재료가 모자란 칸이에요.'},
  {t:'co',s:'#tabs [data-x="co"]',h:'🏢 회사',b:'회사 레벨을 올리면 직원·로봇 수와 창고, <b>사장님 채굴력</b>이 늘어요. 월급을 못 주면 파업하니 돈을 조금 남겨 두세요.'},
- {t:'car',s:'#tabs [data-x="car"]',h:'🚗 차고',b:'차를 모으면 차마다 수입이 +1~5% 늘어요(비싼 차일수록 큼). 타는 차는 창고와 피버 시간을 늘려 줘요. 차는 내구도가 닳으니 수리하고, 필요 없으면 팔 수 있어요. 직원에게 차를 사 주면 직원도 차를 타고 캐요.'},
- {t:'shop',s:'#tabs [data-x="shop"]',h:'🛒 상점',b:'직원 충성도는 천천히 줄어요. 음식과 옷을 사서 주면 올라가요. 충성도가 높으면 더 많이 캐요.'},
+ {t:'car',s:'#segBar [data-x="car"]',h:'🚗 차고',b:'차를 모으면 차마다 수입이 +1~5% 늘어요(비싼 차일수록 큼). 타는 차는 창고와 피버 시간을 늘려 줘요. 차는 내구도가 닳으니 수리하고, 필요 없으면 팔 수 있어요. 직원에게 차를 사 주면 직원도 차를 타고 캐요.'},
+ {t:'shop',s:'#segBar [data-x="shop"]',h:'💝 선물',b:'직원 충성도는 천천히 줄어요. 음식과 옷을 사서 주면 올라가요. 충성도가 높으면 더 많이 캐요.'},
  {t:'work',s:'#menuB',h:'≡ 메뉴',b:'튜토리얼은 여기서 언제든 다시 볼 수 있어요. 창은 켜 둔 채로 일하러 가 볼까요? 광산은 그동안 알아서 커 있을 거예요.'}];
 let tutI=-1;
 function tutStart(){$('mBg').style.display='none';tutI=0;tutShow();}
