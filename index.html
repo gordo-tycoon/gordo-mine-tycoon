@@ -322,7 +322,6 @@ body.fever #tabs button[data-x=work],body.fever #segBar button[data-x=sell]{colo
 @keyframes trpop{0%{opacity:0;transform:translateY(10px) scale(.5)}25%{opacity:1;transform:translateY(-4px) scale(1.15)}70%{opacity:1;transform:translateY(-10px) scale(1)}100%{opacity:0;transform:translateY(-22px) scale(.9)}}
 @keyframes trbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 table.it.bprof td{white-space:normal;word-break:keep-all}table.it.bprof td:first-child{white-space:nowrap;text-align:left;color:var(--dim)}
-.pidv{font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:.5px;color:var(--gold)}
 </style>
 </head>
 <body>
@@ -346,7 +345,7 @@ table.it.bprof td{white-space:normal;word-break:keep-all}table.it.bprof td:first
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.5.1';
+const APPVER='v1.5.2';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -475,12 +474,12 @@ const COST={
  crafter:3000000,crLv:l=>3000000*Math.pow(2.2,l)};
 
 /* ===== 상태 ===== */
-function fresh(){return {v:2,pid:'',codes:{},total:0,inv:{},w:0,fw:0,fa:{},ws:[],wname:[],bname:'',bimg:'',wimg:[],wfat:[],wrest:[],wforce:[],wburn:[],wshift:[],wcarOwn:[],wloy:[],gift:{},wcarDur:[],wcarDead:[],cdur:{},shift3:1,sh4:1,shiftCur:0,shiftT:0,ms:[],sw:0,wrole:[],co:1,mgr:{on:0,dir:'all',log:[],t:0,keep:0,fix:1,gift:1,ct:0},got:{},hist:[],gear:0,pick:0,cap:0,payT:0,strike:0,wages:0,autoU:0,auto:{},lock:{},fever:0,fevers:0,ev:{k:'',t:0},evN:{cop:0,mob:0},
+function fresh(){return {v:2,total:0,inv:{},w:0,fw:0,fa:{},ws:[],wname:[],bname:'',bimg:'',wimg:[],wfat:[],wrest:[],wforce:[],wburn:[],wshift:[],wcarOwn:[],wloy:[],gift:{},wcarDur:[],wcarDead:[],cdur:{},shift3:1,sh4:1,shiftCur:0,shiftT:0,ms:[],sw:0,wrole:[],co:1,mgr:{on:0,dir:'all',log:[],t:0,keep:0,fix:1,gift:1,ct:0},got:{},hist:[],gear:0,pick:0,cap:0,payT:0,strike:0,wages:0,autoU:0,auto:{},lock:{},fever:0,fevers:0,ev:{k:'',t:0},evN:{cop:0,mob:0},
  fur:{lv:0,on:{iron:1,sulfur:1,copper:1,gold:1,dia:1,sapph:1,aqua:1},b:0},rares:0,cr:{u:0,lv:0,on:{},p:{},made:{},slots:[]},
  bm:1,ach:{},cars:[],car:-1,wcar:{want:0,t:0},carBad:0,tab:'work',last:Date.now(),seen:0,money:START_MONEY};}
 let S=fresh();
 function load(){try{const t=localStorage.getItem(SAVEKEY);if(t)merge(JSON.parse(t));}catch(e){}}
-function merge(o){const f=fresh();(function mg(a,b){for(const k in b){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object')mg(a[k],b[k]);else a[k]=b[k];}})(f,o);S=f;try{pidEnsure();}catch(e){}if(o&&o.cr&&o.cr.made)S.cr.made=o.cr.made;if(S.cr.u&&!S.cr.slots.length){const on=Object.keys(RECIPE).filter(k=>S.cr.on&&S.cr.on[k]);S.cr.slots=(on.length?on:['ecu']).map(k=>({k,p:0}));}if(S.w>0&&!S.ws.length)S.ws=Array(S.w).fill('D');S.w=0;wSync();if(!S.shift3){S.shift3=1;distributeShifts();}if(S.mgr.on&&!S.ms.length)S.ms=[S.mgr.dir||'all'];S.mgr.on=0;wFaceFix();if(!(o&&o.sh4)){S.sh4=1;distributeShifts();S.shiftCur=(S.shiftCur||0)%NSH;}{const c=Array(NSH).fill(0);for(let i=0;i<S.ws.length;i++){const v=S.wshift[i];if(v>=0&&v<NSH){if(c[v]>=SH_CAP)S.wshift[i]=-1;else c[v]++;}else if(v>=NSH)S.wshift[i]=-1;}}sfSync(o);}
+function merge(o){const f=fresh();(function mg(a,b){for(const k in b){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object')mg(a[k],b[k]);else a[k]=b[k];}})(f,o);S=f;if(o&&o.cr&&o.cr.made)S.cr.made=o.cr.made;if(S.cr.u&&!S.cr.slots.length){const on=Object.keys(RECIPE).filter(k=>S.cr.on&&S.cr.on[k]);S.cr.slots=(on.length?on:['ecu']).map(k=>({k,p:0}));}if(S.w>0&&!S.ws.length)S.ws=Array(S.w).fill('D');S.w=0;wSync();if(!S.shift3){S.shift3=1;distributeShifts();}if(S.mgr.on&&!S.ms.length)S.ms=[S.mgr.dir||'all'];S.mgr.on=0;wFaceFix();if(!(o&&o.sh4)){S.sh4=1;distributeShifts();S.shiftCur=(S.shiftCur||0)%NSH;}{const c=Array(NSH).fill(0);for(let i=0;i<S.ws.length;i++){const v=S.wshift[i];if(v>=0&&v<NSH){if(c[v]>=SH_CAP)S.wshift[i]=-1;else c[v]++;}else if(v>=NSH)S.wshift[i]=-1;}}sfSync(o);}
 function save(){S.last=Date.now();try{localStorage.setItem(SAVEKEY,JSON.stringify(S));}catch(e){}}
 
 /* ===== 계산 ===== */
@@ -783,37 +782,6 @@ function workerMenu(i){i=+i;const g=S.ws[i];if(!g)return;const sf=isSF(i),t=TRAI
  const sh=sf?X('🔄','조 바꾸기',S.wrole[i]==='s'?'판매 담당':'가공 담당'):S.shift3&&!vc?B('🔄','조 바꾸기',()=>{let v=nextSh(S.wshift[i]);for(let k=0;k<NSH+1&&v>=0&&shCnt(v)>=SH_CAP;k++)v=nextSh(v);S.wshift[i]=v;save();R();workerMenu(i);},shName(i)+'→'+shLabel(nextSh(S.wshift[i]))):X('🔄','조 바꾸기',vc?'휴가 중':'');
  h+=`<div class="sact">${B('✏️','이름 짓기',()=>nameAsk(i))}${B('🎁','선물 주기',()=>giftPick(i),'충성도 ↑')}${t?B('📚','교육',()=>trainAsk(i),W(t.c),'pri'):X('📚','교육','최고 등급')}${vc?B('🏠','휴가 복귀',()=>vacBack(i)):B('🏖️','유급 휴가',()=>vacGo(i),'월급 2배')}${vc?X('😴','쉬게 하기','휴가 중'):B(S.wforce[i]?'▶️':'😴',S.wforce[i]?'일 시키기':'쉬게 하기',()=>{S.wforce[i]=S.wforce[i]?0:1;save();R();workerMenu(i);})}${sh}${fixB}${B('🚗','차 사 주기',()=>wcarPick(i))}${B('🔀','부서 바꾸기',()=>roleAsk(i),ROLE_N[S.wrole[i]||'m'])}${B('👋','내보내기',()=>fireAsk('w',i),'퇴직금 '+W(GRADE[g].w*SEV))}</div>`;
  modal(h,[['닫기',null,'pri']]);}
-/* 봉다방게임즈 상품 코드 공통 규칙 (고르도 v1.5.1~, 봉다방 같은 방식)
-   - 개인식별번호(pid): 게임 머리글 + 8글자. 고르도 'GD-XXXX-XXXX', 봉다방 'BD-XXXX-XXXX'. 처음 켤 때 한 번 만들어 세이브에 저장.
-   - 상품 코드: '{종류 한 글자}{수량}-{일련 4글자}-{서명 8글자}'  예) M500-7K3Q-9XHD2PAB
-     서명 = gcH(GC_SEC|게임|pid|종류수량|일련) 앞 8글자. pid가 다르면 서명이 달라서 그 사람만 쓸 수 있다.
-   - 한 번 쓴 코드는 세이브(S.codes[일련+서명])에 남아 다시 못 쓴다.
-   - 글자는 크록포드 32진수(0-9, A-Z에서 I L O U 뺌). 입력할 때 O→0, I·L→1로 고쳐 읽는다.
-   - 종류: M = 돈(수량 × 1만원). 다른 종류는 게임마다 정해서 쓴다(모르는 종류면 '이 게임에서 쓸 수 없는 상품').
-   한계: 게임 JS 안에 GC_SEC가 그대로 있어 소스를 뜯어보면 코드를 만들 수 있다(윈도우판은 난독화로 조금 어렵게만 함). */
-const GC_A='0123456789ABCDEFGHJKMNPQRSTVWXYZ',GC_SEC='QITiJRezlaiid0ivH5O7Hk8gBctXAwcG';
-function gcH(str){let h1=0xdeadbeef,h2=0x41c6ce57,h3=0x9e3779b9,h4=0x85ebca6b;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677);h3=Math.imul(h3^c,2246822507);h4=Math.imul(h4^c,3266489909);}
- for(let r=0;r<3;r++){h1=Math.imul(h1^(h2>>>16),2246822507)^Math.imul(h3^(h4>>>13),3266489909);h2=Math.imul(h2^(h3>>>16),2246822507)^Math.imul(h4^(h1>>>13),3266489909);h3=Math.imul(h3^(h4>>>16),2246822507)^Math.imul(h1^(h2>>>13),3266489909);h4=Math.imul(h4^(h1>>>16),2246822507)^Math.imul(h2^(h3>>>13),3266489909);}
- let o='';for(const h of [h1,h2,h3,h4]){let v=h>>>0;for(let k=0;k<6;k++){o+=GC_A[v&31];v>>>=5;}}return o;}
-const gcNorm=t=>String(t||'').toUpperCase().replace(/[\s_]+/g,'').replace(/O/g,'0').replace(/[IL]/g,'1');
-const gcRnd=n=>{let o='';const a=new Uint8Array(n);(window.crypto||window.msCrypto).getRandomValues(a);for(const b of a)o+=GC_A[b&31];return o;};
-const gcPid=pre=>pre+'-'+gcRnd(4)+'-'+gcRnd(4);
-const gcSig=(game,pid,ka,ser)=>gcH(GC_SEC+'|'+game+'|'+gcNorm(pid)+'|'+ka+'|'+ser).slice(0,8);
-/* 코드 만들기(관리자 생성기) */
-const gcMake=(game,pid,kind,amt,ser)=>{ser=ser||gcRnd(4);const ka=kind+(+amt);return ka+'-'+ser+'-'+gcSig(game,pid,ka,ser);};
-/* 코드 읽기(게임). 맞으면 {kind,amt,key}, 아니면 null */
-function gcRead(game,pid,code){const m=/^([A-Z])(\d{1,9})-([0-9A-Z]{4})-([0-9A-Z]{8})$/.exec(gcNorm(code));if(!m)return null;const ka=m[1]+m[2];if(gcSig(game,pid,ka,m[3])!==m[4])return null;return {kind:m[1],amt:+m[2],key:m[3]+m[4]};}
-/* 1.5.1 개인식별번호·상품 코드. 번호는 세이브(S.pid)와 따로 저장(PID_K)해서 '처음부터'를 해도 그대로. 세이브를 불러오면 그 세이브의 번호를 따름 */
-const PID_K='gordo-tycoon-pid',CODE_K='gordo-tycoon-codes',GC_GAME='gordo';
-function pidEnsure(){let l='';try{l=localStorage.getItem(PID_K)||'';}catch(e){}if(!S.pid)S.pid=l||gcPid('GD');if(S.pid!==l)try{localStorage.setItem(PID_K,S.pid);}catch(e){}if(!S.codes)S.codes={};return S.pid;}
-try{pidEnsure();}catch(e){}
-function pidCopy(){const p=pidEnsure();try{navigator.clipboard.writeText(p).then(()=>toast('🪪 '+p+' 복사했어요'),()=>toast('🪪 '+p));}catch(e){toast('🪪 '+p);}}
-const GC_KIND={M:{n:'돈',run:a=>{const v=a*10000;S.money+=v;return W(v);}}};
-function codeUse(t){pidEnsure();if(!gcNorm(t)){toast('상품 코드를 넣어 주세요');return;}const r=gcRead(GC_GAME,S.pid,t);
- if(!r){toast('코드가 맞지 않아요. 내 번호('+S.pid+')로 받은 코드인지 확인해 주세요');return;}
- let U={};try{U=JSON.parse(localStorage.getItem(CODE_K)||'{}')||{};}catch(e){}if(S.codes[r.key]||U[r.key]){toast('이미 쓴 코드예요');return;}const k=GC_KIND[r.kind];if(!k){toast('이 게임에서 쓸 수 없는 상품이에요');return;}
- const got=k.run(r.amt);S.codes[r.key]=U[r.key]=Date.now();try{localStorage.setItem(CODE_K,JSON.stringify(U));}catch(e){}S.codeN=(S.codeN||0)+1;save();R();
- modal(`<h2>🎁 상품 코드 사용!</h2><div style="font-size:72px;text-align:center;line-height:1.2">🎁</div><p style="text-align:center;margin:6px 0 0"><b>${k.n} ${got}</b>을(를) 받았어요.</p>`,[['고마워요!',null,'pri']]);}
 /* 1.4.0 판매·가공 직원 창 */
 function sfMenu(k,i){const a=sfA(k),o=a&&a[i];if(!o)return;MFN=[];const fat=Math.round(o.fat),wg=k==='s'?WAGE:FW_WAGE,c=k==='s'?'#5cb6ff':'#ff9a3d';
  const B=(ico,t,fn,sm,cls)=>{MFN.push(fn);return `<button class="btn ${cls||''}" onclick="mGo(${MFN.length-1})"><i>${ico}</i>${t}${sm?`<small>${sm}</small>`:''}</button>`;};
@@ -1018,7 +986,7 @@ const ACT={
  bName(){nameAsk('b');},
  bmTog(){S.bm=S.bm?0:1;toast(S.bm?'사장님이 직접 곡괭이를 들었습니다! ⛏️':'사장님이 채굴에서 빠졌습니다');},
  hire(){if(nWA()>=wMax()){toast('회사 '+S.co+'레벨에서는 채굴 알바를 '+wMax()+'명까지 고용할 수 있습니다'+(S.co<CO_MAX?'. 회사 탭에서 승급하세요':''));return;}if(pay(COST.worker(nW()))){if(!staff()){S.payT=0;S.strike=0;}const g=rollGrade();wPush(g);save();R();hireFx('w',g,S.wimg[S.wimg.length-1]);return 'skip';}},
- fireW(x){workerMenu(x);return 'skip';},shAuto(){distributeShifts();toast('알바를 1·2·3·4조에 고르게 나눴습니다');},shClear(){S.wshift=S.ws.map((g,i)=>isVac(i)?VAC:isSF(i)?SFSH:-1);toast('모두 미편성으로 뺐습니다. 직원을 끌어서 조에 넣으세요');},boss(){const c=car();modal(`<h2>👑 사장님</h2><div class="hiw"><img src="${bossSrc()}" alt="" style="box-shadow:0 0 0 3px var(--gold)"></div><table class="it bprof"><tr><td>가진 돈</td><td>${W(S.money)}</td></tr><tr><td>회사</td><td>${S.co}레벨</td></tr><tr><td>타는 차</td><td>${c?c[0]:'없음'}</td></tr><tr><td>모은 차</td><td>${S.cars.length} / ${CARS.length}대</td></tr><tr><td>직원</td><td>채굴 알바 ${nW()}명 · 관리인 ${nM()}명 · 판매 직원 ${S.sw}명 · 가공 직원 ${S.fw||0}명</td></tr><tr><td>🪪 개인식별번호</td><td><b class="pidv">${pidEnsure()}</b> <button class="btn mini" onclick="pidCopy()">복사</button></td></tr></table><div class="sec">🎁 상품 코드</div><div class="sub">받은 상품 코드를 넣으세요. 코드는 위 번호를 가진 사람만 쓸 수 있고, 한 번만 쓸 수 있어요.</div><div class="row" style="flex-wrap:nowrap"><input id="gcIn" autocomplete="off" spellcheck="false" placeholder="예) M500-XXXX-XXXXXXXX" style="flex:1;min-width:0;box-sizing:border-box;font-size:15px;padding:8px;background:#101312;color:#e8eeea;border:1px solid #3a4340;border-radius:8px;text-transform:uppercase" onkeydown="if(event.key==='Enter')codeUse(this.value)"><button class="btn pri" onclick="codeUse($('gcIn').value)">입력</button></div>`,[['🖼️ 프로필 바꾸기',bossPick],['📒 직원 도감',imgEditor],['닫기',null,'pri']]);return 'skip';},shPick(x){x=+x;if(shSel===x){shSel=-1;R();workerMenu(x);return 'skip';}shSel=x;},shMove(x){if(shSel<0){toast('먼저 옮길 직원을 누르세요');return 'skip';}if(isVac(shSel)){shSel=-1;return;}if(+x>=0&&S.wshift[shSel]!==+x&&shCnt(+x)>=SH_CAP){toast('⛏️ 조마다 최대 '+SH_CAP+'명까지예요');return 'skip';}S.wshift[shSel]=+x;toast(S.ws[shSel]+'등급 알바 → '+shLabel(+x));shSel=-1;},shAuto(){distributeShifts();shSel=-1;toast('알바를 1·2·3·4조에 고르게 나눴습니다');},shClear(){S.wshift=S.ws.map((g,i)=>isVac(i)?VAC:isSF(i)?SFSH:-1);shSel=-1;toast('모두 미편성으로 뺐습니다. 직원을 눌러 조에 넣으세요');},
+ fireW(x){workerMenu(x);return 'skip';},shAuto(){distributeShifts();toast('알바를 1·2·3·4조에 고르게 나눴습니다');},shClear(){S.wshift=S.ws.map((g,i)=>isVac(i)?VAC:isSF(i)?SFSH:-1);toast('모두 미편성으로 뺐습니다. 직원을 끌어서 조에 넣으세요');},boss(){const c=car();modal(`<h2>👑 사장님</h2><div class="hiw"><img src="${bossSrc()}" alt="" style="box-shadow:0 0 0 3px var(--gold)"></div><table class="it bprof"><tr><td>가진 돈</td><td>${W(S.money)}</td></tr><tr><td>회사</td><td>${S.co}레벨</td></tr><tr><td>타는 차</td><td>${c?c[0]:'없음'}</td></tr><tr><td>모은 차</td><td>${S.cars.length} / ${CARS.length}대</td></tr><tr><td>직원</td><td>채굴 알바 ${nW()}명 · 관리인 ${nM()}명 · 판매 직원 ${S.sw}명 · 가공 직원 ${S.fw||0}명</td></tr></table>`,[['🖼️ 프로필 바꾸기',bossPick],['📒 직원 도감',imgEditor],['닫기',null,'pri']]);return 'skip';},shPick(x){x=+x;if(shSel===x){shSel=-1;R();workerMenu(x);return 'skip';}shSel=x;},shMove(x){if(shSel<0){toast('먼저 옮길 직원을 누르세요');return 'skip';}if(isVac(shSel)){shSel=-1;return;}if(+x>=0&&S.wshift[shSel]!==+x&&shCnt(+x)>=SH_CAP){toast('⛏️ 조마다 최대 '+SH_CAP+'명까지예요');return 'skip';}S.wshift[shSel]=+x;toast(S.ws[shSel]+'등급 알바 → '+shLabel(+x));shSel=-1;},shAuto(){distributeShifts();shSel=-1;toast('알바를 1·2·3·4조에 고르게 나눴습니다');},shClear(){S.wshift=S.ws.map((g,i)=>isVac(i)?VAC:isSF(i)?SFSH:-1);shSel=-1;toast('모두 미편성으로 뺐습니다. 직원을 눌러 조에 넣으세요');},
  train(x){trainAsk(x);return 'skip';},
  hireF(){if((S.fw||0)>=fMax()){toast('회사 '+S.co+'레벨에서는 가공 직원을 '+fMax()+'명까지 고용할 수 있습니다'+(S.co<CO_MAX?'. 회사 탭에서 승급하세요':''));return;}if(pay(COST.fworker(S.fw||0))){if(!staff()){S.payT=0;S.strike=0;}const g=rollGrade();wPush(g,'f');save();R();hireFx('f',g,S.wimg[S.wimg.length-1]);return 'skip';}},
  carInfo(x){x=+x;const c=CARS[x],own=S.cars.includes(x),ic=cIc(c),ph='';
@@ -1267,7 +1235,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
- {v:'v1.5.1',t:'🪪 개인식별번호 · 상품 코드',l:['🪪 왼쪽 위 사장님 얼굴을 누르면 나오는 프로필에 <b>개인식별번호</b>(GD-로 시작)가 생겼어요. 복사 버튼으로 복사할 수 있어요. 처음부터 다시 해도 번호는 그대로예요.','🎁 같은 곳에 <b>상품 코드</b> 칸이 생겼어요. 이벤트 상품 코드는 내 번호로만 쓸 수 있고, 한 코드는 한 번만 쓸 수 있어요.','👷 새 직원 얼굴 1명이 늘었어요(모두 38명).']},
+ {v:'v1.5.2',t:'👷 새 직원 얼굴',l:['👷 새 직원 얼굴 1명이 늘었어요(모두 38명).','🪪 잠깐 들어갔던 개인식별번호·상품 코드 칸은 뺐어요.','🛠️ 사장님 프로필 창에서 글이 길면 오른쪽이 잘리던 문제를 고쳤어요.']},
  {v:'v1.5.0',t:'🏅 업적 리뉴얼',l:['🏅 업적이 <b>뱃지</b>로 새로 태어났어요. 등급은 <b>동 · 은 · 금 · 백금 · 다이아</b> 다섯 가지고, 금부터는 리본, 백금은 월계관, 다이아는 빛나는 테두리가 붙어요.','📊 업적을 <b>돈과 회사 · 직원 · 광산과 제품 · 차 · 이벤트 · 생활</b>로 묶었고, 아직 못 딴 업적은 <b>진행도 막대</b>로 얼마나 남았는지 보여요. 뱃지를 누르면 크게 보고 달성한 날짜도 볼 수 있어요.','👑 실패 훈장을 뺀 업적을 전부 모으면 <b>고르도 광산 마스터</b> 다이아 뱃지를 받아요.','✅ 업적 조건과 수치는 예전 그대로예요. 이미 딴 업적도 그대로 남아 있어요.','🎖️ 실패 훈장도 뱃지가 됐어요. 업적을 따면 뱃지가 화면에 크게 떠요.']},
  {v:'v1.4.7',t:'수다 고침',l:['💬 빚 대사에 실제 이름이 들어갔어요. 이일원 사장, 박대갈, 황동만 이야기를 들어 보세요.']},
  {v:'v1.4.6',t:'새 수다',l:['💬 광산 수다에 새 대사가 들어왔어요. 이일원 사장·박대갈의 빚 이야기, 황동만의 <b>동~만</b>, <b>카피야하 · 야하 · 교정야하</b>!']},
