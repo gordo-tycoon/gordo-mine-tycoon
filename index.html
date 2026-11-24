@@ -206,8 +206,22 @@ body.shake #view{animation:shake .45s}
 #mine .cmt{position:absolute;bottom:4px;left:-30%;z-index:3;animation:cmt 5s linear forwards;pointer-events:none;display:flex;flex-direction:column;align-items:center}
 #mine .cmt i{display:block;width:64px;height:32px;background:center/contain no-repeat;image-rendering:pixelated}#mine .cmt b{font-size:10.5px;background:rgba(0,0,0,.65);color:#fff;padding:1px 6px;border-radius:6px;white-space:nowrap;margin-bottom:2px}
 @keyframes cmt{to{left:110%}}
-.achg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px}.ach{display:flex;gap:6px;align-items:center;padding:6px;background:#101312;box-shadow:inset 0 0 0 1px var(--tileB);border-radius:8px;font-size:12px;line-height:1.3;text-align:left}
-.ach .me{font-size:24px;flex:none}.ach.no{opacity:.38;filter:grayscale(1)}.ach small{color:#9aa3a0}.ach.f{box-shadow:inset 0 0 0 1px rgba(255,111,168,.45)}
+.achg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.achc{position:relative;border:0;color:inherit;font:inherit;background:#101312;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);border-radius:10px;padding:8px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-width:0}
+.achc .achs{width:80%;max-width:108px;height:auto;display:block;filter:drop-shadow(0 3px 5px rgba(0,0,0,.55))}
+.achc b{font-size:12.5px;line-height:1.25;text-align:center;word-break:keep-all;margin-top:2px}
+.achc small{font-size:10.5px;color:var(--dim);line-height:1.3;text-align:center;word-break:keep-all}
+.achc:not(.lk){box-shadow:inset 0 0 0 1px var(--tc),inset 0 0 20px -9px var(--tc)}
+.achc.lk .achs,.achbig.lk .achs{filter:grayscale(1) brightness(.4) contrast(.92)}
+.achc.lk b{color:#aab3af}
+.achc .bar{display:block;width:86%;margin-top:4px;height:4px}.achc .bar i{background:var(--tc)}
+.acht{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:11.5px;color:var(--dim)}
+.acht i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--tc);margin-right:4px}.acht b{color:#e8eeea}
+.achbig{position:relative;width:min(230px,72%);margin:4px auto 0}
+.achbig .achs{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 16px rgba(0,0,0,.6))}
+.achbig.lk b{position:absolute;inset:0;display:grid;place-items:center;font-size:48px;font-weight:400}
+#aq .gem.achfx{font-size:0}#aq .gem.achfx .achs{width:170px;height:auto;display:block}
+@media (min-width:760px){.achg{grid-template-columns:repeat(5,minmax(0,1fr))}}
 .pnote{margin:4px 0 10px;padding-left:20px;line-height:1.6;font-size:13.5px}.pnote li{margin:3px 0}
 .mopt{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
 .bossmine{display:flex;gap:10px;align-items:center;margin:8px 0;padding:8px;border-radius:8px;background:rgba(242,193,78,.08);box-shadow:inset 0 0 0 1px rgba(242,193,78,.35)}.bossmine img{width:40px;height:40px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--gold);flex:none}
@@ -330,7 +344,7 @@ body.fever #tabs button[data-x=work],body.fever #segBar button[data-x=sell]{colo
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.4.7';
+const APPVER='v1.5.0';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -697,11 +711,10 @@ const VIEW={
   <div class="sub" style="margin-top:8px">가진 돈 그래프 <span data-v="histSpan"></span></div><div id="chart"></div></div>`;},
  bag(){const cell=k=>{const g=S.got[k]>0,r=ITEM[k].rare;return `<button class="slot ${g?'':'none'} ${r?'rare':''}" data-a="info" data-x="${k}">${ic(k)}<span class="nm">${g||!r?ITEM[k].n:'???'}</span><span class="ct" data-v="have0:${k}"></span></button>`;};
   const all=ORES.concat(Object.values(PROD),CRAFTS,RARES),n=all.filter(k=>S.got[k]>0).length,cnt=L=>L.filter(k=>S.got[k]>0).length+' / '+L.length;
-  const an=ACH.filter(a=>S.ach&&S.ach[a.id]).length,A1=ACH.filter(a=>!a.f),A2=ACH.filter(a=>a.f),ac=L=>L.filter(a=>S.ach&&S.ach[a.id]).length+' / '+L.length;
+  const an=ACH.filter(a=>S.ach&&S.ach[a.id]).length;
   const sec=(t,tag,body,sub)=>`<div class="card"><h3>${t} <span class="tag g">${tag}</span>${sub?`<span class="tag">${sub}</span>`:''}</h3>${body}</div>`;
   return `<div class="dropr" id="sline" style="margin-top:0"><span class="chip">품목 <b>${n} / ${all.length}</b></span><span class="chip">차 <b>${S.cars.length} / ${CARS.length}</b></span><span class="chip">업적 <b>${an} / ${ACH.length}</b></span></div>${S.toon?toonCard('bag'):''}
-  ${sec('🏅 업적',ac(A1),`<div class="achg">${A1.map(achCell).join('')}</div>`)}
-  ${sec('🎖️ 실패 훈장',ac(A2),`<div class="achg">${A2.map(achCell).join('')}</div>`,'망해도 남는 게 있다')}
+  ${achSec()}
   ${sec('⛏️ 광석',cnt(ORES),`<div class="grid">${ORES.map(cell).join('')}</div>`)}
   ${sec('🔥 가공 제품',cnt(Object.values(PROD)),`<div class="grid">${Object.values(PROD).map(cell).join('')}</div>`)}
   ${sec('🛠️ 제작품',cnt(CRAFTS),`<div class="grid">${CRAFTS.map(cell).join('')}</div>`)}
@@ -1014,6 +1027,7 @@ const ACT={
  menu(){menuMain();return 'skip';}
 };
 document.addEventListener('change',ev=>{const c=ev.target.closest('select[data-crs]');if(c){const sl=S.cr.slots[+c.dataset.crs];sl.k=c.value;sl.p=0;save();R();return;}const e=ev.target.closest('select[data-mgr]');if(!e)return;S.ms[+e.dataset.mgr]=e.value;save();toast('관리인 '+(+e.dataset.mgr+1)+' 방향: '+DIRS[e.value].n);});
+ACT.ach=x=>{achOpen(x);return 'skip';};
 document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(!b)return;const r=ACT[b.dataset.a]?.(b.dataset.x,ev);if(r!=='skip'){save();R();}});
 /* 관리자 모드(운영자 전용): 키의 SHA-256만 들어 있음 */
 const ADM_H='78d85040efebf0c623c113bab3f4b93cce871bcb0d6514630c9f68e9f71ca683',ADM_K='gordo-tycoon-adm';
@@ -1083,6 +1097,83 @@ function chatTick(){const m=$('mine');if(!m||S.tab!=='work')return;const rs=[...
  const r=rp(rs);bubble(r,chatPick(r.dataset.i));}
 function commuteFx(){const m=$('mine');if(!m||S.tab!=='work'||document.hidden)return;const own=S.ws.map((g,i)=>i).filter(i=>S.wcarOwn[i]>=0&&(S.wshift[i]??0)===S.shiftCur);
  const c=own.length?CARS[S.wcarOwn[rp(own)]]:(car()||CARS[0]),ic=c?rIc(c):'';const d=document.createElement('div');d.className='cmt';d.innerHTML=`<b>🔄 ${S.shiftCur+1}조 출근 · ${((S.shiftCur+NSH-1)%NSH)+1}조 퇴근</b><i style="background-image:url(${ic})"></i>`;m.appendChild(d);setTimeout(()=>d.remove(),5100);}
+/* 1.5.0 업적 뱃지: 봉다방 타이쿤 0.18.0과 같은 벡터 뱃지(동·은·금·백금·다이아, 실패 훈장) */
+const shade=(h,d)=>{const n=parseInt(h.slice(1),16),f=v=>Math.max(0,Math.min(255,v+d));return'#'+((1<<24)+(f(n>>16)<<16)+(f((n>>8)&255)<<8)+f(n&255)).toString(16).slice(1)};
+const ACH_T=['실패 훈장','동','은','금','백금','다이아'],ACH_TC=['#9aa0a8','#d08a55','#cfd8dc','#f2c14e','#7fd8ff','#ff8fd0'];
+const ACH_E={cup:'#8a4b2a',cupx:'#8a4b2a',coin:'#2f7d4f',shop:'#b5532a',box:'#2f6fb0',map:'#22868a',wheel:'#46586c',spark:'#6a3ab8',kiosk:'#2a7a9a',people:'#5a55b8',gem:'#b0308a',star:'#b8862a',paw:'#7a4ab0',crown:'#a8323c',cap:'#2a5a9a',gift:'#b83a5a',ticket:'#b06a1e',heart:'#d0457e',note:'#b0409a',mega:'#d07a1e',flame:'#c8381e',clip:'#2f7a5a',alarm:'#1e8a6a',hour:'#4a6a9a',glove:'#9a2a2a',mask:'#3a3f52',siren:'#2f52b0',cross:'#b03a3a',umb:'#2a8a9a',trophy:'#8a6a1e'};
+/* ----- 문양 (48×48). 밝은 부분은 currentColor, 어두운 무늬는 반투명 갈색 ----- */
+const _D='fill="#2a1408" fill-opacity=".62"',_DS='fill="none" stroke="#2a1408" stroke-opacity=".62" stroke-linecap="round" stroke-linejoin="round"',_C='fill="currentColor"',_CS='fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"';
+const _CUP=`<path ${_C} d="M9 19h26v9a13 13 0 0 1-26 0z"/><path ${_CS} stroke-width="3.4" d="M35 22h2.5a5 5 0 0 1 0 10H33"/><path ${_C} d="M5 42.5h34a1 1 0 0 1 1 1.3A3 3 0 0 1 37 46H7a3 3 0 0 1-3-2.2 1 1 0 0 1 1-1.3z"/><ellipse ${_D} cx="22" cy="19.4" rx="11.4" ry="2.4"/>`;
+const ACH_SYM={
+ cup:_CUP+`<path ${_CS} stroke-width="2.6" d="M16 3.5c-3 3 3 5 0 9M24 2c-3 3.4 3 5.6 0 10.5M32 3.5c-3 3 3 5 0 9"/><path ${_D} d="M22 26.5c1.2-2.2 4.6-1.6 4.6 1 0 2.2-2.6 3.9-4.6 5.4-2-1.5-4.6-3.2-4.6-5.4 0-2.6 3.4-3.2 4.6-1z"/>`,
+ cupx:_CUP+`<path ${_DS} stroke-width="2.4" d="M25 20l-5 7 6 3-5 9"/><path ${_C} d="M38 6c2 3 3 4.4 3 6a3 3 0 0 1-6 0c0-1.6 1-3 3-6zM10 4c1.6 2.4 2.4 3.6 2.4 4.9a2.4 2.4 0 0 1-4.8 0C7.600 7.600 8.400 6.400 10 4z"/>`,
+ coin:`<circle ${_C} cx="24" cy="24" r="19"/><circle ${_DS} stroke-width="1.6" cx="24" cy="24" r="14.6"/><path ${_DS} stroke-width="3.2" d="M15.500 16.500l4 14.500 4.500-11 4.500 11 4-14.500"/><path ${_DS} stroke-width="1.9" d="M13 21.500h22M13.600 25.800h20.800"/>`,
+ shop:`<path ${_C} d="M10 6h28l5 9a5.200 5.200 0 0 1-9.500 2.800 5.200 5.200 0 0 1-9.500 0 5.200 5.200 0 0 1-9.500 0A5.200 5.200 0 0 1 5 15z"/><path ${_C} d="M9 23.500h30V43a1.500 1.500 0 0 1-1.500 1.500h-27A1.500 1.500 0 0 1 9 43z"/><path ${_D} d="M27 30h8.500v14.500H27zM12.500 29.500h10v8h-10z"/><path ${_DS} stroke-width="1.500" d="M17 6l-2.500 9M24 6v9M31 6l2.500 9"/><circle ${_C} cx="29.500" cy="37.500" r="1.100"/>`,
+ box:`<path ${_C} d="M13 14h28a2 2 0 0 1 2 2v24a2 2 0 0 1-2 2H13a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2z"/><path ${_D} d="M23.500 14h7v11l-3.500-2.200-3.500 2.200z"/><path ${_DS} stroke-width="1.700" d="M30 35.500h8M33 31.500h5"/><path ${_CS} stroke-width="2.800" d="M1.500 19h5.500M3.500 28h3.500M0.500 37h6.500"/>`,
+ map:`<path ${_C} d="M3 11l13-5 16 5 13-5v31l-13 5-16-5-13 5z"/><path ${_DS} stroke-width="1.600" d="M16 6v31M32 11v31"/><path ${_DS} stroke-width="2" stroke-dasharray="1 4" d="M8 33c4-6 8-1 12-6s7-9 10-7"/><path ${_D} d="M37.500 13a5 5 0 0 1 5 5c0 4-5 9.500-5 9.500s-5-5.500-5-9.500a5 5 0 0 1 5-5z"/><circle ${_C} cx="37.500" cy="18" r="1.800"/>`,
+ wheel:`<circle ${_CS} stroke-width="5.500" cx="24" cy="24" r="17.500"/><path ${_CS} stroke-width="5" d="M24 24L8.500 19.500M24 24l15.500-4.500M24 24v16.500"/><circle ${_C} cx="24" cy="24" r="6.500"/><circle ${_D} cx="24" cy="24" r="2.600"/>`,
+ spark:`<path ${_C} d="M21 5c1.800 11 7.200 16.400 18 18-10.800 1.600-16.200 7-18 18-1.800-11-7.200-16.400-18-18 10.800-1.600 16.200-7 18-18z"/><path ${_C} d="M38 1.500c.8 4.600 2.900 6.700 7.500 7.500-4.600.8-6.700 2.900-7.500 7.500-.8-4.600-2.900-6.700-7.500-7.500 4.600-.8 6.700-2.900 7.500-7.500zM39.500 33c.6 3.300 2.200 4.900 5.500 5.500-3.300.6-4.900 2.200-5.500 5.500-.6-3.300-2.200-4.900-5.500-5.500 3.300-.6 4.900-2.200 5.500-5.500z"/><path ${_D} d="M21 14.500c1 5 3.500 7.500 8.500 8.500-5 1-7.500 3.500-8.500 8.500-1-5-3.500-7.500-8.500-8.500 5-1 7.500-3.500 8.500-8.500z"/>`,
+ kiosk:`<path ${_C} d="M13 3h22a3 3 0 0 1 3 3v24a3 3 0 0 1-3 3H13a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z"/><path ${_D} d="M13.500 6.500h21v17h-21z"/><path ${_C} d="M20.500 33h7v8h-7zM13 41h22a2 2 0 0 1 2 2v2H11v-2a2 2 0 0 1 2-2z"/><path ${_C} d="M19 11h8v3.500a4 4 0 0 1-8 0zM27.500 12h1.200a1.600 1.600 0 0 1 0 3.200H27M17.500 20h11v1.300h-11z"/><circle ${_D} cx="24" cy="28.300" r="1.600"/>`,
+ people:`<circle ${_C} cx="33" cy="14" r="6.500" opacity=".82"/><path ${_C} opacity=".82" d="M31 23.500c8.500-1 14 4.500 14 13V40H36.500c0-7-1.500-12.500-5.500-16.500z"/><circle ${_C} cx="18" cy="15.500" r="8.500"/><path ${_C} d="M2.500 42c0-10 6.500-15.500 15.500-15.500S33.500 32 33.500 42a1.500 1.500 0 0 1-1.500 1.500H4A1.500 1.500 0 0 1 2.500 42z"/>`,
+ gem:`<path ${_C} d="M13 6h22l10 13.500L24 44 3 19.500z"/><path ${_DS} stroke-width="1.500" d="M3 19.500h42M13 6l5.500 13.500L24 44M35 6l-5.500 13.500L24 44M18.500 19.500L24 6l5.500 13.500"/><path ${_D} d="M18.500 19.500h11L24 44z" fill-opacity=".28"/>`,
+ star:`<path ${_C} d="M24 2.500l6.300 13.400 14.700 1.900-10.800 10.200 2.800 14.500L24 35.300 11 42.500l2.800-14.500L3 17.800l14.700-1.900z"/><path ${_D} fill-opacity=".3" d="M24 2.500l6.300 13.400 14.700 1.900-10.800 10.200 2.800 14.500L24 35.300z"/>`,
+ paw:`<path ${_C} d="M24 23c7.500 0 14 7.500 14 14 0 5.500-5.500 7-14 7s-14-1.500-14-7c0-6.500 6.500-14 14-14z"/><ellipse ${_C} cx="8.500" cy="21" rx="4.400" ry="6" transform="rotate(-22 8.500 21)"/><ellipse ${_C} cx="18" cy="10.500" rx="4.700" ry="6.700" transform="rotate(-8 18 10.500)"/><ellipse ${_C} cx="30" cy="10.500" rx="4.700" ry="6.700" transform="rotate(8 30 10.500)"/><ellipse ${_C} cx="39.500" cy="21" rx="4.400" ry="6" transform="rotate(22 39.500 21)"/>`,
+ crown:`<path ${_C} d="M7 35L3.500 13l11 9L24 6l9.500 16 11-9L41 35z"/><path ${_C} d="M8 38h32a1.500 1.500 0 0 1 1.500 1.500v3A1.500 1.500 0 0 1 40 44H8a1.500 1.500 0 0 1-1.500-1.500v-3A1.500 1.500 0 0 1 8 38z"/><circle ${_D} cx="24" cy="28" r="3.200"/><circle ${_D} cx="13.500" cy="29.500" r="2"/><circle ${_D} cx="34.500" cy="29.500" r="2"/><circle ${_C} cx="3.500" cy="12" r="2.600"/><circle ${_C} cx="24" cy="5" r="2.800"/><circle ${_C} cx="44.500" cy="12" r="2.600"/>`,
+ cap:`<path ${_C} d="M24 6l23 10.500L24 27 1 16.500z"/><path ${_C} d="M10 24v9.500c0 3.500 6.300 6.500 14 6.500s14-3 14-6.500V24l-14 6.400z"/><path ${_CS} stroke-width="2.200" d="M43 18.500V32"/><circle ${_C} cx="43" cy="34.500" r="3"/><path ${_DS} stroke-width="1.500" d="M24 27v13"/>`,
+ gift:`<path ${_C} d="M8 22h32v20a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2zM6 13.500h36a2 2 0 0 1 2 2V21H4v-5.500a2 2 0 0 1 2-2z"/><path ${_D} d="M20.500 13.500h7V44h-7z"/><path ${_CS} stroke-width="3.400" d="M24 13c-3-8-13-9-13-3.500S19 13 24 13zM24 13c3-8 13-9 13-3.500S29 13 24 13z"/>`,
+ ticket:`<g transform="rotate(-14 24 24)"><path ${_C} d="M3 13h42v7.500a3.500 3.500 0 0 0 0 7V35H3v-7.500a3.500 3.500 0 0 0 0-7z"/><path ${_DS} stroke-width="1.700" stroke-dasharray="2 2.600" d="M14.500 14.500v19"/><path ${_D} d="M30 16.500l2.100 4.500 4.900.6-3.600 3.400.9 4.900-4.300-2.400-4.300 2.400.9-4.900-3.600-3.400 4.900-.6z"/></g>`,
+ heart:`<path ${_C} d="M24 43S4 31.500 4 17.500A10.500 10.500 0 0 1 24 13a10.500 10.500 0 0 1 20 4.500C44 31.500 24 43 24 43z"/><path ${_DS} stroke-width="2.600" d="M11 17.500a5 5 0 0 1 5-5"/>`,
+ note:`<ellipse ${_C} cx="12.500" cy="37" rx="7" ry="5.200" transform="rotate(-22 12.500 37)"/><ellipse ${_C} cx="35.500" cy="32" rx="7" ry="5.200" transform="rotate(-22 35.500 32)"/><path ${_C} d="M16 10.500L42 4v28h-3.500V14L19.500 18.800V37H16z"/>`,
+ mega:`<path ${_C} d="M27 6.500L8 16H5.500A2.500 2.500 0 0 0 3 18.500v8A2.500 2.500 0 0 0 5.500 29H8l19 9.500z"/><path ${_C} d="M10.500 30.500h7l2.500 10a2 2 0 0 1-2 2.500h-3a2 2 0 0 1-2-1.500z"/><path ${_CS} stroke-width="3.200" d="M33 16a9 9 0 0 1 0 13M38.500 10.500a17 17 0 0 1 0 24"/><path ${_DS} stroke-width="1.600" d="M8.500 17v11"/>`,
+ flame:`<path ${_C} d="M25 2c1.500 9 13 13.500 13 26a14 14 0 0 1-28 0c0-5.500 2.300-9.500 5-12 .6 4.500 2.600 6.500 5 6.500C18 15 20.500 8 25 2z"/><path ${_D} d="M24 25c3.500 3.500 6 6.500 6 10a6 6 0 0 1-12 0c0-3.500 2.500-6 6-10z"/>`,
+ clip:`<path ${_C} d="M10 8h28a3 3 0 0 1 3 3v31a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3z"/><path ${_D} d="M17 3.500h14a2 2 0 0 1 2 2V11H15V5.500a2 2 0 0 1 2-2z"/><path ${_DS} stroke-width="2.400" d="M12.500 20.500l2.800 2.800 4.700-5.800M12.500 31.500l2.800 2.800 4.700-5.800"/><path ${_DS} stroke-width="2.200" d="M25 21.500h10.500M25 32.500h10.500"/>`,
+ alarm:`<circle ${_C} cx="24" cy="27" r="16"/><path ${_C} d="M4 13.500a7.500 7.500 0 0 1 12-6zM44 13.500a7.500 7.500 0 0 0-12-6z"/><path ${_CS} stroke-width="3.400" d="M11.500 39.500l-4 5M36.500 39.500l4 5"/><circle ${_DS} stroke-width="1.600" cx="24" cy="27" r="11.800"/><path ${_DS} stroke-width="2.800" d="M24 19v8.500l5.500 3.500"/><path ${_C} d="M22 7h4v5h-4z"/>`,
+ hour:`<path ${_C} d="M9 3h30a2 2 0 0 1 2 2v2.500a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM9 38.500h30a2 2 0 0 1 2 2V43a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-2.500a2 2 0 0 1 2-2z"/><path ${_C} d="M11.500 9.500h25c0 10-8.500 11.500-8.500 14.500s8.500 4.500 8.500 14.500h-25c0-10 8.500-11.500 8.500-14.500s-8.500-4.500-8.500-14.500z"/><path ${_D} d="M16.500 14.500h15c-1.500 4-5.500 5.500-7.500 8-2-2.500-6-4-7.500-8zM15.500 38.500c1-4.500 5-6 8.500-7.500 3.500 1.500 7.500 3 8.500 7.500z"/>`,
+ glove:`<path ${_C} d="M15 31V16.500C15 9 20.500 4 27.500 4S40 9 40 17v5.500c0 5.500-3.500 9-8 9.500V31z"/><path ${_C} d="M8 19.500a4.500 4.500 0 0 1 9 0V29c-5 0-9-4-9-9.500z"/><path ${_C} d="M14 34h18a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z"/><path ${_DS} stroke-width="1.700" d="M15 39.500h16M20.500 12c4-3 10-3 13.500 0"/><path ${_DS} stroke-width="1.700" d="M17 19.500V29"/>`,
+ mask:`<path ${_C} d="M3 16c8-5.500 15-5.500 21-2 6-3.500 13-3.500 21 2-1 12-6.500 18-13 18-4 0-6-3.500-8-7-2 3.500-4 7-8 7-6.500 0-12-6-13-18z"/><ellipse ${_D} cx="14.500" cy="22" rx="5.200" ry="3.600" transform="rotate(8 14.500 22)"/><ellipse ${_D} cx="33.500" cy="22" rx="5.200" ry="3.600" transform="rotate(-8 33.500 22)"/><path ${_CS} stroke-width="2.600" d="M4 20l-3.500 7M44 20l3.500 7"/>`,
+ siren:`<path ${_C} d="M13 31V23a11 11 0 0 1 22 0v8z"/><path ${_C} d="M8 31h32a2 2 0 0 1 2 2v5.500a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V33a2 2 0 0 1 2-2z"/><path ${_CS} stroke-width="3" d="M24 2v5.500M7.500 7.500l4 4M40.500 7.500l-4 4M1.500 22H7M41 22h5.500"/><path ${_DS} stroke-width="2.400" d="M18.500 23a5.500 5.500 0 0 1 5.500-5.500"/><path ${_D} d="M10 35h28v2H10z"/>`,
+ cross:`<path ${_C} d="M19.500 4h9a2 2 0 0 1 2 2v11.500H42a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H30.500V42a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2V30.500H6a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h11.500V6a2 2 0 0 1 2-2z"/><path ${_DS} stroke-width="2.400" d="M7 25.500h8l3-6 4 11 4-13 3 8h12"/>`,
+ umb:`<path ${_C} d="M2 25a22 19 0 0 1 44 0c-2.500-3-6-3-8.500 0-2.500-3-6.500-3-9 0-2.500-3-6.500-3-9 0-2.500-3-6.500-3-9 0-2.500-3-6-3-8.500 0z"/><path ${_CS} stroke-width="2.800" d="M24 23v17a4 4 0 0 1-8 0"/><path ${_DS} stroke-width="1.500" d="M24 6c-5 5-7 11-7 17M24 6c5 5 7 11 7 17"/><circle ${_C} cx="24" cy="5" r="2"/>`,
+ trophy:`<path ${_C} d="M12 4h24v11a12 12 0 0 1-24 0z"/><path ${_CS} stroke-width="3.200" d="M12 8H5.500c0 8 3 11.500 8.500 12.500M36 8h6.500c0 8-3 11.500-8.500 12.500"/><path ${_C} d="M20.500 26h7v9h-7zM15 35h18a3 3 0 0 1 3 3v6H12v-6a3 3 0 0 1 3-3z"/><path ${_D} d="M24 7.500l2 4.200 4.600.6-3.400 3.200.9 4.600-4.100-2.300-4.100 2.300.9-4.600-3.400-3.200 4.600-.6z"/><path ${_D} d="M16 40h16v1.800H16z"/>`};
+/* 테두리 금속색(위에서 아래로) · 0은 실패 훈장의 무쇠 */
+const ACH_M=[['#a6adb6','#636a73','#24282e','#4d545c'],['#f8cda4','#cf8a55','#74401f','#b9713f'],['#ffffff','#d5dde1','#727e85','#b9c3c8'],['#fff8c8','#f6c955','#9a6714','#e6ae3e'],['#f4ffff','#a8e8f7','#2f7c99','#86d4ec']];
+let achDefsOn=0;
+function achDefs(){if(achDefsOn)return;achDefsOn=1;let h='';const st=(m)=>`<stop offset="0" stop-color="${m[0]}"/><stop offset=".42" stop-color="${m[1]}"/><stop offset=".82" stop-color="${m[2]}"/><stop offset="1" stop-color="${m[3]}"/>`;
+ ACH_M.forEach((m,t)=>{h+=`<linearGradient id="am${t}" x1="0" y1="0" x2="0" y2="1">${st(m)}</linearGradient><linearGradient id="an${t}" x1="0" y1="1" x2="0" y2="0">${st(m)}</linearGradient>`});
+ const dia='<stop offset="0" stop-color="#ffe6f9"/><stop offset=".22" stop-color="#c9b8ff"/><stop offset=".48" stop-color="#96eeff"/><stop offset=".74" stop-color="#fff2b8"/><stop offset="1" stop-color="#ff9fd8"/>';
+ h+=`<linearGradient id="am5" x1="0" y1="0" x2="1" y2="1">${dia}</linearGradient><linearGradient id="an5" x1="1" y1="1" x2="0" y2="0">${dia}</linearGradient>`;
+ for(const k in ACH_E){const c=ACH_E[k];h+=`<radialGradient id="ae_${k}" cx=".5" cy=".34" r=".78"><stop offset="0" stop-color="${shade(c,58)}"/><stop offset=".55" stop-color="${c}"/><stop offset="1" stop-color="${shade(c,-62)}"/></radialGradient>`}
+ h+=`<radialGradient id="ae_x" cx=".5" cy=".34" r=".78"><stop offset="0" stop-color="#7a4046"/><stop offset=".55" stop-color="#4a2228"/><stop offset="1" stop-color="#1c0c10"/></radialGradient>`;
+ h+=`<linearGradient id="agl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`;
+ for(const k in ACH_SYM)h+=`<symbol id="ag_${k}" viewBox="0 0 48 48" overflow="visible">${ACH_SYM[k]}</symbol>`;
+ document.body.insertAdjacentHTML('beforeend',`<svg width="0" height="0" style="position:absolute;left:-9px;top:-9px" aria-hidden="true"><defs>${h}</defs></svg>`)}
+const _r=v=>Math.round(v*100)/100,_star=(cx,cy,n,ro,ri,rot)=>{let p='';for(let i=0;i<n*2;i++){const a=(rot||0)+Math.PI*i/n-Math.PI/2,r=i%2?ri:ro;p+=_r(cx+Math.cos(a)*r)+','+_r(cy+Math.sin(a)*r)+' '}return p.trim()};
+const achSvgC={};
+/* 뱃지 한 개. 128×140 틀 안에 리본·빛살·테두리·칠보·문양·등급 별을 겹쳐 그린다 */
+function achSvg(a){if(achSvgC[a.id])return achSvgC[a.id];const T=a.f?0:a.t,cx=64,cy=62,O='#1b1210',m='url(#am'+T+')',mi='url(#an'+T+')';let h='';
+ const rb=a.f?['#5c6168','#33373d','#7c828a']:T===3?['#d9363f','#8c1b24','#ff8088']:T===4?['#2f72dc','#173b88','#86b8ff']:T===5?['#8d4de4','#4a1f90','#d0a8ff']:null;
+ if(rb){const L=a.f?'47,90 30,124 39,121 41,131 50,126 62,98':'47,90 31,131 43,124 50,135 62,98',R=a.f?'81,90 97,131 85,124 78,135 66,98':'81,90 97,131 85,124 78,135 66,98';
+  h+=`<polygon points="${L}" fill="${rb[0]}" stroke="${O}" stroke-width="1.6" stroke-linejoin="round"/><polygon points="${R}" fill="${rb[0]}" stroke="${O}" stroke-width="1.6" stroke-linejoin="round"/><path d="M45 100l-9 24M83 100l9 24" stroke="${rb[2]}" stroke-width="2.2" stroke-opacity=".7" fill="none"/><path d="M52 100l-7 26M76 100l7 26" stroke="${rb[1]}" stroke-width="2.4" stroke-opacity=".8" fill="none"/>`}
+ if(T===5)h+=`<polygon points="${_star(cx,cy,20,60,49)}" fill="${m}" stroke="${O}" stroke-width="1.6" stroke-linejoin="round"/><polygon points="${_star(cx,cy,20,54,49,Math.PI/20)}" fill="#fff" fill-opacity=".35"/>`;
+ if(T===4){let lf='';for(const sgn of[-1,1])for(let i=0;i<8;i++){const ang=Math.PI/2+sgn*(.3+i*.27),x=cx+Math.cos(ang)*53.5,y=cy+Math.sin(ang)*53.5,rot=ang*180/Math.PI+90+sgn*38;lf+=`<ellipse cx="${_r(x)}" cy="${_r(y)}" rx="7.4" ry="3.3" transform="rotate(${_r(rot)} ${_r(x)} ${_r(y)})" fill="${m}" stroke="${O}" stroke-width="1.2"/>`}h+=lf}
+ if(T===3)h+=`<polygon points="${_star(cx,cy,16,56,48)}" fill="${m}" stroke="${O}" stroke-width="1.6" stroke-linejoin="round"/>`;
+ if(T===2){let sc='';for(let i=0;i<14;i++){const ang=Math.PI*2*i/14;sc+=`<circle cx="${_r(cx+Math.cos(ang)*43)}" cy="${_r(cy+Math.sin(ang)*43)}" r="8.6" fill="${m}" stroke="${O}" stroke-width="1.6"/>`}h+=sc}
+ h+=`<circle cx="${cx}" cy="${cy}" r="46" fill="${m}" stroke="${O}" stroke-width="2"/><circle cx="${cx}" cy="${cy}" r="44.6" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1"/><circle cx="${cx}" cy="${cy}" r="40.5" fill="${mi}"/>`;
+ if(T){let bd='';const nb=22;for(let i=0;i<nb;i++){const ang=Math.PI*2*(i+.5)/nb;bd+=`<circle cx="${_r(cx+Math.cos(ang)*43.2)}" cy="${_r(cy+Math.sin(ang)*43.2)}" r="1.45"/>`}h+=`<g fill="#fffbe8" fill-opacity=".92">${bd}</g>`}
+ else{let bd='';for(let i=0;i<8;i++){const ang=Math.PI*2*(i+.5)/8;bd+=`<circle cx="${_r(cx+Math.cos(ang)*43.2)}" cy="${_r(cy+Math.sin(ang)*43.2)}" r="1.7"/>`}h+=`<g fill="#1c2026" fill-opacity=".8">${bd}</g>`}
+ h+=`<circle cx="${cx}" cy="${cy}" r="36.5" fill="url(#ae_${a.f?'x':a.k})" stroke="${O}" stroke-width="1.6"/><circle cx="${cx}" cy="${cy}" r="34.4" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width=".9"/>`;
+ if(T===5){let ry='';for(let i=0;i<12;i++){const ang=Math.PI*2*i/12;ry+=`M${cx} ${cy}L${_r(cx+Math.cos(ang-.07)*34)} ${_r(cy+Math.sin(ang-.07)*34)}L${_r(cx+Math.cos(ang+.07)*34)} ${_r(cy+Math.sin(ang+.07)*34)}z`}h+=`<path d="${ry}" fill="#fff" fill-opacity=".1"/>`}
+ h+=`<use href="#ag_${a.k}" x="${cx-23+1.3}" y="${cy-23+2.2}" width="46" height="46" style="color:#120805" opacity=".5"/><use href="#ag_${a.k}" x="${cx-23}" y="${cy-23}" width="46" height="46" style="color:${a.f?'#d9d2c8':'#fff6e2'}"/>`;
+ h+=`<ellipse cx="${cx}" cy="${cy-15}" rx="29" ry="17.5" fill="url(#agl)" opacity=".5"/>`;
+ if(a.f)h+=`<path d="M43 33l8 9-4 6 10 6-3 6 8 7" fill="none" stroke="#0e0607" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M44 32.300l8 9-4 6 10 6-3 6 8 7" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width=".7" stroke-linejoin="round"/>`;
+ if(T===5){h+=`<path d="M48 22l-4-15 9 6.500L64 2l11 11.500 9-6.500-4 15z" fill="url(#am3)" stroke="${O}" stroke-width="1.6" stroke-linejoin="round"/><circle cx="64" cy="15.500" r="2.600" fill="#ff5d9e" stroke="${O}" stroke-width=".8"/><circle cx="54" cy="16.500" r="1.700" fill="#7fe0ff" stroke="${O}" stroke-width=".7"/><circle cx="74" cy="16.500" r="1.700" fill="#7fe0ff" stroke="${O}" stroke-width=".7"/>`;
+  for(const[x,y,s]of[[14,24,5],[114,30,4],[110,98,3.4],[18,96,3]])h+=`<polygon points="${_star(x,y,4,s,s*.3)}" fill="#fff"/>`}
+ /* 등급 별(실패 훈장은 ×) */
+ const n=a.t,w=13+n*9.5,px=cx-w/2;h+=`<rect x="${_r(px)}" y="100.5" width="${_r(w)}" height="13" rx="6.5" fill="${m}" stroke="${O}" stroke-width="1.6"/><rect x="${_r(px+2)}" y="102" width="${_r(w-4)}" height="4" rx="2" fill="#fff" fill-opacity=".4"/>`;
+ for(let i=0;i<n;i++){const x=cx-(n-1)*4.75+i*9.5;h+=a.f?`<path d="M${_r(x-2.6)} 104.400l5.200 5.200M${_r(x+2.6)} 104.400l-5.200 5.200" stroke="#14171b" stroke-width="1.900" stroke-linecap="round"/>`:`<polygon points="${_star(x,107.2,5,4.3,1.9)}" fill="${T===5?'#5a2a8a':T===4?'#14506a':T===3?'#6a4208':T===2?'#414b52':'#5a2c10'}"/>`}
+ return achSvgC[a.id]=`<svg class="achs" viewBox="0 0 128 140" xmlns="http://www.w3.org/2000/svg">${h}</svg>`}
+ACH_SYM.pick=`<path ${_C} d="M6 15C14 5 30 3 43 9c-8-1-17 1-24 6l-3 1z"/><path ${_C} d="M18.500 13.500l5 3.500L11 44.500a2.400 2.400 0 0 1-4.200-2.300z"/><path ${_DS} stroke-width="1.600" d="M21 21.500L11.500 40"/><path ${_D} d="M17 12.400l6.500 4.300 1-1.300-6.300-4.500z"/>`;ACH_E.pick='#6a5a3a';
+ACH_SYM.car=`<path ${_C} d="M9 22l5-10a4 4 0 0 1 3.600-2.300h12.800A4 4 0 0 1 34 12l5 10h3a3 3 0 0 1 3 3v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9a3 3 0 0 1 3-3z"/><path ${_D} d="M14 21l3.600-7.500h12.800L34 21z"/><circle ${_D} cx="13" cy="36" r="5.500"/><circle ${_D} cx="35" cy="36" r="5.500"/><circle ${_C} cx="13" cy="36" r="2.400"/><circle ${_C} cx="35" cy="36" r="2.400"/><path ${_D} d="M5 26h5v3H5zM38 26h5v3h-5z"/>`;ACH_E.car='#2a6a9a';
 /* 업적: c 달성 조건, f 실패 훈장 */
 const ACH=[
  {id:'m1',e:'💵',n:'첫 100만',d:'번 돈 100만원',c:()=>S.total>=1e6},{id:'m2',e:'💰',n:'천만 광부',d:'번 돈 1천만원',c:()=>S.total>=1e7},{id:'m3',e:'🏦',n:'억대 광산',d:'번 돈 1억원',c:()=>S.total>=1e8},{id:'m4',e:'👑',n:'광산 재벌',d:'번 돈 10억원',c:()=>S.total>=1e9},{id:'m5',e:'🌌',n:'전설의 고르도',d:'번 돈 100억원',c:()=>S.total>=1e10},
@@ -1100,13 +1191,50 @@ const ACH=[
  {id:'bn1',f:1,e:'🥵',n:'과로 주의',d:'번아웃 1번',c:()=>(S.burnN||0)>=1},{id:'bn10',f:1,e:'⚖️',n:'노동청 단골',d:'번아웃 10번',c:()=>(S.burnN||0)>=10},
  {id:'ad1',f:1,e:'🎁',n:'조합의 손길',d:'지원금 1번',c:()=>(S.aidC||0)>=1},{id:'ad5',f:1,e:'🙏',n:'구조 요청 장인',d:'지원금 5번',c:()=>(S.aidC||0)>=5},
  {id:'mm1',f:1,e:'😵',n:'아사 직전',d:'알리미가 0이 된 적 1번',c:()=>(S.mealMiss||0)>=1},{id:'mm10',f:1,e:'🦴',n:'굶기의 달인',d:'알리미 0 10번',c:()=>(S.mealMiss||0)>=10},{id:'dn1',f:1,e:'🚑',n:'응급실 직행',d:'사장님 쓰러짐 1번',c:()=>(S.downN||0)>=1},{id:'dn5',f:1,e:'🛌',n:'불사조 사장',d:'쓰러졌다 일어나기 5번',c:()=>(S.downN||0)>=5}];
-const achCell=a=>{const ok=S.ach&&S.ach[a.id];return `<div class="ach ${ok?'':'no'} ${a.f?'f':''}"><span class="me">${a.e}</span><div><b>${a.n}</b><br><small>${a.d}</small></div></div>`;};
-function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c());if(!nw.length){S.achInit=1;return;}for(const a of nw)S.ach[a.id]=Date.now();
+/* 1.5.0 업적 리뉴얼: 조건(c)은 그대로, 뱃지 문양 k·등급 t(1동~5다이아)·묶음 gp·진행도 v/g/u만 덧붙임 */
+const ACH_G=[['money','💰 돈과 회사'],['crew','👥 직원'],['mine','⛏️ 광산과 제품'],['car','🚘 차'],['ev','🎉 이벤트'],['life','⏰ 생활'],['top','👑 마스터'],['fail','🎖️ 실패 훈장']];
+const _h=v=>Math.floor((v||0)/360)/10,_made=()=>Object.values(S.cr.made||{}).reduce((a,b)=>a+(b>0?1:0),0);
+const ACH_X={m1:['coin',1,'money',()=>S.total,1e6,'원'],m2:['coin',2,'money',()=>S.total,1e7,'원'],m3:['coin',3,'money',()=>S.total,1e8,'원'],m4:['crown',4,'money',()=>S.total,1e9,'원'],m5:['crown',5,'money',()=>S.total,1e10,'원'],
+ c3:['shop',1,'money',()=>S.co,3,'레벨'],c5:['shop',2,'money',()=>S.co,5,'레벨'],c10:['shop',4,'money',()=>S.co,10,'레벨'],
+ w1:['people',1,'crew',()=>S.ws.length,1,'명'],vac1:['umb',2,'crew',()=>S.vacN||0,1,'번'],w16:['people',3,'crew',()=>S.ws.length,16,'명'],ws:['star',3,'crew',null,1,''],wsp:['star',4,'crew',null,1,''],wss:['star',5,'crew',()=>S.ws.length>=16?S.ws.filter(g=>g[0]==='S').length:0,16,'명'],
+ mg:['clip',2,'crew',()=>S.ms.length,1,'명'],
+ cr1:['box',1,'mine',_made,1,'종'],am:['flame',3,'mine',()=>(S.cr.made||{}).ammo||0,1e4,'발'],aq:['gem',3,'mine',()=>S.got.aqua||0,1,'개'],r1:['spark',2,'mine',()=>S.rares||0,1,'개'],r10:['spark',4,'mine',()=>S.rares||0,10,'개'],
+ k1:['car',1,'car',()=>S.cars.length,1,'대'],k10:['car',3,'car',()=>S.cars.length,10,'대'],k46:['trophy',5,'car',()=>S.cars.length,CARS.length,'대'],
+ fv10:['flame',2,'ev',()=>S.fevers,10,'번'],fv50:['flame',4,'ev',()=>S.fevers,50,'번'],mob:['mask',3,'ev',()=>S.evN.mob||0,10,'번'],
+ bt:['pick',2,'life',()=>_h(S.bossT),1,'시간'],p1:['hour',1,'life',()=>_h(S.playT),1,'시간'],p10:['hour',3,'life',()=>_h(S.playT),10,'시간'],p50:['hour',5,'life',()=>_h(S.playT),50,'시간'],
+ ml10:['alarm',2,'life',()=>S.mealOk||0,10,'번'],ml50:['alarm',4,'life',()=>S.mealOk||0,50,'번'],bf:['heart',3,'life',()=>almBufN(),2,'개'],
+ tf1:['cap',1],tf10:['cap',2],tf50:['cap',3],tf200:['cap',4],cp5:['siren',1],cp30:['siren',3],cb1:['car',1],cb10:['car',2],bn1:['flame',1],bn10:['flame',2],ad1:['gift',1],ad5:['gift',2],mm1:['alarm',1],mm10:['alarm',2],dn1:['cross',1],dn5:['cross',2]};
+const ACH_FV={tf1:()=>S.trainF||0,tf10:()=>S.trainF||0,tf50:()=>S.trainF||0,tf200:()=>S.trainF||0,cp5:()=>S.evN.cop||0,cp30:()=>S.evN.cop||0,cb1:()=>S.carBadN||0,cb10:()=>S.carBadN||0,bn1:()=>S.burnN||0,bn10:()=>S.burnN||0,ad1:()=>S.aidC||0,ad5:()=>S.aidC||0,mm1:()=>S.mealMiss||0,mm10:()=>S.mealMiss||0,dn1:()=>S.downN||0,dn5:()=>S.downN||0};
+const ACH_FG={tf1:[1,'번'],tf10:[10,'번'],tf50:[50,'번'],tf200:[200,'번'],cp5:[5,'번'],cp30:[30,'번'],cb1:[1,'번'],cb10:[10,'번'],bn1:[1,'번'],bn10:[10,'번'],ad1:[1,'번'],ad5:[5,'번'],mm1:[1,'번'],mm10:[10,'번'],dn1:[1,'번'],dn5:[5,'번']};
+ACH.forEach(a=>{const x=ACH_X[a.id];a.k=x[0];a.t=x[1];if(a.f){a.gp='fail';a.v=ACH_FV[a.id];a.g=ACH_FG[a.id][0];a.u=ACH_FG[a.id][1];}else{a.gp=x[2];a.v=x[3];a.g=x[4];a.u=x[5];}});
+ACH.push({id:'all',k:'trophy',t:5,gp:'top',e:'🏆',n:'고르도 광산 마스터',d:'실패 훈장을 뺀 업적 전부',v:()=>ACH.filter(a=>!a.f&&a.id!=='all'&&S.ach&&S.ach[a.id]).length,c:()=>ACH.every(a=>a.f||a.id==='all'||(S.ach&&S.ach[a.id]))});
+{const m=ACH.find(a=>a.id==='all');m.g=ACH.filter(a=>!a.f&&a.id!=='all').length;m.u='개';}
+const AMAP={};ACH.forEach(a=>AMAP[a.id]=a);
+const achV=a=>{if(S.ach&&S.ach[a.id])return a.g;if(!a.v)return a.c()?1:0;let v=+a.v()||0;return a.c()?Math.max(v,a.g):Math.min(v,a.g);};
+const achPct=a=>Math.max(0,Math.min(1,achV(a)/a.g));
+const achNum=(a,v)=>a.u==='원'?W(v):(a.u==='시간'?v:Math.floor(v).toLocaleString('ko-KR'))+(a.u?(a.u==='레벨'?' ':'')+a.u:'');
+function achCell(a){const ok=S.ach&&S.ach[a.id],p=achPct(a);return `<button class="achc ${ok?'':'lk'} ${a.f?'f':''}" data-a="ach" data-x="${a.id}" style="--tc:${ACH_TC[a.f?0:a.t]}">${achSvg(a)}<b>${a.n}</b><small>${a.d}</small>${ok?'':`<span class="bar"><i style="width:${Math.round(p*100)}%"></i></span>`}</button>`;}
+function achSec(){achDefs();const reg=ACH.filter(a=>!a.f),fl=ACH.filter(a=>a.f),ok=a=>S.ach&&S.ach[a.id],gr=reg.filter(ok).length,gf=fl.filter(ok).length;
+ let h=`<div class="card"><h3>🏅 업적 <span class="tag g">${gr} / ${reg.length}</span><span class="tag">실패 훈장 ${gf} / ${fl.length}</span></h3><div class="sub">뱃지를 누르면 크게 볼 수 있어요. 실패 훈장을 뺀 업적을 전부 모으면 <b>고르도 광산 마스터</b> 뱃지를 받아요.</div><div class="bar" style="margin-top:8px"><i style="width:${Math.round(gr/reg.length*100)}%;background:var(--gold)"></i></div>
+  <div class="acht">${[1,2,3,4,5].map(t=>{const all=reg.filter(a=>a.t===t);return `<span style="--tc:${ACH_TC[t]}"><i></i>${ACH_T[t]} <b>${all.filter(ok).length}</b>/${all.length}</span>`;}).join('')}</div></div>`;
+ for(const [k,n] of ACH_G){const L=ACH.filter(a=>a.gp===k);if(!L.length)continue;h+=`<div class="card"><h3>${n} <span class="tag">${L.filter(ok).length} / ${L.length}</span></h3>${k==='fail'?'<div class="sub">망해도 남는 게 있다. 모으지 않아도 괜찮아요.</div>':''}<div class="achg">${L.map(achCell).join('')}</div></div>`;}
+ return h;}
+function achOpen(id){achDefs();const a=AMAP[id];if(!a)return;const ok=S.ach&&S.ach[a.id],v=achV(a),p=achPct(a),dt=ok?new Date(ok):null,c=ACH_TC[a.f?0:a.t];
+ modal(`<h2>${a.f?'🎖️':'🏅'} ${a.n} <span class="tag" style="color:${c}">${a.f?'실패 훈장':ACH_T[a.t]}</span></h2><div class="achbig ${ok?'':'lk'}">${achSvg(a)}${ok?'':'<b>🔒</b>'}</div><p style="margin:8px 0 0;text-align:center"><b>${a.d}</b></p>
+ ${a.g>1||!ok?`<div class="bar" style="margin-top:8px"><i style="width:${Math.round(p*100)}%;background:${c}"></i></div><p class="sub" style="margin:4px 0 0;text-align:center">${a.g>1?`${achNum(a,Math.min(v,a.g))} / ${achNum(a,a.g)}`:ok?'':'아직 달성하지 못했어요'}</p>`:''}
+ <p class="sub" style="margin:8px 0 0;text-align:center">${ok?`${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일에 달성했어요.`:a.f?'실패 훈장은 모으지 않아도 돼요.':'달성하면 뱃지에 색이 들어와요.'}</p>`,[['닫기',null,'pri']]);}
+function achFx(a,more){if(!FXON||document.hidden)return;achDefs();const e=$('aq'),c=ACH_TC[a.f?0:a.t];clearTimeout(aqT);e.classList.remove('on');e.classList.toggle('gold',!a.f&&a.t>=3);
+ let h='<div class="ring"></div><div class="ring r2"></div>';const n=!a.f&&a.t>=4?24:12,em=a.f?['💧','🩹']:['✨','🌟','🏅'];for(let i=0;i<n;i++){const g=Math.PI*2*i/n+Math.random()*.3,d=140+Math.random()*170;h+=`<span class="sp" style="--dx:${Math.round(Math.cos(g)*d)}px;--dy:${Math.round(Math.sin(g)*d)}px;animation-delay:${(Math.random()*.25).toFixed(2)}s">${em[i%em.length]}</span>`;}
+ e.innerHTML=h+`<div class="gem achfx">${achSvg(a)}</div><div class="txt" style="text-shadow:0 0 14px ${c},0 2px 4px #000">${a.f?'🎖️ 실패 훈장…':'🏅 업적 달성!'}<small>${a.n}${more?` 외 ${more}개`:''} · ${a.f?'실패 훈장':ACH_T[a.t]+' 뱃지'}</small></div>`;
+ void e.offsetWidth;e.classList.add('on');if(!a.f&&a.t>=4){document.body.classList.add('shake');setTimeout(()=>document.body.classList.remove('shake'),460);}aqT=setTimeout(()=>{e.classList.remove('on','gold');e.innerHTML='';},2250);}
+function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c());if(!nw.length){S.achInit=1;return;}const now=Date.now();for(const a of nw)S.ach[a.id]=now;
  if(!S.achInit){S.achInit=1;toast('🏅 지금까지 한 일로 업적 '+nw.length+'개를 달성했어요! 수집함에서 확인하세요');return;}
- toast((nw[0].f?'🎖️ 실패 훈장: ':'🏅 업적 달성: ')+nw[0].e+' '+nw[0].n+(nw.length>1?' 외 '+(nw.length-1)+'개':''));if(S.tab==='bag')R();}
+ const top=nw.slice().sort((x,y)=>((x.f?1:0)-(y.f?1:0))||(y.t-x.t))[0];
+ toast((top.f?'🎖️ 실패 훈장: ':'🏅 업적 달성: ')+top.n+(nw.length>1?' 외 '+(nw.length-1)+'개':''));achFx(top,nw.length-1);if(S.tab==='bag')R();}
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
+ {v:'v1.5.0',t:'🏅 업적 리뉴얼',l:['🏅 업적이 <b>뱃지</b>로 새로 태어났어요. 등급은 <b>동 · 은 · 금 · 백금 · 다이아</b> 다섯 가지고, 금부터는 리본, 백금은 월계관, 다이아는 빛나는 테두리가 붙어요.','📊 업적을 <b>돈과 회사 · 직원 · 광산과 제품 · 차 · 이벤트 · 생활</b>로 묶었고, 아직 못 딴 업적은 <b>진행도 막대</b>로 얼마나 남았는지 보여요. 뱃지를 누르면 크게 보고 달성한 날짜도 볼 수 있어요.','👑 실패 훈장을 뺀 업적을 전부 모으면 <b>고르도 광산 마스터</b> 다이아 뱃지를 받아요.','✅ 업적 조건과 수치는 예전 그대로예요. 이미 딴 업적도 그대로 남아 있어요.','🎖️ 실패 훈장도 뱃지가 됐어요. 업적을 따면 뱃지가 화면에 크게 떠요.']},
  {v:'v1.4.7',t:'수다 고침',l:['💬 빚 대사에 실제 이름이 들어갔어요. 이일원 사장, 박대갈, 황동만 이야기를 들어 보세요.']},
  {v:'v1.4.6',t:'새 수다',l:['💬 광산 수다에 새 대사가 들어왔어요. 이일원 사장·박대갈의 빚 이야기, 황동만의 <b>동~만</b>, <b>카피야하 · 야하 · 교정야하</b>!']},
  {v:'v1.4.5',t:'새 얼굴 2명',l:['👥 새 직원 얼굴 <b>2명</b>이 들어왔어요. 직원 얼굴은 모두 <b>37가지</b>예요.']},
