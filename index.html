@@ -421,6 +421,9 @@ body.nofx .gban .ray,body.nofx .gban .sp{animation:none}
 .crew .wk .stars{position:absolute;left:-3px;right:auto;top:51px;width:54px;text-align:center;font-size:9.5px;line-height:10px;letter-spacing:.5px;text-shadow:none;color:var(--gold)}.crew .wk .stars i{color:#3d4442}
 .crew .wk .fb{left:-1px;right:-1px;top:63px;bottom:auto;height:5px;background:#0a0c0b;box-shadow:0 0 0 1px #2c3331;border-radius:3px}
 .crew .wk .nm{position:absolute;left:-3px;top:71px;width:54px;margin:0;color:var(--text)}
+.tnode .tt{position:absolute;left:3px;top:2px;font-style:normal;font-size:9px;color:#6f7d8a;line-height:1}
+.tnode .vico{width:40px;height:20px}
+.treelabs div{border-bottom:1px dashed #222a29}
 </style>
 </head>
 <body>
@@ -444,7 +447,7 @@ body.nofx .gban .ray,body.nofx .gban .sp{animation:none}
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.6.4';
+const APPVER='v1.6.5';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -526,7 +529,7 @@ function roleAsk(i){i=+i;const g=S.ws[i];if(!g)return;if(isBoss(i)){toast('👑 
 function sfStep(dt){for(let i=0;i<S.ws.length;i++){if(!isSF(i))continue;if(isVac(i)||S.wforce[i]||S.wrest[i]){S.wfat[i]=(S.wfat[i]||0)-SF_DN*dt;if(S.wfat[i]<=0){S.wfat[i]=0;S.wrest[i]=0;}}else{S.wfat[i]=(S.wfat[i]||0)+SF_UP*dt;if(S.wfat[i]>=100){S.wfat[i]=100;S.wrest[i]=1;}}}}
 function wFaceFix(){const seen=new Set();for(let j=0;j<S.wimg.length;j++){let k=S.wimg[j];if(typeof k!=='number'||k<0||k>=WSLOTS||seen.has(k)){S.wimg[j]=-1;}else seen.add(k);}for(let j=0;j<S.wimg.length;j++)if(S.wimg[j]===-1)S.wimg[j]=wRnd(j),seen.add(S.wimg[j]);}
 function wSync(){if(!Array.isArray(S.wname))S.wname=[];while(S.wname.length<S.ws.length)S.wname.push('');S.wname.length=S.ws.length;if(typeof S.bname!=='string')S.bname='';if(!S.wimg)S.wimg=[];if(!S.wfat)S.wfat=[];if(!S.wrest)S.wrest=[];if(!S.wforce)S.wforce=[];if(!S.wburn)S.wburn=[];if(!S.wshift)S.wshift=[];while(S.wimg.length<S.ws.length)S.wimg.push(wRnd());S.wimg.length=S.ws.length;while(S.wfat.length<S.ws.length)S.wfat.push(0);S.wfat.length=S.ws.length;while(S.wrest.length<S.ws.length)S.wrest.push(0);S.wrest.length=S.ws.length;while(S.wforce.length<S.ws.length)S.wforce.push(0);S.wforce.length=S.ws.length;while(S.wburn.length<S.ws.length)S.wburn.push(0);S.wburn.length=S.ws.length;while(S.wshift.length<S.ws.length)S.wshift.push(autoShift());S.wshift.length=S.ws.length;if(!S.wcarOwn)S.wcarOwn=[];while(S.wcarOwn.length<S.ws.length)S.wcarOwn.push(-1);S.wcarOwn.length=S.ws.length;if(!S.wcarDur)S.wcarDur=[];while(S.wcarDur.length<S.ws.length)S.wcarDur.push(100);S.wcarDur.length=S.ws.length;if(!S.wcarDead)S.wcarDead=[];while(S.wcarDead.length<S.ws.length)S.wcarDead.push(0);S.wcarDead.length=S.ws.length;if(!S.cdur)S.cdur={};if(!Array.isArray(S.wrole))S.wrole=[];while(S.wrole.length<S.ws.length)S.wrole.push('m');S.wrole.length=S.ws.length;if(!S.wloy)S.wloy=[];while(S.wloy.length<S.ws.length)S.wloy.push(LOY_START);S.wloy.length=S.ws.length;if(!S.gift)S.gift={};if(!S.shift3){S.shift3=1;distributeShifts();}if(S.shiftCur==null)S.shiftCur=0;if(S.shiftT==null)S.shiftT=0;}
-const CATROWS=[],CARCAT={};(function(){const m={};CARS.forEach((c,i)=>{(m[c[2]]=m[c[2]]||[]).push(i);});Object.keys(m).sort((a,b)=>m[a][0]-m[b][0]).forEach(cat=>{const list=m[cat];CATROWS.push({cat,list});list.forEach((idx,t)=>{CARCAT[idx]={cat,t,prev:t>0?list[t-1]:(idx===0?-1:0)};});});})();
+const TREE_COLS=8,CATROWS=[],CARCAT={};(function(){const m={};CARS.forEach((c,i)=>{(m[c[2]]=m[c[2]]||[]).push(i);});Object.keys(m).sort((a,b)=>m[a][0]-m[b][0]).forEach(cat=>{const list=m[cat];CATROWS.push({cat,list});list.forEach((idx,t)=>{CARCAT[idx]={cat,t,prev:t>0?list[t-1]:(idx===0?-1:0)};});});})();
 const carPrev=i=>CARCAT[i]?CARCAT[i].prev:-1;
 const SELL_R=16, SW_BASE=50000;
 /* 사장 직접 채굴(1.0.1): 처음부터 채굴 알바 자리에 들어감. 월급 0, 피로·교대·충성도 없음, 파업 중에도 캠. 채굴 ×BOSS_X */
@@ -835,16 +838,20 @@ const VIEW={
   ${sec('🛠️ 제작품',cnt(CRAFTS),`<div class="grid">${CRAFTS.map(cell).join('')}</div>`)}
   ${sec('🌟 최상급 제품',cnt(RARES),`<div class="grid">${RARES.map(cell).join('')}</div>`)}
   <div class="card"><h3>🚘 차 <span class="tag g">${S.cars.length} / ${CARS.length}</span><span class="sp"></span><span class="vsw inl"><button class="${V3D?'':'on'}" data-a="v3d" data-x="0">2D</button><button class="${V3D?'on':''}" data-a="v3d" data-x="1">360°</button></span></h3><div class="grid">${CARS.map((c,i)=>`<button class="slot ${S.cars.includes(i)?'':'none'}" data-a="carInfo" data-x="${i}">${carImg(c)}<span class="nm">${c[0]}</span>${S.car===i?'<span class="ct">타는 중</span>':''}</button>`).join('')}</div></div>`;},
- car(){const colW=110,rowH=84,pad=10,headH=22,nw=96,nh=66,voff=(rowH-nh)/2,rows=CATROWS,
+ car(){/* 1.6.5: 긴 줄(스포츠 16대)은 TREE_COLS칸마다 다음 줄로 접음 → 가로로 너무 길지 않게 */
+  const colW=96,TC=Math.max(3,Math.min(TREE_COLS,Math.floor(((($('view')&&$('view').clientWidth)||400)-90-20+10)/colW))),rowH=80,pad=10,nw=86,nh=64,voff=(rowH-nh)/2,rows=CATROWS,
   colOf=i=>{const cc=CARCAT[i];return i===0?0:(cc.cat==='오토바이'?cc.t:cc.t+1);},
-  maxC=Math.max(...CARS.map((_,i)=>colOf(i))),Wd=pad*2+(maxC+1)*colW,Hd=pad+headH+rows.length*rowH+pad,
-  px=co=>pad+co*colW,py=r=>pad+headH+r*rowH+voff,pos={};
-  rows.forEach((row,r)=>row.list.forEach(idx=>pos[idx]={x:px(colOf(idx)),y:py(r)}));
-  let lines='';rows.forEach(row=>row.list.forEach(idx=>{const pv=carPrev(idx);if(pv<0||!pos[pv])return;const a=pos[pv],b=pos[idx],x1=a.x+nw,y1=a.y+nh/2,x2=b.x,y2=b.y+nh/2,own=S.cars.includes(idx),ok=S.cars.includes(pv);lines+=`<path d="M${x1} ${y1} C${x1+28} ${y1} ${x2-28} ${y2} ${x2} ${y2}" fill="none" stroke="${own?'#3fd99a':ok?'#5c6b78':'#2a3038'}" stroke-width="${own?2.5:2}"/>`;}));
-  let heads='';for(let co=0;co<=maxC;co++)heads+=`<span class="thead" style="left:${px(co)+nw/2}px">T${co+1}</span>`;
-  let nodes='';rows.forEach(row=>row.list.forEach(idx=>{const c=CARS[idx],own=S.cars.includes(idx),unl=carUnlocked(idx),rid=S.car===idx,cls=own?'own':unl?'buy':'lk';nodes+=`<button class="tnode ${cls}" data-a="carInfo" data-x="${idx}" style="left:${pos[idx].x}px;top:${pos[idx].y}px;width:${nw}px;height:${nh}px"><span class="vico" style="background-image:url(${cIc(c)})">${('')?`<img src="${''}" alt="" loading="lazy" onload="this.parentNode.style.backgroundImage='none'" onerror="this.remove()">`:''}</span><span class="tn">${c[0]}</span><span class="tp">${own?(rid?'🚗 타는 중':'보유'):unl?W(c[1]):'🔒'} · +${carPct(idx)}%</span></button>`;}));
+  maxC=Math.min(TC-1,Math.max(...CARS.map((_,i)=>colOf(i)))),pos={},lineN=[];let ln=0;
+  rows.forEach((row,r)=>{const mc=Math.max(...row.list.map(colOf)),n=Math.floor(mc/TC)+1;lineN.push(n);row.list.forEach(idx=>{const c=colOf(idx);pos[idx]={x:pad+(c%TC)*colW,y:pad+(ln+Math.floor(c/TC))*rowH+voff,t:c};});ln+=n;});
+  const Wd=pad*2+(maxC+1)*colW-(colW-nw),Hd=pad*2+ln*rowH;
+  let lines='';rows.forEach(row=>row.list.forEach(idx=>{const pv=carPrev(idx);if(pv<0||!pos[pv])return;const a=pos[pv],b=pos[idx],own=S.cars.includes(idx),ok=S.cars.includes(pv),st=`fill="none" stroke="${own?'#3fd99a':ok?'#5c6b78':'#2a3038'}" stroke-width="${own?2.5:2}"`;
+   if(b.y>a.y+rowH/2&&b.x<a.x&&Math.floor(a.t/TC)!==Math.floor(b.t/TC)&&CARCAT[pv].cat===CARCAT[idx].cat){const x1=a.x+nw,y1=a.y+nh/2,ym=a.y+nh+voff,x2=b.x,y2=b.y+nh/2;lines+=`<path d="M${x1} ${y1} H${x1+5} V${ym} H${x2-5} V${y2} H${x2}" ${st} stroke-linejoin="round"/>`;}
+   else{const x1=a.x+nw,y1=a.y+nh/2,x2=b.x,y2=b.y+nh/2;lines+=`<path d="M${x1} ${y1} C${x1+24} ${y1} ${x2-24} ${y2} ${x2} ${y2}" ${st}/>`;}}));
+  const heads='';
+  let nodes='';rows.forEach(row=>row.list.forEach(idx=>{const c=CARS[idx],own=S.cars.includes(idx),unl=carUnlocked(idx),rid=S.car===idx,cls=own?'own':unl?'buy':'lk';nodes+=`<button class="tnode ${cls}" data-a="carInfo" data-x="${idx}" style="left:${pos[idx].x}px;top:${pos[idx].y}px;width:${nw}px;height:${nh}px"><i class="tt">T${pos[idx].t+1}</i><span class="vico" style="background-image:url(${cIc(c)})"></span><span class="tn">${c[0]}</span><span class="tp">${own?(rid?'🚗 타는 중':'보유'):unl?W(c[1]):'🔒'} · +${carPct(idx)}%</span></button>`;}));
+  const pad0=pad,headH=0;
   return `<div class="card"><h3>🚘 차고 테크트리 <span class="tag g">${S.cars.length} / ${CARS.length}대</span><span class="tag">수입 +${Math.round((bonus()-1)*100)}%</span></h3><div class="sub">차를 누르면 정보가 나오고, 사거나 타거나 팔 수 있어요. 차마다 수입 보너스가 붙어요 (3천만 미만 +1% · 1억 미만 +2% · 2억 미만 +3% · 5억 미만 +4% · 5억 이상 +5%).</div>
-  <div class="treebox"><div class="treelabs" style="padding-top:${pad+headH}px">${rows.map(r=>`<div style="height:${rowH}px">${r.cat}</div>`).join('')}</div><div class="treewrap"><div class="tree" style="width:${Wd}px;height:${Hd}px"><svg width="${Wd}" height="${Hd}" style="position:absolute;inset:0;pointer-events:none">${lines}</svg>${heads}${nodes}</div></div></div>
+  <div class="treebox"><div class="treelabs" style="padding-top:${pad}px">${rows.map((r,k)=>`<div style="height:${rowH*lineN[k]}px">${r.cat}</div>`).join('')}</div><div class="treewrap"><div class="tree" style="width:${Wd}px;height:${Hd}px"><svg width="${Wd}" height="${Hd}" style="position:absolute;inset:0;pointer-events:none">${lines}</svg>${heads}${nodes}</div></div></div>
   <div class="sub" style="margin-top:8px">🟩 보유 · ⬜ 구매 가능 · ⬛ 잠김</div></div>`;}
 };
 let shSel=-1;let drg=null,dragEnd=0,tabJump=0;
@@ -1589,7 +1596,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
- {v:'v1.6.4',t:'🎟️ 직원 뽑기 · 성급 · 👑 왕좌 쟁탈전',l:['🐞 일하는 <b>판매·가공 직원</b> 얼굴이 쉬는 것처럼 어둡게 보이던 문제를 고쳤어요.','👑 사장 자리를 건 싸움의 이름이 <b>왕좌 쟁탈전</b>으로 바뀌었어요.','🏅 <b>새 업적 12개</b>: 스카우트 · 모집 · 얼굴 모으기 · 성급 돌파 · 5성 직원 · 왕좌 쟁탈전 승리, 실패 훈장 \'왕좌 쟁탈전 패배\'까지. 회사 › 업적에서 볼 수 있어요.','🐞 <b>판매·가공 직원</b>도 휴가를 보내면 <b>🏖️ 유급 휴가</b> 칸으로 옮겨져요.','🛒 <b>상점 › 🎟️ 뽑기</b>에서 티켓을 사고 바로 뽑아요. 뽑을 때 카드 연출이 나와요. 확률은 ≡ 메뉴 › 안내에 있어요.','⭐ <b>스카우트</b>: 좋은 등급(최대 S+)이 나와요. 이미 있는 직원이 또 나오면 등급은 그대로고 <b>성급 조각 2개</b>를 줘요. 10번 뽑기에서 새 얼굴이 나오면 B+ 이상 한 명은 보장돼요.','🎫 <b>모집</b>: 아직 없는 직원만 나와서 <b>중복이 없어요</b>. 대신 낮은 등급이 잘 나와요. 채굴·판매·가공 <b>고용 버튼은 없어지고</b> 모집으로 바뀌었어요. 처음 시작하면 모집 티켓 2장 · 스카우트 티켓 1장을 드려요.','★ 조각을 모아 직원 창에서 <b>돌파</b>하면 1성부터 5성까지 올라가요(조각 2·3·4·6·8개). 채굴량(판매·가공 직원은 판매·가공량)이 ×1.2 → ×2.5까지 늘어요.','👑 <b>사장도 직원 중 한 명</b>이 될 수 있어요. 직원을 <b>👑 사장 칸</b>에 끌어 놓으면 지금 사장과 <b>왕좌 쟁탈전</b>을 벌여요. 직접 조종해서 이겨야 사장이 바뀌어요(가드·잽·강타). 사장은 스스로 내려올 수 없어요. 사장의 등급·성급이 사장 채굴 배수에 곱해져요.','🎨 직원 얼굴은 <b>등급 색 테두리</b>로 구분하고, 별·피로 막대·이름은 그림 아래로 옮겼어요.','🐞 관리인 자동 교육에 <b>판매·가공 직원</b>도 들어가요.','🐞 채굴 알바 수는 <b>1~4조만</b> 세요. <b>미편성(대기)</b>은 어느 부서에도 속하지 않아서 판매·가공 직원도 미편성으로 옮길 수 있어요. 대신 채굴+판매+가공+미편성을 합친 <b>전체 정원</b>(채굴·판매·가공 자리 합)이 있어요.','🏖️ <b>유급 휴가</b> 직원은 전체 정원에서 빠져요. 대신 휴가 월급이 <b>휴가 인원 × 2배</b>(1명 2배, 2명이면 1인당 4배, 3명이면 6배…)로 늘어요. 정원이 꽉 차 있으면 휴가에서 돌아올 수 없어요.']},
+ {v:'v1.6.5',t:'🎟️ 직원 뽑기 · 성급 · 👑 왕좌 쟁탈전',l:['🚘 차고 테크트리가 옆으로 너무 길던 걸 고쳤어요. 화면 폭에 맞춰 줄을 접어서 옆으로 넘치지 않고, 긴 줄(스포츠카)은 아랫줄로 이어져요. 칸마다 T 단계가 적혀 있어요.','🐞 일하는 <b>판매·가공 직원</b> 얼굴이 쉬는 것처럼 어둡게 보이던 문제를 고쳤어요.','👑 사장 자리를 건 싸움의 이름이 <b>왕좌 쟁탈전</b>으로 바뀌었어요.','🏅 <b>새 업적 12개</b>: 스카우트 · 모집 · 얼굴 모으기 · 성급 돌파 · 5성 직원 · 왕좌 쟁탈전 승리, 실패 훈장 \'왕좌 쟁탈전 패배\'까지. 회사 › 업적에서 볼 수 있어요.','🐞 <b>판매·가공 직원</b>도 휴가를 보내면 <b>🏖️ 유급 휴가</b> 칸으로 옮겨져요.','🛒 <b>상점 › 🎟️ 뽑기</b>에서 티켓을 사고 바로 뽑아요. 뽑을 때 카드 연출이 나와요. 확률은 ≡ 메뉴 › 안내에 있어요.','⭐ <b>스카우트</b>: 좋은 등급(최대 S+)이 나와요. 이미 있는 직원이 또 나오면 등급은 그대로고 <b>성급 조각 2개</b>를 줘요. 10번 뽑기에서 새 얼굴이 나오면 B+ 이상 한 명은 보장돼요.','🎫 <b>모집</b>: 아직 없는 직원만 나와서 <b>중복이 없어요</b>. 대신 낮은 등급이 잘 나와요. 채굴·판매·가공 <b>고용 버튼은 없어지고</b> 모집으로 바뀌었어요. 처음 시작하면 모집 티켓 2장 · 스카우트 티켓 1장을 드려요.','★ 조각을 모아 직원 창에서 <b>돌파</b>하면 1성부터 5성까지 올라가요(조각 2·3·4·6·8개). 채굴량(판매·가공 직원은 판매·가공량)이 ×1.2 → ×2.5까지 늘어요.','👑 <b>사장도 직원 중 한 명</b>이 될 수 있어요. 직원을 <b>👑 사장 칸</b>에 끌어 놓으면 지금 사장과 <b>왕좌 쟁탈전</b>을 벌여요. 직접 조종해서 이겨야 사장이 바뀌어요(가드·잽·강타). 사장은 스스로 내려올 수 없어요. 사장의 등급·성급이 사장 채굴 배수에 곱해져요.','🎨 직원 얼굴은 <b>등급 색 테두리</b>로 구분하고, 별·피로 막대·이름은 그림 아래로 옮겼어요.','🐞 관리인 자동 교육에 <b>판매·가공 직원</b>도 들어가요.','🐞 채굴 알바 수는 <b>1~4조만</b> 세요. <b>미편성(대기)</b>은 어느 부서에도 속하지 않아서 판매·가공 직원도 미편성으로 옮길 수 있어요. 대신 채굴+판매+가공+미편성을 합친 <b>전체 정원</b>(채굴·판매·가공 자리 합)이 있어요.','🏖️ <b>유급 휴가</b> 직원은 전체 정원에서 빠져요. 대신 휴가 월급이 <b>휴가 인원 × 2배</b>(1명 2배, 2명이면 1인당 4배, 3명이면 6배…)로 늘어요. 정원이 꽉 차 있으면 휴가에서 돌아올 수 없어요.']},
 ];
 /* 다음 패치 예고(사용자 승인 2026-11-24). 1.2.0 내면 PREVIEW=null, 예고 팝업 IIFE 삭제 */
 const PREVIEW=null&&{v:'1.2.0',when:'11월 24일(화) 오전 9시',l:['🏖️ <b>유급 휴가</b> — 고용 중인 알바를 휴가 보낼 수 있어요. 휴가 보너스로 <b>월급은 2배</b>, 대신 쉬는 동안 <b>충성도가 점점 올라가요</b>.','👷 <b>빈자리엔 새 알바</b> — 휴가 간 자리에 새 알바를 뽑을 수 있어요. 진짜 도감 모으는 맛! 대신 감당할 월급이 많아져요.','⛏️ 채굴 조는 <b>조마다 최대 6명</b>까지만 들어가요.','👥 채굴 알바 최대 인원 <b>16명 → 18명</b>.'],warn:'⚠️ <b>주의:</b> 큰 업데이트라 1.2.0이 나오면 <b>세이브가 깨지거나 초기화될 수 있어요.</b> 미리 ≡ 메뉴 → <b>저장 내보내기</b>로 백업해 두세요!'};
