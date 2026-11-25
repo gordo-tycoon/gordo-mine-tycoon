@@ -424,7 +424,6 @@ body.nofx .gban .ray,body.nofx .gban .sp{animation:none}
 .tnode .tt{position:absolute;left:3px;top:2px;font-style:normal;font-size:9px;color:#6f7d8a;line-height:1}
 .tnode .vico{width:40px;height:20px}
 .treelabs div{border-bottom:1px dashed #222a29}
-.refbox{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 10px;border-radius:8px;background:#101413;box-shadow:inset 0 0 0 1px #2a3331;font-size:12.5px;color:var(--dim)}.refbox>div{flex:1;min-width:0;line-height:1.45;word-break:keep-all}.refbox b{color:#c9d1cd}
 </style>
 </head>
 <body>
@@ -448,7 +447,7 @@ body.nofx .gban .ray,body.nofx .gban .sp{animation:none}
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.6.6';
+const APPVER='v1.6.5';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -530,7 +529,7 @@ function roleAsk(i){i=+i;const g=S.ws[i];if(!g)return;if(isBoss(i)){toast('👑 
 function sfStep(dt){for(let i=0;i<S.ws.length;i++){if(!isSF(i))continue;if(isVac(i)||S.wforce[i]||S.wrest[i]){S.wfat[i]=(S.wfat[i]||0)-SF_DN*dt;if(S.wfat[i]<=0){S.wfat[i]=0;S.wrest[i]=0;}}else{S.wfat[i]=(S.wfat[i]||0)+SF_UP*dt;if(S.wfat[i]>=100){S.wfat[i]=100;S.wrest[i]=1;}}}}
 function wFaceFix(){const seen=new Set();for(let j=0;j<S.wimg.length;j++){let k=S.wimg[j];if(typeof k!=='number'||k<0||k>=WSLOTS||seen.has(k)){S.wimg[j]=-1;}else seen.add(k);}for(let j=0;j<S.wimg.length;j++)if(S.wimg[j]===-1)S.wimg[j]=wRnd(j),seen.add(S.wimg[j]);}
 function wSync(){if(!Array.isArray(S.wname))S.wname=[];while(S.wname.length<S.ws.length)S.wname.push('');S.wname.length=S.ws.length;if(typeof S.bname!=='string')S.bname='';if(!S.wimg)S.wimg=[];if(!S.wfat)S.wfat=[];if(!S.wrest)S.wrest=[];if(!S.wforce)S.wforce=[];if(!S.wburn)S.wburn=[];if(!S.wshift)S.wshift=[];while(S.wimg.length<S.ws.length)S.wimg.push(wRnd());S.wimg.length=S.ws.length;while(S.wfat.length<S.ws.length)S.wfat.push(0);S.wfat.length=S.ws.length;while(S.wrest.length<S.ws.length)S.wrest.push(0);S.wrest.length=S.ws.length;while(S.wforce.length<S.ws.length)S.wforce.push(0);S.wforce.length=S.ws.length;while(S.wburn.length<S.ws.length)S.wburn.push(0);S.wburn.length=S.ws.length;while(S.wshift.length<S.ws.length)S.wshift.push(autoShift());S.wshift.length=S.ws.length;if(!S.wcarOwn)S.wcarOwn=[];while(S.wcarOwn.length<S.ws.length)S.wcarOwn.push(-1);S.wcarOwn.length=S.ws.length;if(!S.wcarDur)S.wcarDur=[];while(S.wcarDur.length<S.ws.length)S.wcarDur.push(100);S.wcarDur.length=S.ws.length;if(!S.wcarDead)S.wcarDead=[];while(S.wcarDead.length<S.ws.length)S.wcarDead.push(0);S.wcarDead.length=S.ws.length;if(!S.cdur)S.cdur={};if(!Array.isArray(S.wrole))S.wrole=[];while(S.wrole.length<S.ws.length)S.wrole.push('m');S.wrole.length=S.ws.length;if(!S.wloy)S.wloy=[];while(S.wloy.length<S.ws.length)S.wloy.push(LOY_START);S.wloy.length=S.ws.length;if(!S.gift)S.gift={};if(!S.shift3){S.shift3=1;distributeShifts();}if(S.shiftCur==null)S.shiftCur=0;if(S.shiftT==null)S.shiftT=0;}
-const CAR_SRC='https://bongnudo-catch-ledger.k4wa13.chatgpt.site/vehicles',TREE_COLS=8,CATROWS=[],CARCAT={};(function(){const m={};CARS.forEach((c,i)=>{(m[c[2]]=m[c[2]]||[]).push(i);});Object.keys(m).sort((a,b)=>m[a][0]-m[b][0]).forEach(cat=>{const list=m[cat];CATROWS.push({cat,list});list.forEach((idx,t)=>{CARCAT[idx]={cat,t,prev:t>0?list[t-1]:(idx===0?-1:0)};});});})();
+const TREE_COLS=8,CATROWS=[],CARCAT={};(function(){const m={};CARS.forEach((c,i)=>{(m[c[2]]=m[c[2]]||[]).push(i);});Object.keys(m).sort((a,b)=>m[a][0]-m[b][0]).forEach(cat=>{const list=m[cat];CATROWS.push({cat,list});list.forEach((idx,t)=>{CARCAT[idx]={cat,t,prev:t>0?list[t-1]:(idx===0?-1:0)};});});})();
 const carPrev=i=>CARCAT[i]?CARCAT[i].prev:-1;
 const SELL_R=16, SW_BASE=50000;
 /* 사장 직접 채굴(1.0.1): 처음부터 채굴 알바 자리에 들어감. 월급 0, 피로·교대·충성도 없음, 파업 중에도 캠. 채굴 ×BOSS_X */
@@ -853,7 +852,7 @@ const VIEW={
   const pad0=pad,headH=0;
   return `<div class="card"><h3>🚘 차고 테크트리 <span class="tag g">${S.cars.length} / ${CARS.length}대</span><span class="tag">수입 +${Math.round((bonus()-1)*100)}%</span></h3><div class="sub">차를 누르면 정보가 나오고, 사거나 타거나 팔 수 있어요. 차마다 수입 보너스가 붙어요 (3천만 미만 +1% · 1억 미만 +2% · 2억 미만 +3% · 5억 미만 +4% · 5억 이상 +5%).</div>
   <div class="treebox"><div class="treelabs" style="padding-top:${pad}px">${rows.map((r,k)=>`<div style="height:${rowH*lineN[k]}px">${r.cat}</div>`).join('')}</div><div class="treewrap"><div class="tree" style="width:${Wd}px;height:${Hd}px"><svg width="${Wd}" height="${Hd}" style="position:absolute;inset:0;pointer-events:none">${lines}</svg>${heads}${nodes}</div></div></div>
-  <div class="sub" style="margin-top:8px">🟩 보유 · ⬜ 구매 가능 · ⬛ 잠김</div><div class="refbox"><div><b>📚 참고</b> 차량 목록 · 가격 · 정보는 <b>믜밈</b>님의 사이트에서 가져왔어요.</div><button class="btn mini" onclick="window.open(CAR_SRC,'_blank','noopener')">🔗 사이트 방문하기</button></div></div>`;}
+  <div class="sub" style="margin-top:8px">🟩 보유 · ⬜ 구매 가능 · ⬛ 잠김</div></div>`;}
 };
 let shSel=-1;let drg=null,dragEnd=0,tabJump=0;
 document.addEventListener('pointerdown',e=>{const w=e.target.closest('.shcol .wk');if(!w||(e.button||0)>0)return;drg={i:+w.dataset.x,x:e.clientX,y:e.clientY,el:w,gh:null};});
@@ -1597,7 +1596,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
- {v:'v1.6.6',t:'📚 차고 참고 출처',l:['📚 차고 테크트리 아래에 차량 정보 출처(<b>믜밈</b>님의 사이트)를 밝히고, <b>🔗 사이트 방문하기</b> 버튼을 달았어요.']},
+ {v:'v1.6.5',t:'🚘 차고 테크트리 정리',l:['🚘 차고 테크트리가 옆으로 너무 길던 걸 고쳤어요. 화면 폭에 맞춰 줄을 접어서 옆으로 넘치지 않고, 긴 줄(스포츠카)은 아랫줄로 이어져요.','🔢 위쪽 T1·T2 줄 대신 차 칸마다 T 단계가 적혀 있어요.']},
 ];
 /* 다음 패치 예고(사용자 승인 2026-11-24). 1.2.0 내면 PREVIEW=null, 예고 팝업 IIFE 삭제 */
 const PREVIEW=null&&{v:'1.2.0',when:'11월 24일(화) 오전 9시',l:['🏖️ <b>유급 휴가</b> — 고용 중인 알바를 휴가 보낼 수 있어요. 휴가 보너스로 <b>월급은 2배</b>, 대신 쉬는 동안 <b>충성도가 점점 올라가요</b>.','👷 <b>빈자리엔 새 알바</b> — 휴가 간 자리에 새 알바를 뽑을 수 있어요. 진짜 도감 모으는 맛! 대신 감당할 월급이 많아져요.','⛏️ 채굴 조는 <b>조마다 최대 6명</b>까지만 들어가요.','👥 채굴 알바 최대 인원 <b>16명 → 18명</b>.'],warn:'⚠️ <b>주의:</b> 큰 업데이트라 1.2.0이 나오면 <b>세이브가 깨지거나 초기화될 수 있어요.</b> 미리 ≡ 메뉴 → <b>저장 내보내기</b>로 백업해 두세요!'};
