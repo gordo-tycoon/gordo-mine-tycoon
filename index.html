@@ -444,7 +444,7 @@ body.nofx .gban .ray,body.nofx .gban .sp{animation:none}
 /* 옛 저장 키 옮기기 */try{for(const k of Object.keys(localStorage)){if(k&&k.indexOf('bong'+'nudo-')===0){const n='gordo-'+k.slice(9);if(localStorage.getItem(n)==null)localStorage.setItem(n,localStorage.getItem(k));localStorage.removeItem(k);}}}catch(e){}
 'use strict';
 /* ===== 판 구성 (판매용 체험판·제품키는 나중에 여기에 붙임) ===== */
-const APPVER='v1.6.1';
+const APPVER='v1.6.2';
 const SAVEKEY='gordo-tycoon-v2';
 const TICK_MAX=90; /* 한 번에 계산하는 최대 초: 절전·멈춤 뒤 몰아서 계산하지 않음 */
 
@@ -1119,7 +1119,7 @@ function bossDuel(i){const o=bossI(),fee=bossFee();if(!S.ws[i]||isBoss(i))return
  const crowd=S.ws.map((g,j)=>j).filter(j=>j!==i&&j!==o).sort(()=>Math.random()-.5);
  fightStart({a:i,b:o,title:'사장 교체혈전',d:.6,crowd,onEnd:w=>{
   if(w&&S.ws[i]){const r=S.wrole[i],sh=S.wshift[i];S.wrole[i]='b';S.wshift[i]=SFSH;S.wrest[i]=0;S.wforce[i]=0;if(o>=0){S.wrole[o]=r;S.wshift[o]=r==='m'?sh:SFSH;}sfCount();S.duelN=(S.duelN||0)+1;bossWinFx(i,o);}
-  else toast('👑 '+fnm(o)+'이(가) 사장 자리를 지켰어요');
+  else{S.duelL=(S.duelL||0)+1;toast('👑 '+fnm(o)+'이(가) 사장 자리를 지켰어요');}
   save();R();}});}
 function bossWinFx(i,o){toast('👑 '+fnm(i)+' 새 사장!');if(!FXON)return;const e=$('aq');clearTimeout(aqT);e.classList.remove('on');e.classList.add('gold');
  let h='<div class="ring"></div><div class="ring r2"></div>';for(let k=0;k<20;k++){const g=Math.PI*2*k/20,d=150+Math.random()*170;h+=`<span class="sp" style="--dx:${Math.round(Math.cos(g)*d)}px;--dy:${Math.round(Math.sin(g)*d)}px;animation-delay:${(Math.random()*.25).toFixed(2)}s">${['👑','🥊','✨'][k%3]}</span>`;}
@@ -1537,6 +1537,14 @@ const ACH=[
  {id:'bn1',f:1,e:'🥵',n:'과로 주의',d:'번아웃 1번',c:()=>(S.burnN||0)>=1},{id:'bn10',f:1,e:'⚖️',n:'노동청 단골',d:'번아웃 10번',c:()=>(S.burnN||0)>=10},
  {id:'ad1',f:1,e:'🎁',n:'조합의 손길',d:'지원금 1번',c:()=>(S.aidC||0)>=1},{id:'ad5',f:1,e:'🙏',n:'구조 요청 장인',d:'지원금 5번',c:()=>(S.aidC||0)>=5},
  {id:'mm1',f:1,e:'😵',n:'아사 직전',d:'알리미가 0이 된 적 1번',c:()=>(S.mealMiss||0)>=1},{id:'mm10',f:1,e:'🦴',n:'굶기의 달인',d:'알리미 0 10번',c:()=>(S.mealMiss||0)>=10},{id:'dn1',f:1,e:'🚑',n:'응급실 직행',d:'사장님 쓰러짐 1번',c:()=>(S.downN||0)>=1},{id:'dn5',f:1,e:'🛌',n:'불사조 사장',d:'쓰러졌다 일어나기 5번',c:()=>(S.downN||0)>=5}];
+/* 1.6.2 새 업적(성급·뽑기·사장 혈전) */
+const _stars=()=>Object.values(S.fst||{}).reduce((a,o)=>a+(o.s||0),0),_st5=()=>Object.values(S.fst||{}).some(o=>(o.s||0)>=5)?1:0,_faces=()=>new Set(S.wimg.filter(f=>f>=0)).size;
+ACH.push(
+ {id:'sc1',e:'⭐',n:'첫 스카우트',d:'스카우트 1번',c:()=>(S.scoutN||0)>=1},{id:'sc100',e:'🌟',n:'스카우트 중독',d:'스카우트 100번',c:()=>(S.scoutN||0)>=100},
+ {id:'rc10',e:'🎫',n:'인사팀장',d:'직원 모집 10번',c:()=>(S.rcN||0)>=10},{id:'fc20',e:'📒',n:'얼굴 수집가',d:'직원 얼굴 20명 모으기',c:()=>_faces()>=20},{id:'fcAll',e:'📚',n:'도감 완성',d:'직원 얼굴 '+WSLOTS+'명 모두',c:()=>_faces()>=WSLOTS},
+ {id:'st1',e:'✴️',n:'첫 돌파',d:'직원 성급 첫 돌파',c:()=>(S.starN||0)>=1},{id:'st30',e:'💫',n:'별 부자',d:'모든 직원 별 합계 30개',c:()=>_stars()>=30},{id:'st5',e:'🌠',n:'5성 직원',d:'직원 한 명을 5성까지',c:()=>_st5()>=1},
+ {id:'du1',e:'👑',n:'하극상',d:'사장 교체혈전 첫 승리',c:()=>(S.duelN||0)>=1},{id:'du10',e:'🥊',n:'왕좌의 주인',d:'교체혈전 10번 승리',c:()=>(S.duelN||0)>=10},
+ {id:'dl1',f:1,e:'🩹',n:'사장님은 강했다',d:'교체혈전 1번 패배',c:()=>(S.duelL||0)>=1},{id:'dl10',f:1,e:'🛌',n:'쿠데타 실패 전문',d:'교체혈전 10번 패배',c:()=>(S.duelL||0)>=10});
 /* 1.5.0 업적 리뉴얼: 조건(c)은 그대로, 뱃지 문양 k·등급 t(1동~5다이아)·묶음 gp·진행도 v/g/u만 덧붙임 */
 const ACH_G=[['money','💰 돈과 회사'],['crew','👥 직원'],['mine','⛏️ 광산과 제품'],['car','🚘 차'],['ev','🎉 이벤트'],['life','⏰ 생활'],['top','👑 마스터'],['fail','🎖️ 실패 훈장']];
 const _h=v=>Math.floor((v||0)/360)/10,_made=()=>Object.values(S.cr.made||{}).reduce((a,b)=>a+(b>0?1:0),0);
@@ -1550,8 +1558,9 @@ const ACH_X={m1:['coin',1,'money',()=>S.total,1e6,'원'],m2:['coin',2,'money',()
  bt:['pick',2,'life',()=>_h(S.bossT),1,'시간'],p1:['hour',1,'life',()=>_h(S.playT),1,'시간'],p10:['hour',3,'life',()=>_h(S.playT),10,'시간'],p50:['hour',5,'life',()=>_h(S.playT),50,'시간'],
  ml10:['alarm',2,'life',()=>S.mealOk||0,10,'번'],ml50:['alarm',4,'life',()=>S.mealOk||0,50,'번'],bf:['heart',3,'life',()=>almBufN(),2,'개'],
  tf1:['cap',1],tf10:['cap',2],tf50:['cap',3],tf200:['cap',4],cp5:['siren',1],cp30:['siren',3],cb1:['car',1],cb10:['car',2],bn1:['flame',1],bn10:['flame',2],ad1:['gift',1],ad5:['gift',2],mm1:['alarm',1],mm10:['alarm',2],dn1:['cross',1],dn5:['cross',2]};
-const ACH_FV={tf1:()=>S.trainF||0,tf10:()=>S.trainF||0,tf50:()=>S.trainF||0,tf200:()=>S.trainF||0,cp5:()=>S.evN.cop||0,cp30:()=>S.evN.cop||0,cb1:()=>S.carBadN||0,cb10:()=>S.carBadN||0,bn1:()=>S.burnN||0,bn10:()=>S.burnN||0,ad1:()=>S.aidC||0,ad5:()=>S.aidC||0,mm1:()=>S.mealMiss||0,mm10:()=>S.mealMiss||0,dn1:()=>S.downN||0,dn5:()=>S.downN||0};
-const ACH_FG={tf1:[1,'번'],tf10:[10,'번'],tf50:[50,'번'],tf200:[200,'번'],cp5:[5,'번'],cp30:[30,'번'],cb1:[1,'번'],cb10:[10,'번'],bn1:[1,'번'],bn10:[10,'번'],ad1:[1,'번'],ad5:[5,'번'],mm1:[1,'번'],mm10:[10,'번'],dn1:[1,'번'],dn5:[5,'번']};
+Object.assign(ACH_X,{sc1:['star',1,'crew',()=>S.scoutN||0,1,'번'],sc100:['star',4,'crew',()=>S.scoutN||0,100,'번'],rc10:['people',2,'crew',()=>S.rcN||0,10,'번'],fc20:['people',3,'crew',_faces,20,'명'],fcAll:['trophy',5,'crew',_faces,WSLOTS,'명'],st1:['star',2,'crew',()=>S.starN||0,1,'번'],st30:['star',4,'crew',_stars,30,'개'],st5:['crown',5,'crew',_st5,1,'명'],du1:['crown',2,'crew',()=>S.duelN||0,1,'번'],du10:['crown',4,'crew',()=>S.duelN||0,10,'번'],dl1:['cap',1],dl10:['cap',2]});
+const ACH_FV={dl1:()=>S.duelL||0,dl10:()=>S.duelL||0,tf1:()=>S.trainF||0,tf10:()=>S.trainF||0,tf50:()=>S.trainF||0,tf200:()=>S.trainF||0,cp5:()=>S.evN.cop||0,cp30:()=>S.evN.cop||0,cb1:()=>S.carBadN||0,cb10:()=>S.carBadN||0,bn1:()=>S.burnN||0,bn10:()=>S.burnN||0,ad1:()=>S.aidC||0,ad5:()=>S.aidC||0,mm1:()=>S.mealMiss||0,mm10:()=>S.mealMiss||0,dn1:()=>S.downN||0,dn5:()=>S.downN||0};
+const ACH_FG={dl1:[1,'번'],dl10:[10,'번'],tf1:[1,'번'],tf10:[10,'번'],tf50:[50,'번'],tf200:[200,'번'],cp5:[5,'번'],cp30:[30,'번'],cb1:[1,'번'],cb10:[10,'번'],bn1:[1,'번'],bn10:[10,'번'],ad1:[1,'번'],ad5:[5,'번'],mm1:[1,'번'],mm10:[10,'번'],dn1:[1,'번'],dn5:[5,'번']};
 ACH.forEach(a=>{const x=ACH_X[a.id];a.k=x[0];a.t=x[1];if(a.f){a.gp='fail';a.v=ACH_FV[a.id];a.g=ACH_FG[a.id][0];a.u=ACH_FG[a.id][1];}else{a.gp=x[2];a.v=x[3];a.g=x[4];a.u=x[5];}});
 ACH.push({id:'all',k:'trophy',t:5,gp:'top',e:'🏆',n:'고르도 광산 마스터',d:'실패 훈장을 뺀 업적 전부',v:()=>ACH.filter(a=>!a.f&&a.id!=='all'&&S.ach&&S.ach[a.id]).length,c:()=>ACH.every(a=>a.f||a.id==='all'||(S.ach&&S.ach[a.id]))});
 {const m=ACH.find(a=>a.id==='all');m.g=ACH.filter(a=>!a.f&&a.id!=='all').length;m.u='개';}
@@ -1580,7 +1589,7 @@ function achChk(){if(!S.ach)S.ach={};const nw=ACH.filter(a=>!S.ach[a.id]&&a.c())
 /* ===== 패치노트: 새 버전을 처음 열면 한 번 뜸(처음 하는 사람은 튜토리얼만). ≡ 메뉴에서 다시 보기. 새 버전은 맨 위에 추가 ===== */
 const VER_KEY='gordo-tycoon-ver';
 const PATCH=[
- {v:'v1.6.1',t:'🎟️ 직원 뽑기 · 성급 · 👑 사장 교체혈전',l:['🐞 <b>판매·가공 직원</b>도 휴가를 보내면 <b>🏖️ 유급 휴가</b> 칸으로 옮겨져요.','🛒 <b>상점 › 🎟️ 뽑기</b>에서 티켓을 사고 바로 뽑아요. 뽑을 때 카드 연출이 나와요. 확률은 ≡ 메뉴 › 안내에 있어요.','⭐ <b>스카우트</b>: 좋은 등급(최대 S+)이 나와요. 이미 있는 직원이 또 나오면 등급은 그대로고 <b>성급 조각 2개</b>를 줘요. 10번 뽑기에서 새 얼굴이 나오면 B+ 이상 한 명은 보장돼요.','🎫 <b>모집</b>: 아직 없는 직원만 나와서 <b>중복이 없어요</b>. 대신 낮은 등급이 잘 나와요. 채굴·판매·가공 <b>고용 버튼은 없어지고</b> 모집으로 바뀌었어요. 처음 시작하면 모집 티켓 2장 · 스카우트 티켓 1장을 드려요.','★ 조각을 모아 직원 창에서 <b>돌파</b>하면 1성부터 5성까지 올라가요(조각 2·3·4·6·8개). 채굴량(판매·가공 직원은 판매·가공량)이 ×1.2 → ×2.5까지 늘어요.','👑 <b>사장도 직원 중 한 명</b>이 될 수 있어요. 직원을 <b>👑 사장 칸</b>에 끌어 놓으면 지금 사장과 <b>교체혈전</b>을 벌여요. 직접 조종해서 이겨야 사장이 바뀌어요(가드·잽·강타). 사장은 스스로 내려올 수 없어요. 사장의 등급·성급이 사장 채굴 배수에 곱해져요.','🎨 직원 얼굴은 <b>등급 색 테두리</b>로 구분하고, 별·피로 막대·이름은 그림 아래로 옮겼어요.','🐞 관리인 자동 교육에 <b>판매·가공 직원</b>도 들어가요.','🐞 채굴 알바 수는 <b>1~4조만</b> 세요. <b>미편성(대기)</b>은 어느 부서에도 속하지 않아서 판매·가공 직원도 미편성으로 옮길 수 있어요. 대신 채굴+판매+가공+미편성을 합친 <b>전체 정원</b>(채굴·판매·가공 자리 합)이 있어요.','🏖️ <b>유급 휴가</b> 직원은 전체 정원에서 빠져요. 대신 휴가 월급이 <b>휴가 인원 × 2배</b>(1명 2배, 2명이면 1인당 4배, 3명이면 6배…)로 늘어요. 정원이 꽉 차 있으면 휴가에서 돌아올 수 없어요.']},
+ {v:'v1.6.2',t:'🎟️ 직원 뽑기 · 성급 · 👑 사장 교체혈전',l:['🏅 <b>새 업적 12개</b>: 스카우트 · 모집 · 얼굴 모으기 · 성급 돌파 · 5성 직원 · 사장 교체혈전 승리, 실패 훈장 \'교체혈전 패배\'까지. 회사 › 업적에서 볼 수 있어요.','🐞 <b>판매·가공 직원</b>도 휴가를 보내면 <b>🏖️ 유급 휴가</b> 칸으로 옮겨져요.','🛒 <b>상점 › 🎟️ 뽑기</b>에서 티켓을 사고 바로 뽑아요. 뽑을 때 카드 연출이 나와요. 확률은 ≡ 메뉴 › 안내에 있어요.','⭐ <b>스카우트</b>: 좋은 등급(최대 S+)이 나와요. 이미 있는 직원이 또 나오면 등급은 그대로고 <b>성급 조각 2개</b>를 줘요. 10번 뽑기에서 새 얼굴이 나오면 B+ 이상 한 명은 보장돼요.','🎫 <b>모집</b>: 아직 없는 직원만 나와서 <b>중복이 없어요</b>. 대신 낮은 등급이 잘 나와요. 채굴·판매·가공 <b>고용 버튼은 없어지고</b> 모집으로 바뀌었어요. 처음 시작하면 모집 티켓 2장 · 스카우트 티켓 1장을 드려요.','★ 조각을 모아 직원 창에서 <b>돌파</b>하면 1성부터 5성까지 올라가요(조각 2·3·4·6·8개). 채굴량(판매·가공 직원은 판매·가공량)이 ×1.2 → ×2.5까지 늘어요.','👑 <b>사장도 직원 중 한 명</b>이 될 수 있어요. 직원을 <b>👑 사장 칸</b>에 끌어 놓으면 지금 사장과 <b>교체혈전</b>을 벌여요. 직접 조종해서 이겨야 사장이 바뀌어요(가드·잽·강타). 사장은 스스로 내려올 수 없어요. 사장의 등급·성급이 사장 채굴 배수에 곱해져요.','🎨 직원 얼굴은 <b>등급 색 테두리</b>로 구분하고, 별·피로 막대·이름은 그림 아래로 옮겼어요.','🐞 관리인 자동 교육에 <b>판매·가공 직원</b>도 들어가요.','🐞 채굴 알바 수는 <b>1~4조만</b> 세요. <b>미편성(대기)</b>은 어느 부서에도 속하지 않아서 판매·가공 직원도 미편성으로 옮길 수 있어요. 대신 채굴+판매+가공+미편성을 합친 <b>전체 정원</b>(채굴·판매·가공 자리 합)이 있어요.','🏖️ <b>유급 휴가</b> 직원은 전체 정원에서 빠져요. 대신 휴가 월급이 <b>휴가 인원 × 2배</b>(1명 2배, 2명이면 1인당 4배, 3명이면 6배…)로 늘어요. 정원이 꽉 차 있으면 휴가에서 돌아올 수 없어요.']},
 ];
 /* 다음 패치 예고(사용자 승인 2026-11-24). 1.2.0 내면 PREVIEW=null, 예고 팝업 IIFE 삭제 */
 const PREVIEW=null&&{v:'1.2.0',when:'11월 24일(화) 오전 9시',l:['🏖️ <b>유급 휴가</b> — 고용 중인 알바를 휴가 보낼 수 있어요. 휴가 보너스로 <b>월급은 2배</b>, 대신 쉬는 동안 <b>충성도가 점점 올라가요</b>.','👷 <b>빈자리엔 새 알바</b> — 휴가 간 자리에 새 알바를 뽑을 수 있어요. 진짜 도감 모으는 맛! 대신 감당할 월급이 많아져요.','⛏️ 채굴 조는 <b>조마다 최대 6명</b>까지만 들어가요.','👥 채굴 알바 최대 인원 <b>16명 → 18명</b>.'],warn:'⚠️ <b>주의:</b> 큰 업데이트라 1.2.0이 나오면 <b>세이브가 깨지거나 초기화될 수 있어요.</b> 미리 ≡ 메뉴 → <b>저장 내보내기</b>로 백업해 두세요!'};
