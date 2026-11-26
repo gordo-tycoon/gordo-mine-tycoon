@@ -2874,6 +2874,8 @@ function genSprites(){try{
 loadImgs();
 genSprites();
 load();
+/* 1.7.4 천장 첫 도입 기념: 모두 한 번 천장 게이지 +100(선택권 1장) */
+if(!S.cg174){S.cg174=1;S.ceil=(S.ceil||0)+100;try{save();}catch(e){}setTimeout(()=>{try{toast('🎯 천장 첫 도입 기념! 선택권 1장을 드렸어요 · 상점 › 직원 스카우트');}catch(e){}},4000);}
 /* 켜 둔 동안에만 진행: 꺼 둔 시간은 계산하지 않음 */
 S.fever=0;S.ev={k:'',t:0};if(!S.seen)S.seen=1;if(S.wcar&&S.wcar.want&&!(S.wcar.who||[]).length){S.wcar.want=0;S.wcar.t=0;}
 {let a=false;try{a=!localStorage.getItem(TUT_KEY);}catch(e){}if(a){$('mBg').style.display='none';tutStart();}patchChk(a);}
