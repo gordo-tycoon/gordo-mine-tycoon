@@ -2,4 +2,4 @@
 
 플레이: https://gordo-tycoon.github.io/gordo-mine-tycoon/
 
-최신 버전: v1.7.4
+최신 버전: v1.7.5
