@@ -2715,7 +2715,7 @@ function rdHintOff(){const h=$('rdHint');if(h)h.remove();const m=$('menuB');if(m
   h.style.display='block';m.classList.add('rdGlow');const w=h.offsetWidth,vw=document.documentElement.clientWidth;
   let L=Math.min(vw-w-8,Math.max(8,r.left+r.width/2-w+16));h.style.left=L+'px';h.style.top=(r.bottom+12)+'px';h.style.setProperty('--ax',Math.max(6,Math.min(w-24,L+w-(r.left+r.width/2)-9))+'px');
  },700);})();
-function patchChk(isNew){let seen=null;try{seen=localStorage.getItem(VER_KEY);localStorage.setItem(VER_KEY,APPVER);}catch(e){return;}if(isNew||seen===APPVER)return;patchShow(seen);}
+function patchChk(isNew){let seen=null;try{seen=localStorage.getItem(VER_KEY);localStorage.setItem(VER_KEY,APPVER);}catch(e){return;}return;/* 2026-11-27 선이: 패치 포스터 자동 팝업 끔(메뉴에서만) */}
 const TUT_KEY='gordo-tycoon-tut';
 const TUT=[
  {h:'👋 고르도 광산 타이쿤',b:'이 게임은 서버에서 <b>지루한 노동</b>을 하는 동안 옆에 띄워 두고 즐기는 <b>보조 게임</b>이에요. 주인공은 서버에서의 일이고, 이 게임은 그 시간을 덜 지루하게 해 주는 친구예요. 창을 <b>켜 둔 동안에만</b> 알아서 굴러가요. 최소화해 두거나 뒤에 깔아 둬도 되고, 가끔 들여다보면 돼요. 창을 끄면 광산도 같이 쉬어요.<br><br>1분짜리 안내를 볼게요. 언제든 <b>건너뛰기</b>로 나갈 수 있고, ≡ 메뉴에서 다시 볼 수 있어요.'},
@@ -2755,7 +2755,7 @@ const TUT170=[
  {t:'shop',s:'#kitC',sc:1,h:'🩹 구급상자',b:'EMS 직원이 없을 땐 <b>구급상자</b>(5만원)로 살려요. 👔 관리인이 있으면 3개씩 알아서 채워 둬요.'},
  {t:'wh',s:'#segBar [data-x="wh"]',h:'📦 창고',b:'회사 › <b>창고</b> 탭에서 자원 수량을 보고 버릴 수 있고, 모든 차의 내구도를 보고 🚧 교정공에게 수리를 맡겨요.'},
  {t:'gacha',s:'#segBar [data-x="gacha"]',h:'⭐ 직원은 스카우트로',b:'🎟️ <b>직원 모집</b>이 없어지고 이제 직원은 ⭐ <b>스카우트</b> 뽑기로만 얻어요. 남은 모집 티켓은 산 값으로 돌려드렸어요. 그럼 새 광산 생활을 즐겨 주세요!'}];
-(()=>{const iv=setInterval(()=>{if(document.hidden)return;let ok=false;try{ok=!!localStorage.getItem(TUT_KEY)&&!localStorage.getItem(TUT172_KEY);}catch(e){}
+(()=>{/* 2026-11-27 선이: 1.7.2 튜토리얼 자동 시작 끔 */return;const iv=setInterval(()=>{if(document.hidden)return;let ok=false;try{ok=!!localStorage.getItem(TUT_KEY)&&!localStorage.getItem(TUT172_KEY);}catch(e){}
  if(!ok){try{if(localStorage.getItem(TUT172_KEY))clearInterval(iv);}catch(e){}return;}
  if($('mBg').style.display==='flex'||$('adBg').style.display==='flex'||document.querySelector('#gx.on')||$('tut'))return;
  clearInterval(iv);tutStart(TUT172);},3000);})();
